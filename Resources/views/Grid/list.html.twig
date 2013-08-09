@@ -22,7 +22,7 @@
                 <option value="xls">Excel</option>
                 <option value="tsv">TSV</option>
             </select>
-            <a class="btn icon-save" data-ng-href="{{ data.exportLink }}" target="_blank"> Export</a>
+            <a class="btn" data-ng-href="{{ data.exportLink }}" target="_blank"><span class="icon-save"> Export</span></a>
         </p>
     </span>
     <span class="span2">
@@ -65,8 +65,8 @@
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }} {{ action.icon }}" data-ng-href="{{ entity.paths[action.alias] }}">
-                            {{ action.title }}
+                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[action.alias] }}">
+                            <span class="{{action.icon}}">{{ action.title }}</span>
                         </a>
                     </span>
                 </td>
