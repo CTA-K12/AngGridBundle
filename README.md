@@ -31,8 +31,9 @@ base.html.twig
 {% javascripts
     'bundles/mesdanggrid/js/angular-1.0.7.js'
     'bundles/mesdanggrid/js/angular-resource-1.0.7.js'
+    'bundles/mesdanggrid/js/grid_config.js'
     'bundles/mesdanggrid/js/grid_controller.js'
-    'bundles/mesdanggrid/js/grid_module.js'
+    'bundles/mesdanggrid/js/grid_filters.js'
     %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
@@ -161,6 +162,15 @@ class ExampleController extends Controller
                     'sortIcon' => 'icon-sort',
                     'title' => 'Modified',
                     'type' => 'date',
+                ),
+                ),
+                'e.active' => array(
+                    'column' => 'e.modified',
+                    'search' => 'false',
+                    'show' => 'true',
+                    'sortIcon' => 'icon-sort',
+                    'title' => 'Modified',
+                    'type' => 'boolean',
                 ),
             )
         ;
