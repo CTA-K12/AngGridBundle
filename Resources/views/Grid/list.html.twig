@@ -1,0 +1,80 @@
+{% verbatim %}
+<div class="row-fluid" data-ng-module="task" data-ng-controller="{% endverbatim %}{{ ngController }}{% verbatim %}">
+    <span class="span3">
+        <p>
+            <input class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="getData()" />
+        </p>
+    </span>
+    <span class="span3">
+        <p>
+            Page
+            <button class="btn" data-ng-click="previousPage()"><span class="icon-chevron-left"></span></button>
+            <input style="width: 5em;" data-ng-model="data.page" data-ng-change="getData()" />
+            <button class="btn" data-ng-click="nextPage()"><span class="icon-chevron-right"></span></button>
+            of
+            <span data-ng-bind="data.last"></span>
+        </p>
+    </span>
+    <span class="span2">
+        <p>
+            <select style="width: 10em;" data-ng-model="data.exportType" data-ng-change="getData()">
+                <option value="csv">CSV</option>
+                <option value="xls">Excel</option>
+                <option value="tsv">TSV</option>
+            </select>
+            <a class="btn icon-save" data-ng-href="{{ data.exportLink }}" target="_blank"> Export</a>
+        </p>
+    </span>
+    <span class="span2">
+        <p>
+            Show
+            <select style="width: 5em;" data-ng-model="data.perPage" data-ng-change="getData()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            per page
+        </p>
+    </span>
+    <span class="span2">
+        <p>
+            Displaying
+            <span data-ng-bind="data.filtered"></span>
+            of
+            <span data-ng-bind="data.total"></span>
+        </p>
+    </span>
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <span>Actions</span>
+                </th>
+                <th data-ng-repeat="header in data.headers | filter: !header.show" data-ng-click="sort($event, header.column)">
+                    <span>
+                        {{ header.title}} <span class="{{ header.sortIcon }}"></span>
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-show="!data.entities.length">
+                <td colspan="{{ data.headers.length + 1 }}">No matches found.</td>
+            </tr>
+            <tr data-ng-repeat="entity in data.entities">
+                <td data-role-th="Actions">
+                    <span class="btn-group">
+                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }} {{ action.icon }}" data-ng-href="{{ entity.paths[action.alias] }}">
+                            {{ action.title }}
+                        </a>
+                    </span>
+                </td>
+                <td data-ng-repeat="header in data.headers | filter: !header.show" data-role-th="{{ header.title }}">
+                    <span data-ng-bind="entity.values[header.column]"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endverbatim %}
