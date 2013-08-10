@@ -109,15 +109,17 @@ class ExampleController extends Controller
         $grid['actions'] = array(
                 'example_show' => array(
                     'alias' => 'example_show',
-                    'title' => '',
                     'class' => 'btn-info',
                     'icon' => 'icon-search',
+                    'title' => 'Show',
+                    'text' => '',
                 ),
                 'example_edit' => array(
                     'alias' => 'example_edit',
-                    'title' => '',
                     'class' => 'btn-primary',
                     'icon' => 'icon-pencil',
+                    'title' => 'Edit',
+                    'text' => '',
                 )
             )
         ;
