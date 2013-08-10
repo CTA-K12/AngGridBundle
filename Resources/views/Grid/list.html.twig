@@ -66,7 +66,7 @@
                 <td data-role-th="Actions">
                     <span class="btn-group">
                         <a data-ng-repeat="action in data.actions" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[action.alias] }}">
-                            <span class="{{action.icon}}">{{ action.title }}</span>
+                            <span class="{{action.icon}}" title="{{ action.title }}">{{ action.text }}</span>
                         </a>
                     </span>
                 </td>

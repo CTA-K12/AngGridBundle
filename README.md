@@ -26,20 +26,26 @@ app/AppKernel.php
         );
 ```
 
-base.html.twig
+
+
+app/Resources/views/base.html.twig
 ```twig
-{% javascripts
-    'bundles/mesdanggrid/js/angular-1.0.7.js'
-    'bundles/mesdanggrid/js/angular-resource-1.0.7.js'
-    'bundles/mesdanggrid/js/grid_config.js'
-    'bundles/mesdanggrid/js/grid_controller.js'
-    'bundles/mesdanggrid/js/grid_filters.js'
-    %}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
+{% extends 'MESDPresentationPresentationBundle::index.html.twig' %}
+{% block javascripts %}
+    {{parent()}}
+    {% javascripts
+        'bundles/mesdanggrid/js/angular-1.0.7.js'
+        'bundles/mesdanggrid/js/angular-resource-1.0.7.js'
+        'bundles/mesdanggrid/js/grid_config.js'
+        'bundles/mesdanggrid/js/grid_controller.js'
+        'bundles/mesdanggrid/js/grid_filters.js'
+        %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock javascripts %}
 ```
 
-example.yml
+src/MESD/App/ExampleBundle/Resources/config/routing/example.yml
 ```yml
 example:
     pattern:  /
@@ -58,7 +64,7 @@ example_export:
     defaults: { _controller: "MESDAngGridBundle:Grid:data" }
 ```
 
-ExampleController.php
+src/MESD/App/ExampleBundle/ExampleController.php
 ```php
 <?php
 
