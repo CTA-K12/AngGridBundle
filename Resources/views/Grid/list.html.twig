@@ -71,7 +71,7 @@
                     </span>
                 </td>
                 <td data-ng-repeat="header in data.headers | filter: !header.show" data-role-th="{{ header.title }}">
-                    <span data-ng-bind="entity.values[header.column]"></span>
+                    <span data-ng-bind="entity.values[header.column] | filter: checkmark"></span>
                 </td>
             </tr>
         </tbody>

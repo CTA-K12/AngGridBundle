@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gridModule', [])
+angular.module('gridModule', ['gridFilters'])
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
             .when('/', {
