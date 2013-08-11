@@ -61,7 +61,7 @@
         {% if '' == grid.exportAlias %}
             ""
         {% else %}
-            "{{ path(grid.exportAlias, {'exportString': 'true', 'exportType': grid.exportType, 'search': grid.search, 'sorts': grid.sortsString }) }}"
+            "{{ path(grid.exportAlias, {exportType: grid.exportType }) }}?exportString=true&&search={{ grid.search }}&sorts={{ grid.sortsString }}"
         {% endif %},
     "exportType": "{{ grid.exportType }}",
     "filtered": "{{ grid.filtered }}",

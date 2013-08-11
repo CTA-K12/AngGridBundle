@@ -7,17 +7,8 @@
     </span>
     <span class="span3">
         <p>
-            Page
-            <button class="btn" data-ng-click="previousPage()"><span class="icon-chevron-left"></span></button>
-            <input style="width: 5em;" data-ng-model="data.page" data-ng-change="getData()" />
-            <button class="btn" data-ng-click="nextPage()"><span class="icon-chevron-right"></span></button>
-            of
-            <span data-ng-bind="data.last"></span>
-        </p>
-    </span>
-    <span class="span2">
-        <p>
-            <select style="width: 10em;" data-ng-model="data.exportType" data-ng-change="getData()">
+            <select data-ng-model="data.exportType" data-ng-change="getData()">
+                <option></option>
                 <option value="csv">CSV</option>
                 <option value="xls">Excel</option>
                 <option value="tsv">TSV</option>
@@ -27,8 +18,16 @@
     </span>
     <span class="span2">
         <p>
+            Displaying
+            <span data-ng-bind="data.filtered"></span>
+            of
+            <span data-ng-bind="data.total"></span>
+        </p>
+    </span>
+    <span class="span2">
+        <p>
             Show
-            <select style="width: 5em;" data-ng-model="data.perPage" data-ng-change="getData()">
+            <select data-ng-model="data.perPage" data-ng-change="getData()">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -39,10 +38,12 @@
     </span>
     <span class="span2">
         <p>
-            Displaying
-            <span data-ng-bind="data.filtered"></span>
+            Page
+            <button class="btn" data-ng-click="previousPage()"><span class="icon-chevron-left"></span></button>
+            <input style="width: 5em;" data-ng-model="data.page" data-ng-change="getData()" />
+            <button class="btn" data-ng-click="nextPage()"><span class="icon-chevron-right"></span></button>
             of
-            <span data-ng-bind="data.total"></span>
+            <span data-ng-bind="data.last"></span>
         </p>
     </span>
     <table class="table table-bordered table-condensed table-hover table-striped">

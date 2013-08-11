@@ -98,6 +98,8 @@ class ExampleController extends Controller
 
         if (is_null($exportType)) {
             $grid['exportType'] = $request->query->get('exportType');
+        } else {
+            $grid['exportType'] = $exportType;
         }
 
         if (is_null($grid['exportString'])) {
