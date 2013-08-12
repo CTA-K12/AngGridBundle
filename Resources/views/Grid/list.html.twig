@@ -1,14 +1,14 @@
 {% verbatim %}
 <div class="row-fluid" data-ng-module="task" data-ng-controller="{% endverbatim %}{{ ngController }}{% verbatim %}" style="line-height:2em;">
     <div class="span5">
-        <div class="row-fluid">
+        <div class="row-fluid search-control">
             <div class="span6">
                 <input class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="getData()" style="width:100%"/>
             </div>
             <div class="span1">
             </div>
             <div class="span5">
-                <div class="row-fluid">
+                <div class="row-fluid export-control">
                     <div class="span5">
                         <select data-ng-model="data.exportType" data-ng-change="getData()" class="grid-export">
                             <option value="csv">CSV</option>
@@ -25,7 +25,6 @@
             </div>
         </div>
     </div>
-
     <div class="span7">
         <div class="row-fluid">
             <div class="span7">
@@ -33,7 +32,7 @@
                     <div class="span2">
                     </div>
                     <div class="span4">
-                        <div class="row-fluid">
+                        <div class="row-fluid results-control">
                             Showing
                             <span data-ng-bind="data.filtered"></span>
                             of
@@ -41,7 +40,7 @@
                         </div>
                     </div>
                     <div class="span6">
-                        <div class="row-fluid">
+                        <div class="row-fluid items-per-page-control">
                             <div class="span5">
                                 <select data-ng-model="data.perPage" data-ng-change="getData()" class="grid-pages">
                                     <option value="10">10</option>
@@ -57,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <div class="span5">
+            <div class="span5 page-control">
                 <span>Page</span>
                 <span class="btn-group">
                     <button class="btn" data-ng-click="previousPage()"><span class="icon-chevron-left"></button>
