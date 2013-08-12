@@ -52,13 +52,13 @@
     <div class="span3">
             <span>Page</span>
                 <span class="btn-group">
-                    <button class="btn icon-chevron-left" data-ng-click="previousPage()"></button>
+                    <button class="btn" data-ng-click="previousPage()"><span class="icon-chevron-left"></button>
                 </span>
                 <span>
                     <input data-ng-model="data.page" data-ng-change="getData()" style="width:20%"/>
                 </span>
                 <span class="btn-group">
-                    <button class="btn icon-chevron-right" data-ng-click="nextPage()"></button>
+                    <button class="btn" data-ng-click="nextPage()"><span class="icon-chevron-right"></button>
                 </span>
                 <span> of</span>
                 <span data-ng-bind="data.last"></span>
@@ -83,7 +83,7 @@
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }} {{action.icon}}" data-ng-href="{{ entity.paths[action.alias] }}" title="{{ action.title }}">
+                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }} {{action.icon}}" data-ng-href="{{ entity.paths[action.alias] }}" title="{{ action.title }}">{{action.text}}
                         </a>
                     </span>
                 </td>
