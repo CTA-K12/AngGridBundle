@@ -7,6 +7,10 @@ function GridController($scope, $http) {
     $scope.data.perPage = 10;
     $scope.data.search = '';
     $scope.data.sorts = {};
+    $("select").select2({
+        minimumInputLength:0
+        ,width: "100%"
+    });
     $scope.getData = function() {
         $http({
             method: 'GET',
@@ -19,67 +23,68 @@ function GridController($scope, $http) {
                 "sorts": $scope.data.sorts
             }
         })
-        .success(function(data, status, headers, config) {
-            $scope.data.actions = data.actions;
-            $scope.data.entities = data.entities;
-            $scope.data.exportLink = data.exportLink;
-            $scope.data.filtered = data.filtered;
-            $scope.data.last = data.last;
-            $scope.data.headers = data.headers;
-            $scope.data.page = data.page;
-            $scope.data.total = data.total;
-        }).error(function(data, status, headers, config) {
-            $scope.status = status;
-        });
-    }
-    $scope.getData();
-    $scope.previousPage = function() {
-        if (1 < parseInt($scope.data.page)) {
-            $scope.data.page = parseInt($scope.data.page) - 1;
-            $scope.getData();
-        }
-    }
-    $scope.nextPage = function() {
-        if (parseInt($scope.data.last) > parseInt($scope.data.page)) {
-            $scope.data.page = parseInt($scope.data.page) + 1;
-            $scope.getData();
-        }
-    }
-    $scope.sort = function(event, column) {
-        if (undefined == $scope.data.sorts.length) {
-            $scope.data.sorts = [{column: column, direction: 'asc'}];
-        } else {
-            if (event.shiftKey) {
-                if (column == $scope.data.sorts[$scope.data.sorts.length - 1]['column']) {
-                    if ('asc' == $scope.data.sorts[$scope.data.sorts.length - 1]['direction']) {
-                        $scope.data.sorts[$scope.data.sorts.length - 1]['direction'] = 'desc';
-                    } else {
-                        $scope.data.sorts.splice($scope.data.sorts.length - 1, 1);
-                    }
-                } else {
-                    var found = false;
-                    for (var i = 0; i < $scope.data.sorts.length; i++)
-                    {
-                        if (column == $scope.data.sorts[i].column) {
-                            found = true;
-                        }
-                    }
-                    if (false == found) {
-                        $scope.data.sorts.push({column: column, direction: 'asc'});
-                    }
-                }
-            } else {
-                if (column == $scope.data.sorts[0]['column']) {
-                    if ('asc' == $scope.data.sorts[0]['direction']) {
-                        $scope.data.sorts = [{column: column, direction: 'desc'}];
-                    } else {
-                        $scope.data.sorts = {};
-                    }
-                } else {
-                    $scope.data.sorts = [{column: column, direction: 'asc'}];
-                }
-            }
+        .success(
+            function(data, status, headers, config) {
+                $scope.data.actions = data.actions;
+                $scope.data.entities = data.entities;
+                $scope.data.exportLink = data.exportLink;
+                $scope.data.filtered = data.filtered;
+                $scope.data.last = data.last;
+                $scope.data.headers = data.headers;
+                $scope.data.page = data.page;
+                $scope.data.total = data.total;
+            }).error(function(data, status, headers, config) {
+                $scope.status = status;
+            });
         }
         $scope.getData();
+        $scope.previousPage = function() {
+            if (1 < parseInt($scope.data.page)) {
+                $scope.data.page = parseInt($scope.data.page) - 1;
+                $scope.getData();
+            }
+        }
+        $scope.nextPage = function() {
+            if (parseInt($scope.data.last) > parseInt($scope.data.page)) {
+                $scope.data.page = parseInt($scope.data.page) + 1;
+                $scope.getData();
+            }
+        }
+        $scope.sort = function(event, column) {
+            if (undefined == $scope.data.sorts.length) {
+                $scope.data.sorts = [{column: column, direction: 'asc'}];
+            } else {
+                if (event.shiftKey) {
+                    if (column == $scope.data.sorts[$scope.data.sorts.length - 1]['column']) {
+                        if ('asc' == $scope.data.sorts[$scope.data.sorts.length - 1]['direction']) {
+                            $scope.data.sorts[$scope.data.sorts.length - 1]['direction'] = 'desc';
+                        } else {
+                            $scope.data.sorts.splice($scope.data.sorts.length - 1, 1);
+                        }
+                    } else {
+                        var found = false;
+                        for (var i = 0; i < $scope.data.sorts.length; i++)
+                        {
+                            if (column == $scope.data.sorts[i].column) {
+                                found = true;
+                            }
+                        }
+                        if (false == found) {
+                            $scope.data.sorts.push({column: column, direction: 'asc'});
+                        }
+                    }
+                } else {
+                    if (column == $scope.data.sorts[0]['column']) {
+                        if ('asc' == $scope.data.sorts[0]['direction']) {
+                            $scope.data.sorts = [{column: column, direction: 'desc'}];
+                        } else {
+                            $scope.data.sorts = {};
+                        }
+                    } else {
+                        $scope.data.sorts = [{column: column, direction: 'asc'}];
+                    }
+                }
+            }
+            $scope.getData();
+        }
     }
-}
