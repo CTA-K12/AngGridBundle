@@ -6,8 +6,7 @@
     <div class="span3">
         <div class="row-fluid">
             <div class="span7">
-                <select data-ng-model="data.exportType" data-ng-change="getData()">
-                    <option></option>
+                <select data-ng-model="data.exportType" data-ng-change="getData()" class="grid-export">
                     <option value="csv">CSV</option>
                     <option value="xls">Excel</option>
                     <option value="tsv">TSV</option>
@@ -35,7 +34,7 @@
             <div class="span6">
                 <div class="row-fluid">
                     <div class="span5">
-                        <select data-ng-model="data.perPage" data-ng-change="getData()">
+                        <select data-ng-model="data.perPage" data-ng-change="getData()" class="grid-control-pages">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
