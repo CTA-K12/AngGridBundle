@@ -11,7 +11,7 @@ class Query
             foreach ( $values as $k => $term ) {
                 $oqb=array();
                 foreach ( $headers as $headerKey => $header ) {
-                    if ('false' == $header['search']) {
+                    if ('false' == $header['searchable']) {
                         continue;
                     }
                     if ( 'text' == $header['type'] ) {
