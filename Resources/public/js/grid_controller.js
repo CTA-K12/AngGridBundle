@@ -10,7 +10,6 @@ function GridController($scope, $http) {
     $scope.data.sorts = {};
 
     $scope.getData = function() {
-        console.log("GetData Called");
         $http({
             method: 'GET',
             url: 'data.json',
@@ -33,35 +32,38 @@ function GridController($scope, $http) {
             $scope.data.total = data.total;
         }).error(function(data, status, headers, config) {
             $scope.status = status;
-            console.log('status');
-            console.log(status);
         });
     }
 
     $scope.getData();
 
-    $("select.grid-export").select2({
-        minimumInputLength:0
-        ,width: "100%"
-    });
+console.log(typeof $("select.grid-export").select2);
 
-    $("select.grid-export").on("change",
-        function (event) {
-            $scope.data.exportType=$(this).val();
-            $scope.getData();
+    if (typeof $("select.grid-export").select2 == 'function'){
+
+        $("select.grid-export").select2({
+            minimumInputLength:0
+            ,width: "100%"
         });
 
-    $("select.grid-control-pages").select2({
-        minimumInputLength:0
-        ,width: "100%"
-    });
+        $("select.grid-export").on("change",
+            function (event) {
+                $scope.data.exportType=$(this).val();
+                $scope.getData();
+            });
 
-    $("select.grid-control-pages").on("change",
-        function (event) {
-            $scope.data.perPage =$(this).val();
-            $scope.getData();
-
+        $("select.grid-pages").select2({
+            minimumInputLength:0
+            ,width: "100%"
         });
+
+        $("select.grid-pages").on("change",
+            function (event) {
+                $scope.data.perPage =$(this).val();
+                $scope.getData();
+            });
+
+    }
 
     $scope.previousPage = function() {
         if (1 < parseInt($scope.data.page)) {
