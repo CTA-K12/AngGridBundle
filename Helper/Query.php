@@ -32,4 +32,14 @@ class Query
         }
         return $query;
     }
+    public static function setOrder($headers, $columns){
+        $newHeaders = array();
+
+        foreach($columns as $column){
+            $newHeaders[$column] = $headers[$column];
+        }
+
+        $newHeaders = array_merge($newHeaders, $headers);
+        return $newHeaders;
+    }
 }
