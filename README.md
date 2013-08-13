@@ -130,7 +130,7 @@ class ExampleController extends Controller
             ->createQueryBuilder( 'e' );
 
         $grid['headers'] = array(
-                'e.id' => array(
+                0 => array(
                     'column' => 't.id',
                     'show' => 'false',
                     'search' => 'false',
@@ -138,7 +138,7 @@ class ExampleController extends Controller
                     'title' => 'ID',
                     'type' => 'text',
                 ),
-                'e.shortName' => array(
+                1 => array(
                     'column' => 'e.shortName',
                     'search' => 'true',
                     'show' => 'true',
@@ -146,7 +146,7 @@ class ExampleController extends Controller
                     'title' => 'Short Name',
                     'type' => 'text',
                 ),
-                'e.longName' => array(
+                2 => array(
                     'column' => 'e.longName',
                     'search' => 'true',
                     'show' => 'true',
@@ -154,7 +154,7 @@ class ExampleController extends Controller
                     'title' => 'Long Name',
                     'type' => 'text',
                 ),
-                'e.description' => array(
+                3 => array(
                     'column' => 'e.description',
                     'search' => 'true',
                     'show' => 'true',
@@ -162,7 +162,7 @@ class ExampleController extends Controller
                     'title' => 'Description',
                     'type' => 'text',
                 ),
-                'e.modified' => array(
+                4 => array(
                     'column' => 'e.modified',
                     'search' => 'true',
                     'show' => 'true',
@@ -171,7 +171,7 @@ class ExampleController extends Controller
                     'type' => 'date',
                 ),
                 ),
-                'e.active' => array(
+                5 => array(
                     'column' => 'e.modified',
                     'search' => 'false',
                     'show' => 'true',
@@ -227,11 +227,11 @@ class ExampleController extends Controller
                     'example_edit' => $this->generateUrl('example_edit', array('id' => $result->getId())),
                 ),
                 'values' => array(
-                    'e.id'          => $result->getId(),
-                    'e.shortName'   => $result->getShortName(),
-                    'e.longName'    => $result->getLongName(),
-                    'e.description' => $result->getDescription(),
-                    'e.modified'    => $result->getModified()->format('Y-m-d H:i:s'),
+                    0 => $result->getId(),
+                    1 => $result->getShortName(),
+                    2 => $result->getLongName(),
+                    3 => $result->getDescription(),
+                    4 => $result->getModified()->format('Y-m-d H:i:s'),
                 ),
             );
         }

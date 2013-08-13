@@ -97,8 +97,8 @@
                         </a>
                     </span>
                 </td>
-                <td data-ng-repeat="header in data.headers" data-role-th="{{ header.title }}">
-                    <div data-ng-bind="entity.values[header.column] | filter: checkmark"></div>
+                <td data-ng-repeat="(key, header) in data.headers" data-role-th="{{ header.title }}">
+                    <div data-ng-bind="entity.values[key] | filter: checkmark"></div>
                 </td>
             </tr>
         </tbody>
