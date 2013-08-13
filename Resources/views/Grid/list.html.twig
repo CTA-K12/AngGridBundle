@@ -78,7 +78,7 @@
                 <th>
                     <span>Actions</span>
                 </th>
-                <th data-ng-repeat="header in data.headers" data-ng-click="sort($event, header.column)">
+                <th data-ng-repeat="(key, header) in data.headers" data-ng-click="sort($event, key)">
                     <span>
                         {{ header.title}} <span class="{{ header.sortIcon }}"></span>
                     </span>
