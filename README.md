@@ -115,14 +115,12 @@ class ExampleController extends Controller
                     'class' => 'btn-info',
                     'icon' => 'icon-search',
                     'title' => 'Show',
-                    'text' => '',
                 ),
                 'example_edit' => array(
                     'alias' => 'example_edit',
                     'class' => 'btn-primary',
                     'icon' => 'icon-pencil',
                     'title' => 'Edit',
-                    'text' => '',
                 )
             )
         ;
@@ -130,8 +128,6 @@ class ExampleController extends Controller
         $em = $this->getDoctrine()->getManager();
         $qb= $em->getRepository( 'MESDAngGridBundle:Example' )
             ->createQueryBuilder( 'e' );
-
-        $grid['idColumn'] = 'e.id';
 
         $grid['headers'] = array(
                 'e.id' => array(
@@ -226,13 +222,18 @@ class ExampleController extends Controller
         $grid['entities'] = array();
         foreach($results as $result) {
             $grid['entities'][] = array(
+                'paths' => array(
+                    'example_show' => $this->generateUrl('example_show', array('id' => $result->getId())),
+                    'example_edit' => $this->generateUrl('example_edit', array('id' => $result->getId())),
+                ),
+                'values' => array(
                     'e.id'          => $result->getId(),
                     'e.shortName'   => $result->getShortName(),
                     'e.longName'    => $result->getLongName(),
                     'e.description' => $result->getDescription(),
-                    'e.modified'    => $result->getModified(),
-                )
-            ;
+                    'e.modified'    => $result->getModified()->format('Y-m-d H:i:s'),
+                ),
+            );
         }
 
         if ($export) {
@@ -249,16 +250,12 @@ class ExampleController extends Controller
         }
 
         if (is_null($grid['exportType'])) {
-            $grid['exportAlias'] = '';
+            $grid['exportLink'] = '';
         } else {
-            $grid['exportAlias'] = 'caseload_export';
+            $grid['exportLink'] = $this->generateUrl('caseload_export', array('exportType' => $grid['exportType'])) . '?exportString=true&search=' . $grid['search'] . '&sorts=' . $grid['sortsString'];
         }
 
-        return $this->render('MESDAngGridBundle:Grid:data.json.twig',
-            array(
-                'grid' => $grid,
-            )
-        );
+        return new JsonResponse($grid);
     }
 }
 ```
