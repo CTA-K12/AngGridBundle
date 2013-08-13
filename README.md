@@ -209,7 +209,7 @@ class ExampleController extends Controller
         if (!is_null($grid['sortsString'])) {
             $grid['sorts'] = json_decode($grid['sortsString']);
             foreach($grid['sorts'] as $sort) {
-                $qb->addOrderBy($sort->column, $sort->direction);
+                $qb->addOrderBy($grid['headers'][intval($sort->column)]['column'], $sort->direction);
                 if ('asc' == $sort->direction) {
                     $grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
                 } else {
