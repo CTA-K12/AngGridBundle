@@ -78,7 +78,7 @@
                 <th>
                     <span>Actions</span>
                 </th>
-                <th data-ng-repeat="(key, header) in data.headers" data-ng-click="sort($event, key)">
+                <th data-ng-repeat="(headerKey, header) in data.headers" data-ng-click="sort($event, headerKey)">
                     <span>
                         {{ header.title}} <span class="{{ header.sortIcon }}"></span>
                     </span>
@@ -92,13 +92,13 @@
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[action.alias] }}" title="{{ action.title }}">
+                        <a data-ng-repeat="(actionKey, action) in data.actions" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[actionKey] }}" title="{{ action.title }}">
                             <span class="{{action.icon}}"></span> {{action.text}}
                         </a>
                     </span>
                 </td>
-                <td data-ng-repeat="(key, header) in data.headers" data-role-th="{{ header.title }}">
-                    <div data-ng-bind="entity.values[key] | filter: checkmark"></div>
+                <td data-ng-repeat="(headerKey, header) in data.headers" data-role-th="{{ header.title }}">
+                    <div data-ng-bind="entity.values[headerKey] | filter: checkmark"></div>
                 </td>
             </tr>
         </tbody>

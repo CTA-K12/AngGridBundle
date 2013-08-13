@@ -110,14 +110,12 @@ class ExampleController extends Controller
         }
 
         $grid['actions'] = array(
-                'example_show' => array(
-                    'alias' => 'example_show',
+                0 => array(
                     'class' => 'btn-info',
                     'icon' => 'icon-search',
                     'title' => 'Show',
                 ),
-                'example_edit' => array(
-                    'alias' => 'example_edit',
+                1 => array(
                     'class' => 'btn-primary',
                     'icon' => 'icon-pencil',
                     'title' => 'Edit',
@@ -224,8 +222,8 @@ class ExampleController extends Controller
         foreach($results as $result) {
             $grid['entities'][] = array(
                 'paths' => array(
-                    'example_show' => $this->generateUrl('example_show', array('id' => $result->getId())),
-                    'example_edit' => $this->generateUrl('example_edit', array('id' => $result->getId())),
+                    0 => $this->generateUrl('example_show', array('id' => $result->getId())),
+                    1 => $this->generateUrl('example_edit', array('id' => $result->getId())),
                 ),
                 'values' => array(
                     0 => $result->getId(),
