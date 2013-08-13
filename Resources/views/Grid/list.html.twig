@@ -78,7 +78,7 @@
                 <th>
                     <span>Actions</span>
                 </th>
-                <th data-ng-repeat="header in data.headers | filter: !header.show" data-ng-click="sort($event, header.column)">
+                <th data-ng-repeat="header in data.headers" data-ng-click="sort($event, header.column)">
                     <span>
                         {{ header.title}} <span class="{{ header.sortIcon }}"></span>
                     </span>
@@ -92,16 +92,19 @@
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }} {{action.icon}}" data-ng-href="{{ entity.paths[action.alias] }}" title="{{ action.title }}">
-                            {{action.text}}
+                        <a data-ng-repeat="action in data.actions" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[action.alias] }}" title="{{ action.title }}">
+                            <span class="{{action.icon}}"></span> {{action.text}}
                         </a>
                     </span>
                 </td>
-                <td data-ng-repeat="header in data.headers | filter: !header.show" data-role-th="{{ header.title }}">
+                <td data-ng-repeat="header in data.headers" data-role-th="{{ header.title }}">
                     <div data-ng-bind="entity.values[header.column] | filter: checkmark"></div>
                 </td>
             </tr>
         </tbody>
     </table>
+    <ul>
+        <li data-ng-repeat="header in data.headers">{{header.title}}</li>
+    </ul>
 </div>
 {% endverbatim %}
