@@ -42,4 +42,12 @@ class Query
         $newHeaders = array_merge($newHeaders, $headers);
         return $newHeaders;
     }
+
+    public static function hideColumns($headers, $columns){
+
+        foreach($columns as $column){
+            unset($headers[$column]);
+        }
+        return $headers;
+    }
 }
