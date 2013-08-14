@@ -9,6 +9,13 @@ function GridController($scope, $http) {
     $scope.data.search = '';
     $scope.data.sorts = {};
 
+    $scope.notSorted = function(obj){
+        if (!obj) {
+            return [];
+        }
+        return Object.keys(obj);
+    }
+
     $scope.getData = function() {
         $http({
             method: 'GET',
