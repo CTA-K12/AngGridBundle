@@ -92,8 +92,8 @@
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="(actionKey, action) in data.actions" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[actionKey] }}" title="{{ action.title }}">
-                            <span class="{{action.icon}}"></span> {{action.text}}
+                        <a data-ng-repeat="action in notSorted(data.actions)" data-ng-init="value=data.actions[action]" class="btn {{ action.class }}" data-ng-href="{{ entity.paths[actionKey] }}" title="{{ action.title }}">
+                            <span class="{{data.actions[action].icon}}"></span> {{data.actions[action].text}}
                         </a>
                     </span>
                 </td>
