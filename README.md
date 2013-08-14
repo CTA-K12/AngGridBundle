@@ -168,7 +168,6 @@ class ExampleController extends Controller
                     'title' => 'Modified',
                     'type' => 'date',
                 ),
-                ),
                 5 => array(
                     'column' => 'e.modified',
                     'search' => 'false',
