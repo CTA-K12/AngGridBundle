@@ -6,7 +6,7 @@ class Query
 {
     public static function search($query, $value, $headers)
     {
-        if ( isset( $value ) ) {
+        if ('' != $value) {
             $values = explode( ' ', str_replace( array( ',', ';' ), ' ', $value ) );
             foreach ( $values as $k => $term ) {
                 $oqb=array();

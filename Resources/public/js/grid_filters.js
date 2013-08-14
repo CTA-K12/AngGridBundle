@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('gridFilters', [])
     .filter('checkmark', function() {
         return function(input) {

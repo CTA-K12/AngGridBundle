@@ -111,12 +111,12 @@ class ExampleController extends Controller
 
         $grid['actions'] = array(
                 0 => array(
-                    'class' => 'btn-info',
+                    'class' => 'btn-mini btn-default action',
                     'icon' => 'icon-search',
                     'title' => 'Show',
                 ),
                 1 => array(
-                    'class' => 'btn-primary',
+                    'class' => 'btn-mini btn-default action',
                     'icon' => 'icon-pencil',
                     'title' => 'Edit',
                 )
