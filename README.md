@@ -129,52 +129,32 @@ class ExampleController extends Controller
 
         $grid['headers'] = array(
                 0 => array(
-                    'column' => 'e.id',
-                    'show' => 'false',
-                    'search' => 'false',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'ID',
-                    'type' => 'text',
-                ),
-                1 => array(
                     'column' => 'e.shortName',
                     'search' => 'true',
-                    'show' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Short Name',
                     'type' => 'text',
                 ),
-                2 => array(
+                1 => array(
                     'column' => 'e.longName',
                     'search' => 'true',
-                    'show' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Long Name',
                     'type' => 'text',
                 ),
-                3 => array(
+                2 => array(
                     'column' => 'e.description',
                     'search' => 'true',
-                    'show' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Description',
                     'type' => 'text',
                 ),
-                4 => array(
+                3 => array(
                     'column' => 'e.modified',
                     'search' => 'true',
-                    'show' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Modified',
                     'type' => 'date',
-                ),
-                5 => array(
-                    'column' => 'e.modified',
-                    'search' => 'false',
-                    'show' => 'true',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'Modified',
-                    'type' => 'boolean',
                 ),
             )
         ;
@@ -225,11 +205,10 @@ class ExampleController extends Controller
                     1 => $this->generateUrl('example_edit', array('id' => $result->getId())),
                 ),
                 'values' => array(
-                    0 => $result->getId(),
-                    1 => $result->getShortName(),
-                    2 => $result->getLongName(),
-                    3 => $result->getDescription(),
-                    4 => $result->getModified()->format('Y-m-d H:i:s'),
+                    0 => $result->getShortName(),
+                    1 => $result->getLongName(),
+                    2 => $result->getDescription(),
+                    3 => $result->getModified()->format('Y-m-d H:i:s'),
                 ),
             );
         }
