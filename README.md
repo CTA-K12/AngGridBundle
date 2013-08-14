@@ -135,35 +135,30 @@ class ExampleController extends Controller
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Short Name',
-                    'type' => 'text',
                 ),
                 'example.longName' => array(
                     'column' => 'example.longName',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Long Name',
-                    'type' => 'text',
                 ),
                 'example.description' => array(
                     'column' => 'example.description',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Description',
-                    'type' => 'text',
                 ),
                 'example.modified' => array(
                     'column' => 'example.modified',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Modified',
-                    'type' => 'date',
                 ),
                 'example.active' => array(
                     'column' => 'example.active',
                     'searchable' => 'false',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Active',
-                    'type' => 'boolean',
                 ),
             )
         ;
