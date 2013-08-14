@@ -132,6 +132,7 @@ class ExampleController extends Controller
         $grid['headers'] = array(
                 'example.shortName' => array(
                     'column' => 'example.shortName',
+                    'id' => 'shortName',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Short Name',
@@ -139,6 +140,7 @@ class ExampleController extends Controller
                 ),
                 'example.longName' => array(
                     'column' => 'example.longName',
+                    'id' => 'longName',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Long Name',
@@ -146,6 +148,7 @@ class ExampleController extends Controller
                 ),
                 'example.description' => array(
                     'column' => 'example.description',
+                    'id' => 'description',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Description',
@@ -153,6 +156,7 @@ class ExampleController extends Controller
                 ),
                 'example.modified' => array(
                     'column' => 'example.modified',
+                    'id' => 'modified',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Modified',
@@ -160,6 +164,7 @@ class ExampleController extends Controller
                 ),
                 'example.active' => array(
                     'column' => 'example.active',
+                    'id' => 'active',
                     'searchable' => 'false',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Active',
