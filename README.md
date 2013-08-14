@@ -130,28 +130,28 @@ class ExampleController extends Controller
         $grid['headers'] = array(
                 0 => array(
                     'column' => 'e.shortName',
-                    'search' => 'true',
+                    'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Short Name',
                     'type' => 'text',
                 ),
                 1 => array(
                     'column' => 'e.longName',
-                    'search' => 'true',
+                    'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Long Name',
                     'type' => 'text',
                 ),
                 2 => array(
                     'column' => 'e.description',
-                    'search' => 'true',
+                    'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Description',
                     'type' => 'text',
                 ),
                 3 => array(
                     'column' => 'e.modified',
-                    'search' => 'true',
+                    'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Modified',
                     'type' => 'date',
