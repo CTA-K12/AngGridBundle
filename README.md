@@ -170,7 +170,8 @@ class ExampleController extends Controller
 
         $qb->select('count(example)');
         $grid['total'] = $qb->getQuery()->getSingleScalarResult();
-        $grid['headers'] = Query::hideColumns($grid['headers'], array('example.id'));
+        $grid['headers'] = Query::setOrder($grid['headers'],array('example.shortName','example.longName','example.description','example.modified'));
+        $grid['headers'] = Query::hideColumns($grid['headers'],array('example.id'));
         $qb = Query::search($qb, $grid['search'], $grid['headers']);
         $grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
 
