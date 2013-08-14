@@ -121,7 +121,7 @@ class ExampleController extends Controller
                     'class' => 'btn-mini btn-default action',
                     'icon' => 'icon-pencil',
                     'title' => 'Edit',
-                )
+                ),
             )
         ;
 
