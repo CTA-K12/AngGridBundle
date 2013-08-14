@@ -161,7 +161,7 @@ class ExampleController extends Controller
 
         $qb->select('count(e)');
         $grid['total'] = $qb->getQuery()->getSingleScalarResult();
-                    $grid['headers'] = Query::setOrder($grid['headers'],array('e.shortName','e.longName','e.description','e.modified'));
+        $grid['headers'] = Query::setOrder($grid['headers'],array('e.shortName','e.longName','e.description','e.modified'));
         $grid['headers'] = Query::hideColumns($grid['headers'],array('e.id'));
         $qb = Query::search($qb, $grid['search'], $grid['headers']);
         $grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
