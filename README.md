@@ -110,12 +110,14 @@ class ExampleController extends Controller
         }
 
         $grid['actions'] = array(
-                0 => array(
+                'example_show' => array(
+                    'alias' => 'example_show',
                     'class' => 'btn-mini btn-default action',
                     'icon' => 'icon-search',
                     'title' => 'Show',
                 ),
-                1 => array(
+                'example_edit' => array(
+                    'alias' => 'example_edit',
                     'class' => 'btn-mini btn-default action',
                     'icon' => 'icon-pencil',
                     'title' => 'Edit',
@@ -125,44 +127,51 @@ class ExampleController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $qb= $em->getRepository( 'MESDAngGridBundle:Example' )
-            ->createQueryBuilder( 'e' );
+            ->createQueryBuilder( 'example' );
 
         $grid['headers'] = array(
-                0 => array(
-                    'column' => 'e.shortName',
+                'example.shortName' => array(
+                    'column' => 'example.shortName',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Short Name',
                     'type' => 'text',
                 ),
-                1 => array(
-                    'column' => 'e.longName',
+                'example.longName' => array(
+                    'column' => 'example.longName',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Long Name',
                     'type' => 'text',
                 ),
-                2 => array(
-                    'column' => 'e.description',
+                'example.description' => array(
+                    'column' => 'example.description',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Description',
                     'type' => 'text',
                 ),
-                3 => array(
-                    'column' => 'e.modified',
+                'example.modified' => array(
+                    'column' => 'example.modified',
                     'searchable' => 'true',
                     'sortIcon' => 'icon-sort',
                     'title' => 'Modified',
                     'type' => 'date',
                 ),
+                'example.active' => array(
+                    'column' => 'example.active',
+                    'searchable' => 'false',
+                    'sortIcon' => 'icon-sort',
+                    'title' => 'Active',
+                    'type' => 'boolean',
+                ),
             )
         ;
 
-        $qb->select('count(e)');
+        $qb->select('count(example)');
         $grid['total'] = $qb->getQuery()->getSingleScalarResult();
-        $grid['headers'] = Query::setOrder($grid['headers'],array('e.shortName','e.longName','e.description','e.modified'));
-        $grid['headers'] = Query::hideColumns($grid['headers'],array('e.id'));
+        $grid['headers'] = Query::setOrder($grid['headers'],array('example.shortName','example.longName','example.description','example.modified'));
+        $grid['headers'] = Query::hideColumns($grid['headers'],array('example.id'));
         $qb = Query::search($qb, $grid['search'], $grid['headers']);
         $grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
 
@@ -181,7 +190,7 @@ class ExampleController extends Controller
             ->setMaxResults($grid['perPage']);
         }
 
-        $qb->select( 'e' )
+        $qb->select('example')
         ;
 
         if (!is_null($grid['sortsString'])) {
@@ -202,14 +211,15 @@ class ExampleController extends Controller
         foreach($results as $result) {
             $grid['entities'][] = array(
                 'paths' => array(
-                    0 => $this->generateUrl('example_show', array('id' => $result->getId())),
-                    1 => $this->generateUrl('example_edit', array('id' => $result->getId())),
+                    'example_show' => $this->generateUrl('example_show', array('id' => $result->getId())),
+                    'example_edit' => $this->generateUrl('example_edit', array('id' => $result->getId())),
                 ),
                 'values' => array(
-                    0 => $result->getShortName(),
-                    1 => $result->getLongName(),
-                    2 => $result->getDescription(),
-                    3 => $result->getModified()->format('Y-m-d H:i:s'),
+                    'example.shortName' => $result->getShortName(),
+                    'example.longName' => $result->getLongName(),
+                    'example.description' => $result->getDescription(),
+                    'example.modified' => $result->getModified()->format('Y-m-d H:i:s'),
+                    'example.active' => $result->getActive() ? '✔' : '✘',
                 ),
             );
         }
