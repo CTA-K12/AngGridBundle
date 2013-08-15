@@ -44,8 +44,6 @@ function GridController($scope, $http) {
 
     $scope.getData();
 
-console.log(typeof $("select.grid-export").select2);
-
     if (typeof $("select.grid-export").select2 == 'function'){
 
         $("select.grid-export").select2({
