@@ -94,7 +94,7 @@
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in notSorted(data.actions)" data-ng-init="value=data.actions[action]" class="btn {{ data.actions[action].class }}" data-ng-show="entity.paths[action]" data-ng-href="{{ entity.paths[action] }}" title="{{ data.actions[action].title }}">
+                        <a data-ng-repeat="action in notSorted(entity.paths)" data-ng-init="value=data.actions[action]" class="btn {{ data.actions[action].class }}" data-ng-href="{{ entity.paths[action] }}" title="{{ data.actions[action].title }}">
                             <span class="{{data.actions[action].icon}}"></span> {{data.actions[action].text}}
                         </a>
                     </span>
