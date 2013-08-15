@@ -51,9 +51,9 @@ example:
     pattern:  /
     defaults: { _controller: "MESDAngGridBundle:Grid:index" }
 
-example_list:
-    pattern:  /list
-    defaults: { _controller: "MESDAngGridBundle:Grid:list" }
+example_grid:
+    pattern:  /grid
+    defaults: { _controller: "MESDAngGridBundle:Grid:grid" }
 
 example_data:
     pattern: /data.json
