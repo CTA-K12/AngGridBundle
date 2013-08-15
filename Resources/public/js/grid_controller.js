@@ -121,7 +121,4 @@ function GridController($scope, $http) {
         $scope.getData();
     }
 
-    $scope.count = function() {
-        console.log($scope.data);
-    }
 }
