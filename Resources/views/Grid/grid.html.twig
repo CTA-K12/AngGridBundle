@@ -88,7 +88,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-hide="data.entities.length">
+            <tr data-ng-show="!data.filtered">
                 <td>No matches found.</td>
             </tr>
             <tr data-ng-repeat="entity in data.entities">

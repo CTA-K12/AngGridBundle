@@ -37,6 +37,7 @@ function GridController($scope, $http) {
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
             $scope.data.total = data.total;
+            console.log(data.filtered);
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
@@ -118,5 +119,9 @@ function GridController($scope, $http) {
             }
         }
         $scope.getData();
+    }
+
+    $scope.count = function() {
+        console.log($scope.data);
     }
 }
