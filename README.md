@@ -82,9 +82,9 @@ class ExampleController extends Controller
         return $this->render('MESDAngGridBundle:Grid:index.html.twig');
     }
 
-    public function listAction()
+    public function gridAction()
     {
-        return $this->render('MESDAngGridBundle:Grid:list.html.twig', array('ngController' => 'GridController'));
+        return $this->render('MESDAngGridBundle:Grid:grid.html.twig', array('ngController' => 'GridController'));
     }
 
     public function dataAction(Request $request, $exportType = null)

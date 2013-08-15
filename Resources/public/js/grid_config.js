@@ -4,7 +4,7 @@ angular.module('gridModule', ['gridFilters'])
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'list',
+                templateUrl: 'grid',
                 controller: GridController
             })
             .otherwise({
