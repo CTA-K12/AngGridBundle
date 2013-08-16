@@ -40,7 +40,6 @@ function GridController($scope, $http) {
                 $scope.data.last = data.last;
                 $scope.data.headers = data.headers;
                 $scope.data.page = data.page;
-                $scope.data.requestCount = data.requestCount;
                 $scope.data.total = data.total;
             }
         }).error(function(data, status, headers, config) {
