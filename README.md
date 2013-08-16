@@ -49,33 +49,33 @@ src/MESD/App/ExampleBundle/Resources/config/routing/example.yml
 ```yml
 example:
     pattern:  /
-    defaults: { _controller: "MESDAngGridBundle:Grid:index" }
+    defaults: { _controller: "MESDAppChangeThisBundle:ChangeThis:index" }
 
 example_grid:
     pattern:  /grid
-    defaults: { _controller: "MESDAngGridBundle:Grid:grid" }
+    defaults: { _controller: "MESDAppChangeThisBundle:ChangeThis:grid" }
 
 example_data:
     pattern: /data.json
-    defaults: { _controller: "MESDAngGridBundle:Grid:data" }
+    defaults: { _controller: "MESDAppChangeThisBundle:ChangeThis:data" }
 
 example_export:
     pattern: /export.{exportType}
-    defaults: { _controller: "MESDAngGridBundle:Grid:data" }
+    defaults: { _controller: "MESDAppChangeThisBundle:ChangeThis:data" }
 ```
 
-src/MESD/App/ExampleBundle/ExampleController.php
+src/MESD/App/ChangeThisBundle/ChangeThisController.php
 ```php
 <?php
 
-namespace MESD\Ang\GridBundle\Controller;
+namespace MESD\App\ChangeThisBundle\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use MESD\Ang\GridBundle\Helper\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExampleController extends Controller
+class ChangeThisController extends Controller
 {
     public function indexAction()
     {
