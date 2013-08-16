@@ -73,7 +73,7 @@ function GridController($scope, $http) {
         $("select.grid-export").on("change",
             function (event) {
                 $scope.data.exportType=$(this).val();
-                $scope.getData();
+                $scope.makeRequest();
             });
 
         $("select.grid-pages").select2({
@@ -84,7 +84,7 @@ function GridController($scope, $http) {
         $("select.grid-pages").on("change",
             function (event) {
                 $scope.data.perPage =$(this).val();
-                $scope.getData();
+                $scope.makeRequest();
             });
 
     }
@@ -92,13 +92,13 @@ function GridController($scope, $http) {
     $scope.previousPage = function() {
         if (1 < parseInt($scope.data.page)) {
             $scope.data.page = parseInt($scope.data.page) - 1;
-            $scope.getData();
+            $scope.makeRequest();
         }
     }
     $scope.nextPage = function() {
         if (parseInt($scope.data.last) > parseInt($scope.data.page)) {
             $scope.data.page = parseInt($scope.data.page) + 1;
-            $scope.getData();
+            $scope.makeRequest();
         }
     }
     $scope.sort = function(event, column) {
@@ -136,7 +136,7 @@ function GridController($scope, $http) {
                 }
             }
         }
-        $scope.getData();
+        $scope.makeRequest();
     }
 
 }
