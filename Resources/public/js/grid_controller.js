@@ -32,16 +32,17 @@ function GridController($scope, $http) {
             }
         }).success(
         function(data, status, headers, config) {
-            if (parseInt(data.requestCount) == $scope.data.requestCount) {
-                $scope.data.actions = data.actions;
-                $scope.data.entities = data.entities;
-                $scope.data.exportLink = data.exportLink;
-                $scope.data.filtered = data.filtered;
-                $scope.data.last = data.last;
-                $scope.data.headers = data.headers;
-                $scope.data.page = data.page;
-                $scope.data.total = data.total;
+            if (parseInt(data.requestCount) != $scope.data.requestCount) {
+                return;
             }
+            $scope.data.actions = data.actions;
+            $scope.data.entities = data.entities;
+            $scope.data.exportLink = data.exportLink;
+            $scope.data.filtered = data.filtered;
+            $scope.data.last = data.last;
+            $scope.data.headers = data.headers;
+            $scope.data.page = data.page;
+            $scope.data.total = data.total;
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
