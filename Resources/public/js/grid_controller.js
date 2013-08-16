@@ -8,6 +8,7 @@ function GridController($scope, $http) {
     $scope.data.exportType ='csv';
     $scope.data.search = '';
     $scope.data.sorts = {};
+    $scope.data.requestCount = 0;
 
     $scope.notSorted = function(obj){
         if (!obj) {
@@ -16,7 +17,21 @@ function GridController($scope, $http) {
         return Object.keys(obj);
     }
 
-    $scope.getData = function() {
+    $scope.makeRequest = function() {
+        $scope.data.requestCount += 1;
+        $scope.sendRequest($scope.data.requestCount);
+    }
+
+    $scope.sendRequest = function(i) {
+        setTimeout(function() {
+            $scope.getData(i)
+        }, 300);
+    }
+
+    $scope.getData = function(count) {
+        if (count != $scope.data.requestCount) {
+            return;
+        }
         $http({
             method: 'GET',
             url: 'data.json',
@@ -24,11 +39,15 @@ function GridController($scope, $http) {
                 "exportType": $scope.data.exportType,
                 "page": $scope.data.page,
                 "perPage": $scope.data.perPage,
+                "requestCount": $scope.data.requestCount,
                 "search": $scope.data.search,
-                "sorts": $scope.data.sorts
+                "sorts": $scope.data.sorts,
             }
         }).success(
         function(data, status, headers, config) {
+            if (parseInt(data.requestCount) != $scope.data.requestCount) {
+                return;
+            }
             $scope.data.actions = data.actions;
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
@@ -37,13 +56,12 @@ function GridController($scope, $http) {
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
             $scope.data.total = data.total;
-            console.log(data.filtered);
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
     }
 
-    $scope.getData();
+    $scope.makeRequest();
 
     if (typeof $("select.grid-export").select2 == 'function'){
 
