@@ -17,8 +17,21 @@ function GridController($scope, $http) {
         return Object.keys(obj);
     }
 
-    $scope.getData = function() {
+    $scope.makeRequest = function() {
         $scope.data.requestCount += 1;
+        $scope.sendRequest($scope.data.requestCount);
+    }
+
+    $scope.sendRequest = function(i) {
+        setTimeout(function() {
+            $scope.getData(i)
+        }, 300);
+    }
+
+    $scope.getData = function(count) {
+        if (count != $scope.data.requestCount) {
+            return;
+        }
         $http({
             method: 'GET',
             url: 'data.json',
@@ -48,7 +61,7 @@ function GridController($scope, $http) {
         });
     }
 
-    $scope.getData();
+    $scope.makeRequest();
 
     if (typeof $("select.grid-export").select2 == 'function'){
 
