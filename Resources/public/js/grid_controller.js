@@ -8,6 +8,7 @@ function GridController($scope, $http) {
     $scope.data.exportType ='csv';
     $scope.data.search = '';
     $scope.data.sorts = {};
+    $scope.data.requestCount = 0;
 
     $scope.notSorted = function(obj){
         if (!obj) {
@@ -17,6 +18,7 @@ function GridController($scope, $http) {
     }
 
     $scope.getData = function() {
+        $scope.data.requestCount += 1;
         $http({
             method: 'GET',
             url: 'data.json',
@@ -24,20 +26,23 @@ function GridController($scope, $http) {
                 "exportType": $scope.data.exportType,
                 "page": $scope.data.page,
                 "perPage": $scope.data.perPage,
+                "requestCount": $scope.data.requestCount,
                 "search": $scope.data.search,
-                "sorts": $scope.data.sorts
+                "sorts": $scope.data.sorts,
             }
         }).success(
         function(data, status, headers, config) {
-            $scope.data.actions = data.actions;
-            $scope.data.entities = data.entities;
-            $scope.data.exportLink = data.exportLink;
-            $scope.data.filtered = data.filtered;
-            $scope.data.last = data.last;
-            $scope.data.headers = data.headers;
-            $scope.data.page = data.page;
-            $scope.data.total = data.total;
-            console.log(data.filtered);
+            if (parseInt(data.requestCount) == $scope.data.requestCount) {
+                $scope.data.actions = data.actions;
+                $scope.data.entities = data.entities;
+                $scope.data.exportLink = data.exportLink;
+                $scope.data.filtered = data.filtered;
+                $scope.data.last = data.last;
+                $scope.data.headers = data.headers;
+                $scope.data.page = data.page;
+                $scope.data.requestCount = data.requestCount;
+                $scope.data.total = data.total;
+            }
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
