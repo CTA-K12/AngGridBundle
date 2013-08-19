@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('gridFilters', [])
-    .filter('checkmark', function() {
+    .filter('boolean' , function() {
         return function(input) {
-            return input ? '\u2713' : '\u2718';
+            console.log("Input");
+            console.log(input);
+            return ('true' == input) ? 'true-check' : 'false-ex';
         };
     });
+
+

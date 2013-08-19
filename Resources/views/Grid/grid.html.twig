@@ -1,3 +1,4 @@
+{% block controls %}
 {% verbatim %}
 <div class="row-fluid" data-ng-module="task" data-ng-controller="{% endverbatim %}{{ ngController }}{% verbatim %}" style="line-height:2em;">
     <div class="span5">
@@ -74,6 +75,10 @@
             </div>
         </div>
     </div>
+{% endverbatim %}
+{% endblock controls %}
+{% block tableheader %}
+{% verbatim %}
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
             <tr>
@@ -86,7 +91,15 @@
                     </span>
                 </th>
             </tr>
+{% endverbatim %}
+{% block extraheader %}
+{% endblock extraheader %}
+{% verbatim %}
         </thead>
+{% endverbatim %}
+{% endblock tableheader %}
+{% block tablebody %}
+{% verbatim %}
         <tbody>
             <tr data-ng-show="!data.filtered">
                 <td>No matches found.</td>
@@ -100,10 +113,14 @@
                     </span>
                 </td>
                 <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th="{{ data.headers[header].title }}">
-                    <div data-ng-bind="entity.values[data.headers[header].column] | filter: checkmark"></div>
+                    <div ng-switch on="data.headers[header].html">
+                        <div ng-switch-when="true" data-ng-bind-html-unsafe="entity.values[data.headers[header].column]"></div>
+                        <div ng-switch-default data-ng-bind="entity.values[data.headers[header].column]"></div>
+                    </div>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
 {% endverbatim %}
+{% endblock tablebody %}
