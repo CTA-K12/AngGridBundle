@@ -70,6 +70,8 @@ function GridController($scope, $http) {
             ,width: "100%"
         });
 
+        $('input.s2').each(starts2);
+
         $("select.grid-export").on("change",
             function (event) {
                 $scope.data.exportType=$(this).val();
@@ -138,5 +140,13 @@ function GridController($scope, $http) {
         }
         $scope.makeRequest();
     }
+
+    $scope.boolean = function(func) {
+        return function(input) {
+            console.log("Input");
+            console.log(input);
+            return ('true' == input) ? 'true-check' : 'false-ex';
+        }
+    };
 
 }
