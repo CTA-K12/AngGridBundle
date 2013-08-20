@@ -1,6 +1,7 @@
+{% block grid %}
 {% block controls %}
-{% verbatim %}
-<div class="row-fluid" data-ng-module="task" data-ng-controller="{% endverbatim %}{{ ngController }}{% verbatim %}" style="line-height:2em;">
+                                            {# {{ ngController }} is twig-- don't verbatim that#}
+<div class="row-fluid" data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
     <div class="span5">
         <div class="row-fluid search-control">
             <div class="span6">
@@ -18,7 +19,7 @@
                         </select>
                     </div>
                     <div class="span7">
-                        <a class="btn" data-ng-href="{{ data.exportLink }}" target="_blank">
+                        <a class="btn" data-ng-href="{% verbatim %}{{ data.exportLink }}{% endverbatim %}" target="_blank">
                             <div class="icon-save"> Export</div>
                         </a>
                     </div>
@@ -75,44 +76,38 @@
             </div>
         </div>
     </div>
-{% endverbatim %}
 {% endblock controls %}
-{% block tableheader %}
-{% verbatim %}
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
+{% block tableheader %}
             <tr>
                 <th>
                     <span>Actions</span>
                 </th>
-                <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id="{{ data.headers[header].id }}">
+                <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %}>
                     <span>
-                       {{data.headers[header].title}} <span class="{{ data.headers[header].sortIcon }}">
+                    {% verbatim %}{{data.headers[header].title}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}
                     </span>
                 </th>
             </tr>
-{% endverbatim %}
+        </thead>
+        <tbody>
+{% endblock tableheader %}
 {% block extraheader %}
 {% endblock extraheader %}
-{% verbatim %}
-        </thead>
-{% endverbatim %}
-{% endblock tableheader %}
 {% block tablebody %}
-{% verbatim %}
-        <tbody>
             <tr data-ng-show="!data.filtered">
                 <td>No matches found.</td>
             </tr>
             <tr data-ng-repeat="entity in data.entities">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in notSorted(entity.paths)" data-ng-init="value=data.actions[action]" class="btn {{ data.actions[action].class }}" data-ng-href="{{ entity.paths[action] }}" title="{{ data.actions[action].title }}">
-                            <span class="{{data.actions[action].icon}}"></span> {{data.actions[action].text}}
+                        <a data-ng-repeat="action in notSorted(entity.paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"btn {{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ entity.paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
+                            <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
                         </a>
                     </span>
                 </td>
-                <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th="{{ data.headers[header].title }}">
+                <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
                     <div ng-switch on="data.headers[header].html">
                         <div ng-switch-when="true" data-ng-bind-html-unsafe="entity.values[data.headers[header].column]"></div>
                         <div ng-switch-default data-ng-bind="entity.values[data.headers[header].column]"></div>
@@ -122,5 +117,5 @@
         </tbody>
     </table>
 </div>
-{% endverbatim %}
 {% endblock tablebody %}
+{% endblock grid %}
