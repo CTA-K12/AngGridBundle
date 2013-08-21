@@ -7,13 +7,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GridManager
 {
+    private $controller;
     private $export;
     private $grid;
     private $queryBuilder;
+    private $root;
 
-    public function __construct($queryBuilder, $request, $exportType)
+    public function __construct($root, $queryBuilder, $request, $exportType, $controller)
     {
+        $this->controller = $controller;
         $this->queryBuilder = $queryBuilder;
+        $this->root = $root;
 
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
@@ -36,33 +40,57 @@ class GridManager
         }
     }
 
-    public function setHeader($column)
+    public function setAction($item)
     {
-        $name = $column['column'];
-        if (!isset($column['header'])) {
-            $column['header'] = $name;
+        $alias = $item['alias'];
+        if (!isset($item['class'])) {
+            $item['class'] = 'btn-mini action btn-default';
         }
-        if (!isset($column['id'])) {
-            $column['id'] = str_replace('.', '-', $name);
+        if (!isset($item['icon'])) {
+            $item['icon'] = 'icon-search';
         }
-        if (!isset($column['searchable'])) {
-            $column['searchable'] = 'true';
+        if (!isset($item['title'])) {
+            $item['title'] = $alias;
         }
-        if (!isset($column['sort-icon'])) {
-            $column['sort-icon'] = 'icon-sort';
+        $this->grid['actions'][$item['alias']] = $item;
+    }
+
+    public function setHeader($item)
+    {
+        $name = $item['column'];
+        if (!isset($item['header'])) {
+            if (isset($item['title'])) {
+                $item['header'] = $item['title'];
+            } else {
+                $item['header'] = $name;
+            }
         }
-        if (!isset($column['title'])) {
-            $column['title'] = $name;
+        if (!isset($item['id'])) {
+            $item['id'] = str_replace('.', '-', $name);
         }
-        $this->grid['headers'][$column['column']] = $column;
+        if (!isset($item['searchable'])) {
+            $item['searchable'] = 'true';
+        }
+        if (!isset($item['sort-icon'])) {
+            $item['sort-icon'] = 'icon-sort';
+        }
+        if (!isset($item['title'])) {
+            if (isset($item['header'])) {
+                $item['title'] = $item['header'];
+            } else {
+                $item['title'] = $name;
+            }
+        }
+        $this->grid['headers'][$item['column']] = $item;
     }
 
     public function getJsonResponse()
     {
-        //$this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
+        $this->queryBuilder->select($this->queryBuilder->expr()->count('distinct ' . $this->root . '.id'));
+        $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $qb = Query::search( $this->queryBuilder, $this->grid['search'], $this->grid['headers'] );
-        //$this->grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
-        $this->grid['filtered'] = 0;
+        $this->grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
+        $this->queryBuilder->select($this->root);
 
         if (!$this->export) {
             if ( 0 < $this->grid['filtered'] ) {
@@ -93,7 +121,29 @@ class GridManager
 
         $results = new Paginator( $qb->getQuery(), $fetchJoinCollection = true );
 
-        // entities
+        $this->grid['entities'] = array();
+
+        foreach($results as $result) {
+            $paths = array();
+            foreach($this->grid['actions'] as $action) {
+                $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+            }
+            $values = array();
+            foreach($this->grid['headers'] as $header) {
+                $columns = explode('.', $header['column']);
+                $value = $result;
+                foreach($columns as $key => $column){
+                    if ($key > 0) {
+                        $value = call_user_func(array($value,'get' . ucwords($column)));
+                    }
+                }
+                $values[$header['column']] = $value;
+            }
+            $this->grid['entities'][] = array(
+                'paths' => $paths,
+                'values' => $values,
+            );
+        }
 
         if ( $this->export ) {
             $response = $this->render('MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
