@@ -142,7 +142,7 @@ class GridManager
         $results = $paginator->paginate(
             $qb->getQuery(),
             $this->get('request')->query->get('page', $this->grid['page']),
-            $this->grid['perPage'],
+            $this->grid['perPage']
         );
 
         $this->grid['entities'] = array();
