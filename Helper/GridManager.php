@@ -2,7 +2,6 @@
 
 namespace MESD\Ang\GridBundle\Helper;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GridManager
@@ -14,11 +13,13 @@ class GridManager
     private $queryBuilder;
     private $root;
 
-    public function __construct($root, $queryBuilder, $request, $exportType, $controller)
+    public function __construct($root, $queryBuilder, $controller, $exportType = null)
     {
         $this->controller = $controller;
         $this->queryBuilder = $queryBuilder;
         $this->root = $root;
+
+        $request = $this->controller->get('request');
 
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
@@ -136,14 +137,23 @@ class GridManager
             }
         }
 
-        $results = new Paginator( $qb->getQuery(), $fetchJoinCollection = true );
-
-        $this->grid['entities'] = array();
+        $paginator = $this->controller->get('knp_paginator');
+        $results = $paginator->paginate(
+            $qb->getQuery()->setHint('knp_paginator.count', $this->grid['filtered']),
+            $this->grid['page'],
+            $this->grid['perPage'],
+            array('distinct' => false));
 
         foreach($results as $result) {
+            $id = $result->getId();
             $paths = array();
             foreach($this->grid['actions'] as $action) {
-                $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                if (isset($action['function'])) {
+                    $function = $action['function'];
+                    $paths[$action['alias']] = $function($result);
+                } else {
+                    $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                }
             }
             $values = array();
             foreach($this->grid['headers'] as $header) {
@@ -161,7 +171,8 @@ class GridManager
                     $values[$header['column']] = $value;
                 }
             }
-            $this->grid['entities'][] = array(
+            $this->grid['entities']['id_' . $id] = array(
+                'id' => $id,
                 'paths' => $paths,
                 'values' => $values,
             );
