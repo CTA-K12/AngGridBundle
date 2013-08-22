@@ -12,15 +12,20 @@ class GridManager
     private $grid;
     private $queryBuilder;
     private $root;
+    private $rootClass;
+    private $selects;
 
-    public function __construct($root, $queryBuilder, $controller, $exportType = null)
+    public function __construct($root, $rootClass, $queryBuilder, $controller, $exportType = null)
     {
         $this->controller = $controller;
         $this->queryBuilder = $queryBuilder;
         $this->root = $root;
+        $this->rootClass = $rootClass;
+        $this->selects = array();
 
         $request = $this->controller->get('request');
 
+        $this->grid['actions'] = array();
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
         $this->grid['page'] = $request->query->get( 'page' );
@@ -40,6 +45,10 @@ class GridManager
         } else {
             $this->export = true;
         }
+    }
+
+    public function setSelect($select) {
+        $this->selects[$select] = $select;
     }
 
     public function setAction($item)
@@ -110,6 +119,10 @@ class GridManager
         $this->grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select($this->root);
 
+        foreach($this->selects as $select) {
+            $this->queryBuilder->addSelect($select);
+        }
+
         if (!$this->export) {
             if ( 0 < $this->grid['filtered'] ) {
                 $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
@@ -136,46 +149,60 @@ class GridManager
                 }
             }
         }
-
         $paginator = $this->controller->get('knp_paginator');
         $results = $paginator->paginate(
-            $qb->getQuery()->setHint('knp_paginator.count', $this->grid['filtered']),
+            $this->queryBuilder->getQuery()->setHint('knp_paginator.count', $this->grid['filtered']),
             $this->grid['page'],
             $this->grid['perPage'],
             array('distinct' => false));
 
         foreach($results as $result) {
-            $id = $result->getId();
-            $paths = array();
-            foreach($this->grid['actions'] as $action) {
-                if (isset($action['function'])) {
-                    $function = $action['function'];
-                    $paths[$action['alias']] = $function($result);
-                } else {
-                    $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
-                }
-            }
             $values = array();
             foreach($this->grid['headers'] as $header) {
                 if (isset($header['function'])) {
                     $function = $header['function'];
-                    $values[$header['column']] = $function($result);
-                } else {
-                    $columns = explode('.', $header['column']);
-                    $value = $result;
-                    foreach($columns as $key => $column){
-                        if ($key > 0) {
-                            $value = call_user_func(array($value,'get' . ucwords($column)));
-                        }
+                    $value = $function($result);
+                    if (get_class($result) == $this->rootClass) {
+                        $values[$header['column']] = $value['value'];
+                    } else {
+                        $values[$header['column']] = $value;
                     }
-                    $values[$header['column']] = $value;
+                } else {
+                    if (get_class($result) == $this->rootClass) {
+                        $columns = explode('.', $header['column']);
+                        $value = $result;
+                        foreach($columns as $key => $column){
+                            if ($key > 0) {
+                                $value = call_user_func(array($value,'get' . ucwords($column)));
+                            }
+                        }
+                        $values[$header['column']] = $value;
+                    }
                 }
             }
-            $this->grid['entities']['id_' . $id] = array(
-                'id' => $id,
-                'paths' => $paths,
-                'values' => $values,
-            );
+            if (get_class($result) == $this->rootClass) {
+                $id = $result->getId();
+                $paths = array();
+                foreach($this->grid['actions'] as $action) {
+                    if (isset($action['function'])) {
+                        $function = $action['function'];
+                        $paths[$action['alias']] = $function($result['value']);
+                    } else {
+                        $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                    }
+                }
+                $this->grid['entities']['id_' . $id] = array(
+                    'id' => $id,
+                    'paths' => $paths,
+                    'values' => $values,
+                );
+            } else {
+                foreach($values as $key => $value) {
+                    if (isset($value['id'])) {
+                        $this->grid['entities']['id_' . $value['id']]['values'][$key] = $value['value'];
+                    }
+                }
+            }
         }
 
         if ( $this->export ) {
