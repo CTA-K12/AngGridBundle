@@ -180,19 +180,23 @@ class GridManager
                     }
                 }
             }
-            if (get_class($result) == $this->rootClass) {
-                $id = $result->getId();
-                $paths = array();
-                foreach($this->grid['actions'] as $action) {
-                    if (isset($action['function'])) {
-                        $function = $action['function'];
-                        $paths[$action['alias']] = $function($result['value']);
+            $paths = array();
+            foreach($this->grid['actions'] as $action) {
+                if (isset($action['function'])) {
+                    $function = $action['function'];
+                    $path = $function($result, $this->controller);
+                    if (get_class($result) == $this->rootClass) {
+                        $paths[$action['alias']] = $path['path'];
                     } else {
-                        $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                        $paths[$action['alias']] = $path;
                     }
+                } else {
+                    $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
                 }
-                $this->grid['entities']['id_' . $id] = array(
-                    'id' => $id,
+            }
+            if (get_class($result) == $this->rootClass) {
+                $this->grid['entities']['id_' . $result->getId()] = array(
+                    'id' => $result->getId(),
                     'paths' => $paths,
                     'values' => $values,
                 );
@@ -200,6 +204,11 @@ class GridManager
                 foreach($values as $key => $value) {
                     if (isset($value['id'])) {
                         $this->grid['entities']['id_' . $value['id']]['values'][$key] = $value['value'];
+                    }
+                }
+                foreach($paths as $key => $path) {
+                    if (isset($path['id'])) {
+                        $this->grid['entities']['id_' . $path['id']]['paths'][$key] = $path['path'];
                     }
                 }
             }
