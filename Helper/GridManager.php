@@ -2,7 +2,6 @@
 
 namespace MESD\Ang\GridBundle\Helper;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GridManager
@@ -136,16 +135,12 @@ class GridManager
             }
         }
 
-        //$results = new Paginator( $qb->getQuery(), $fetchJoinCollection = true );
-
-        $paginator  = $this->controller->get('knp_paginator');
+        $paginator = $this->controller->get('knp_paginator');
         $results = $paginator->paginate(
-            $qb->getQuery(),
-            $this->controller->get('request')->query->get('page', $this->grid['page']),
-            $this->grid['perPage']
-        );
-
-        $this->grid['entities'] = array();
+            $qb->getQuery()->setHint('knp_paginator.count', $this->grid['filtered']),
+            $this->grid['page'],
+            $this->grid['perPage'],
+            array('distinct' => false));
 
         foreach($results as $result) {
             $id = $result->getId();
