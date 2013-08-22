@@ -138,10 +138,10 @@ class GridManager
 
         //$results = new Paginator( $qb->getQuery(), $fetchJoinCollection = true );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->controller->get('knp_paginator');
         $results = $paginator->paginate(
             $qb->getQuery(),
-            $this->get('request')->query->get('page', $this->grid['page']),
+            $this->controller->get('request')->query->get('page', $this->grid['page']),
             $this->grid['perPage']
         );
 
