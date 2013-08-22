@@ -81,6 +81,9 @@ class GridManager
                 $item['title'] = $name;
             }
         }
+        if (!isset($item['type'])) {
+            $item['type'] = 'text';
+        }
         $this->grid['headers'][$item['column']] = $item;
     }
 
@@ -130,14 +133,19 @@ class GridManager
             }
             $values = array();
             foreach($this->grid['headers'] as $header) {
-                $columns = explode('.', $header['column']);
-                $value = $result;
-                foreach($columns as $key => $column){
-                    if ($key > 0) {
-                        $value = call_user_func(array($value,'get' . ucwords($column)));
+                if (isset($header['function'])) {
+                    $function = $header['function'];
+                    $values[$header['column']] = $function($result);
+                } else {
+                    $columns = explode('.', $header['column']);
+                    $value = $result;
+                    foreach($columns as $key => $column){
+                        if ($key > 0) {
+                            $value = call_user_func(array($value,'get' . ucwords($column)));
+                        }
                     }
+                    $values[$header['column']] = $value;
                 }
-                $values[$header['column']] = $value;
             }
             $this->grid['entities'][] = array(
                 'paths' => $paths,
