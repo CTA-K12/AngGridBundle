@@ -108,9 +108,9 @@
                     </span>
                 </td>
                 <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                    <div ng-switch on="data.headers[header].html">
-                        <div ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]"></div>
-                        <div ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]"></div>
+                    <div data-ng-switch on="data.headers[header].html">
+                        <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]"></div>
+                        <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]"></div>
                     </div>
                 </td>
             </tr>
