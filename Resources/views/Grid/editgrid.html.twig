@@ -84,11 +84,6 @@
                         <tr>
                             <th>
                                 <span>Actions</span>
-                                        <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
-                                        <span class="icon-save">
-                                        </span>
-                                        Save All
-                                    </button>
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
                                 <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}</span>
@@ -124,6 +119,15 @@
                             </td>
                         </tr>
                     {% endblock tablebody %}
+                    <tr>
+                        <td colspan='100'>
+                            <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+                                <span class="icon-save">
+                                </span>
+                                Save All
+                            </button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </form>
