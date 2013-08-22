@@ -141,9 +141,15 @@ class GridManager
         $this->grid['entities'] = array();
 
         foreach($results as $result) {
+            $id = $result->getId();
             $paths = array();
             foreach($this->grid['actions'] as $action) {
-                $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                if (isset($action['function'])) {
+                    $function = $action['function'];
+                    $paths[$action['alias']] = $function($result);
+                } else {
+                    $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                }
             }
             $values = array();
             foreach($this->grid['headers'] as $header) {
@@ -161,7 +167,8 @@ class GridManager
                     $values[$header['column']] = $value;
                 }
             }
-            $this->grid['entities'][] = array(
+            $this->grid['entities']['id_' . $id] = array(
+                'id' => $id,
                 'paths' => $paths,
                 'values' => $values,
             );
