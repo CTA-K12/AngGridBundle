@@ -95,8 +95,8 @@ class GridManager
         if (!isset($item['searchable'])) {
             $item['searchable'] = 'true';
         }
-        if (!isset($item['sort-icon'])) {
-            $item['sort-icon'] = 'icon-sort';
+        if (!isset($item['sortIcon'])) {
+            $item['sortIcon'] = 'icon-sort';
         }
         if (!isset($item['title'])) {
             if (isset($item['header'])) {
