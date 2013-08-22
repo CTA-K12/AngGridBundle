@@ -84,6 +84,11 @@
                         <tr>
                             <th>
                                 <span>Actions</span>
+                                        <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+                                        <span class="icon-save">
+                                        </span>
+                                        Save All
+                                    </button>
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
                                 <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}</span>
@@ -105,7 +110,7 @@
                                         <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
                                     </a>
                                     <button data-ng-repeat="action in notSorted(entity.buttons)"
-                                        class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}" name="action" value="grid_update">
+                                        class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}" name="action" value="grid_update_{% verbatim %}{{ entity.values.entity_id }}{% endverbatim %}">
                                         <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}>
                                         </span>
                                     </button>
