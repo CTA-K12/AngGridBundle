@@ -9,6 +9,7 @@ class GridManager
 {
     private $controller;
     private $export;
+    private $exportAlias;
     private $grid;
     private $queryBuilder;
     private $root;
@@ -53,6 +54,10 @@ class GridManager
             $item['title'] = $alias;
         }
         $this->grid['actions'][$item['alias']] = $item;
+    }
+
+    public function setExportAlias($alias) {
+        $this->exportAlias = $alias;
     }
 
     public function setHeader($item)
@@ -163,7 +168,7 @@ class GridManager
         }
 
         if ( $this->export ) {
-            $response = $this->render('MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+            $response = $this->controller->render('MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
                 array(
                     'entities' => $this->grid['entities'],
                     'headers' => $this->grid['headers'],
@@ -175,7 +180,11 @@ class GridManager
             return $response;
         }
 
-        // export
+        if ( is_null( $this->grid['exportType'] ) ) {
+            $this->grid['exportLink'] = '';
+        } else {
+            $this->grid['exportLink'] = $this->controller->generateUrl($this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . '?exportString=true&search=' . $this->grid['search'] . '&sorts=' . $this->grid['sortsString'];
+        }
 
         return new JsonResponse($this->grid);
     }
