@@ -13,11 +13,13 @@ class GridManager
     private $queryBuilder;
     private $root;
 
-    public function __construct($root, $queryBuilder, $request, $exportType, $controller)
+    public function __construct($root, $queryBuilder, $controller, $exportType = null)
     {
         $this->controller = $controller;
         $this->queryBuilder = $queryBuilder;
         $this->root = $root;
+
+        $request = $this->controller->get('request');
 
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
