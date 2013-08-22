@@ -57,7 +57,16 @@ class GridManager
 
     public function setHeader($item)
     {
-        $name = $item['column'];
+        $name = $item['field'];
+        if (!isset($item['column'])) {
+            $last = strrpos($name, '.');
+            $nextLast = strrpos($name, '.', $last - strlen($name) - 1);
+            if (false == $nextLast) {
+                $item['column'] = $name;
+            } else {
+                $item['column'] = substr($name, $nextLast + 1);
+            }
+        }
         if (!isset($item['header'])) {
             if (isset($item['title'])) {
                 $item['header'] = $item['title'];
