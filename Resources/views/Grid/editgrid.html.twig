@@ -83,43 +83,53 @@
                     {% block tableheader %}
                         <tr>
                             <th>
-                                <span><button type="submit" class="btn btn-primary save" name="action" value="create"><span class="icon-save"></span> Save All</button>
                                 <span>Actions</span>
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                                <span>
-                                    {% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}
-                                </span>
+                                <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}</span>
                             </th>
-                        </form>
-                    </tr>
+                        </tr>
+                    {% endblock tableheader %}
                 </thead>
                 <tbody>
-                {% endblock tableheader %}
-                {% block extraheader %}
-                {% endblock extraheader %}
-                {% block tablebody %}
-                    <tr data-ng-show="!data.filtered">
-                        <td>No matches found.</td>
-                    </tr>
-                    <tr data-ng-repeat="entity in data.entities">
-                        <td data-role-th="Actions">
-                            <span class="btn-group">
-                                <a data-ng-repeat="action in notSorted(entity.paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"btn {{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ entity.paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
-                                    <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
-                                </a>
-                            </span>
-                        </td>
-                        <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                            <div ng-switch on="data.headers[header].html">
-                                <div ng-switch-when="true" data-ng-bind-html-unsafe="entity.values[data.headers[header].column]"></div>
-                                <div ng-switch-default data-ng-bind="entity.values[data.headers[header].column]"></div>
-                            </div>
+                    {% block extraheader %}
+                    {% endblock extraheader %}
+                    {% block tablebody %}
+                        <tr data-ng-show="!data.filtered">
+                            <td>No matches found.</td>
+                        </tr>
+                        <tr data-ng-repeat="entity in data.entities">
+                            <td data-role-th="Actions">
+                                <div class="btn-group">
+                                    <a data-ng-repeat="action in notSorted(entity.paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ entity.paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
+                                        <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
+                                    </a>
+                                    <button data-ng-repeat="action in notSorted(entity.buttons)"
+                                        class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}" name="action" value="grid_update_{% verbatim %}{{ entity.values.entity_id }}{% endverbatim %}">
+                                        <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}>
+                                        </span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                                <span data-ng-switch on="data.headers[header].html">
+                                    <span data-ng-switch-when="true" data-ng-bind-html-unsafe="entity.values[data.headers[header].column]"></span>
+                                    <span data-ng-switch-default data-ng-bind="entity.values[data.headers[header].column]"></span>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endblock tablebody %}
+                    <tr>
+                        <td colspan='100'>
+                            <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+                                <span class="icon-save">
+                                </span>
+                                Save All
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </form>
     </div>
-{% endblock tablebody %}
 {% endblock grid %}
