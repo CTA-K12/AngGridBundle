@@ -2,7 +2,12 @@
 
 namespace MESD\Ang\GridBundle\Helper;
 
+use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\Paginator;
+use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Router;
 
 class GridManager
 {
@@ -12,18 +17,21 @@ class GridManager
     private $grid;
     private $queryBuilder;
     private $root;
+    private $router;
     private $rootClass;
     private $selects;
+    private $templating;
 
-    public function __construct($root, $rootClass, $queryBuilder, $controller, $exportType = null)
+    public function __construct(EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating)
     {
-        $this->controller = $controller;
-        $this->queryBuilder = $queryBuilder;
-        $this->root = $root;
-        $this->rootClass = $rootClass;
-        $this->selects = array();
+        $this->entityManager = $entityManager;
+        $this->paginator = $paginator;
+        $this->request = $request;
+        $this->router = $router;
+        $this->templating = $templating;
 
-        $request = $this->controller->get('request');
+        $this->selects = array();
+        $this->grid = array();
 
         $this->grid['actions'] = array();
         $this->grid['exportString'] = $request->query->get( 'exportString' );
@@ -34,17 +42,29 @@ class GridManager
         $this->grid['search'] = $request->query->get( 'search' );
         $this->grid['sortsString'] = $request->query->get( 'sorts' );
 
-        if ( is_null( $exportType ) ) {
-            $this->grid['exportType'] = $request->query->get( 'exportType' );
-        } else {
-            $this->grid['exportType'] = $exportType;
-        }
-
         if ( is_null( $this->grid['exportString'] ) ) {
             $this->export = false;
         } else {
             $this->export = true;
         }
+    }
+
+    public function setRoot($root, $rootClass) {
+        $this->root = $root;
+        $this->rootClass = $rootClass;
+    }
+
+    public function setQueryBuilder($queryBuilder) {
+        $this->queryBuilder = $queryBuilder;
+    }
+
+    public function setExportType($exportType) {
+        if ( is_null( $exportType ) ) {
+            $this->grid['exportType'] = $this->request->query->get( 'exportType' );
+        } else {
+            $this->grid['exportType'] = $exportType;
+        }
+
     }
 
     public function setSelect($select) {
@@ -149,8 +169,7 @@ class GridManager
                 }
             }
         }
-        $paginator = $this->controller->get('knp_paginator');
-        $results = $paginator->paginate(
+        $results = $this->paginator->paginate(
             $this->queryBuilder->getQuery()->setHint('knp_paginator.count', $this->grid['filtered']),
             $this->grid['page'],
             $this->grid['perPage'],
@@ -161,14 +180,14 @@ class GridManager
             foreach($this->grid['actions'] as $action) {
                 if (isset($action['function'])) {
                     $function = $action['function'];
-                    $path = $function($result, $this->controller);
+                    $path = $function($result, $this->router);
                     if (get_class($result) == $this->rootClass) {
                         $paths[$action['alias']] = $path['path'];
                     } else {
                         $paths[$action['alias']] = $path;
                     }
                 } else {
-                    $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                    $paths[$action['alias']] = $this->router->generate($action['alias'], array( 'id' => $result->getId()));
                 }
             }
             $values = array();
@@ -215,7 +234,7 @@ class GridManager
         }
 
         if ( $this->export ) {
-            $response = $this->controller->render('MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+            $response = $this->templating->render('MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
                 array(
                     'entities' => $this->grid['entities'],
                     'headers' => $this->grid['headers'],
@@ -230,7 +249,7 @@ class GridManager
         if ( is_null( $this->grid['exportType'] ) ) {
             $this->grid['exportLink'] = '';
         } else {
-            $this->grid['exportLink'] = $this->controller->generateUrl($this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . '?exportString=true&search=' . $this->grid['search'] . '&sorts=' . $this->grid['sortsString'];
+            $this->grid['exportLink'] = $this->router->generate($this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . '?exportString=true&search=' . $this->grid['search'] . '&sorts=' . $this->grid['sortsString'];
         }
 
         return new JsonResponse($this->grid);

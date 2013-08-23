@@ -1,0 +1,8 @@
+parameters:
+    anggrid.gridmanager.class: MESD\Ang\GridBundle\Helper\GridManager
+
+services:
+    anggrid.gridmanager:
+        class: %anggrid.gridmanager.class%
+        arguments: [ @doctrine.orm.entity_manager, @knp_paginator, @request, @router, @templating ]
+        scope: request
