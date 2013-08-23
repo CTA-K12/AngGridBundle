@@ -157,29 +157,6 @@ class GridManager
             array('distinct' => false));
 
         foreach($results as $result) {
-            $values = array();
-            foreach($this->grid['headers'] as $header) {
-                if (isset($header['function'])) {
-                    $function = $header['function'];
-                    $value = $function($result);
-                    if (get_class($result) == $this->rootClass) {
-                        $values[$header['column']] = $value['value'];
-                    } else {
-                        $values[$header['column']] = $value;
-                    }
-                } else {
-                    if (get_class($result) == $this->rootClass) {
-                        $columns = explode('.', $header['column']);
-                        $value = $result;
-                        foreach($columns as $key => $column){
-                            if ($key > 0) {
-                                $value = call_user_func(array($value,'get' . ucwords($column)));
-                            }
-                        }
-                        $values[$header['column']] = $value;
-                    }
-                }
-            }
             $paths = array();
             foreach($this->grid['actions'] as $action) {
                 if (isset($action['function'])) {
@@ -192,6 +169,29 @@ class GridManager
                     }
                 } else {
                     $paths[$action['alias']] = $this->controller->generateUrl($action['alias'], array( 'id' => $result->getId()));
+                }
+            }
+            $values = array();
+            foreach($this->grid['headers'] as $header) {
+                if (isset($header['function'])) {
+                    $function = $header['function'];
+                    $value = $function($result);
+                    if (get_class($result) == $this->rootClass) {
+                        $values[$header['column']] = $value['value'];
+                    } else {
+                        $values[$header['column']] = $value;
+                    }
+                } else {
+                    if (get_class($result) == $this->rootClass) {
+                        $columns = explode('.', $header['field']);
+                        $value = $result;
+                        foreach($columns as $key => $column){
+                            if ($key > 0) {
+                                $value = call_user_func(array($value,'get' . ucwords($column)));
+                            }
+                        }
+                        $values[$header['column']] = $value;
+                    }
                 }
             }
             if (get_class($result) == $this->rootClass) {
