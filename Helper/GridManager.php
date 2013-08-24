@@ -131,6 +131,14 @@ class GridManager
         $this->grid['headers'][$item['column']] = $item;
     }
 
+    public function orderColumns($columns) {
+        $this->grid['headers'] = Query::orderColumns($this->grid['headers'], $columns);
+    }
+
+    public function hideColumns($columns) {
+        $this->grid['headers'] = Query::hideColumns($this->grid['headers'], $columns);
+    }
+
     public function getJsonResponse()
     {
         $this->queryBuilder->select($this->queryBuilder->expr()->count('distinct ' . $this->root . '.id'));

@@ -32,7 +32,7 @@ class Query
         }
         return $query;
     }
-    public static function setOrder($headers, $columns){
+    public static function orderColumns($headers, $columns){
         $newHeaders = array();
 
         foreach($columns as $column){

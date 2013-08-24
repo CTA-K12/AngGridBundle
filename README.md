@@ -26,7 +26,11 @@ app/AppKernel.php
         );
 ```
 
-
+app/config/config.yml
+```yml
+imports:
+    - { resource: "@MESDAngGridBundle/Resources/config/services.yml" }
+```
 
 app/Resources/views/base.html.twig
 ```twig
@@ -38,14 +42,13 @@ app/Resources/views/base.html.twig
         'bundles/mesdanggrid/js/angular-resource-1.0.7.js'
         'bundles/mesdanggrid/js/grid_config.js'
         'bundles/mesdanggrid/js/grid_controller.js'
-        'bundles/mesdanggrid/js/grid_filters.js'
         %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock javascripts %}
 ```
 
-src/MESD/App/ExampleBundle/Resources/config/routing/example.yml
+src/MESD/App/ChangeThisBundle/Resources/config/routing/example.yml
 ```yml
 example:
     pattern:  /
@@ -70,8 +73,6 @@ src/MESD/App/ChangeThisBundle/ChangeThisController.php
 
 namespace MESD\App\ChangeThisBundle\Controller;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use MESD\Ang\GridBundle\Helper\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -79,7 +80,7 @@ class ChangeThisController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('MESDAngGridBundle:Grid:index.html.twig');
+        return $this->render('MESDAppChangeThisBundle:Grid:index.html.twig');
     }
 
     public function gridAction()
@@ -89,166 +90,78 @@ class ChangeThisController extends Controller
 
     public function dataAction(Request $request, $exportType = null)
     {
-        $grid = array();
-
-        $grid['exportString'] = $request->query->get('exportString');
-        $grid['page'] = $request->query->get('page');
-        $grid['perPage'] = $request->query->get('perPage');
-        $grid['search'] = $request->query->get('search');
-        $grid['sortsString'] = $request->query->get('sorts');
-
-        if (is_null($exportType)) {
-            $grid['exportType'] = $request->query->get('exportType');
-        } else {
-            $grid['exportType'] = $exportType;
-        }
-
-        if (is_null($grid['exportString'])) {
-            $export = false;
-        } else {
-            $export = true;
-        }
-
-        $grid['actions'] = array(
-                'example_show' => array(
-                    'alias' => 'example_show',
-                    'class' => 'btn-mini btn-default action',
-                    'icon' => 'icon-search',
-                    'title' => 'Show',
-                ),
-                'example_edit' => array(
-                    'alias' => 'example_edit',
-                    'class' => 'btn-mini btn-default action',
-                    'icon' => 'icon-pencil',
-                    'title' => 'Edit',
-                ),
-            )
-        ;
-
         $em = $this->getDoctrine()->getManager();
-        $qb= $em->getRepository( 'MESDAngGridBundle:Example' )
-            ->createQueryBuilder( 'example' );
+        $qb = $em->getRepository('MESDAppChangeThisBundle:Example')
+            ->createQueryBuilder('example');
+        $qb->leftJoin('example.another', 'another');
 
-        $grid['headers'] = array(
-                'example.shortName' => array(
-                    'column' => 'example.shortName',
-                    'id' => 'shortName',
-                    'searchable' => 'true',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'Short Name',
-                    'type' => 'text',
-                ),
-                'example.longName' => array(
-                    'column' => 'example.longName',
-                    'id' => 'longName',
-                    'searchable' => 'true',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'Long Name',
-                    'type' => 'text',
-                ),
-                'example.description' => array(
-                    'column' => 'example.description',
-                    'id' => 'description',
-                    'searchable' => 'true',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'Description',
-                    'type' => 'text',
-                ),
-                'example.modified' => array(
-                    'column' => 'example.modified',
-                    'id' => 'modified',
-                    'searchable' => 'true',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'Modified',
-                    'type' => 'date',
-                ),
-                'example.active' => array(
-                    'column' => 'example.active',
-                    'id' => 'active',
-                    'searchable' => 'false',
-                    'sortIcon' => 'icon-sort',
-                    'title' => 'Active',
-                    'type' => 'boolean',
-                ),
+        $gm = $this->get('anggrid.gridmanager');
+
+        $gm->setQueryBuilder($qb);
+        $gm->setRoot('rate', 'MESD\App\ChangeThisBundle\Entity\Example');
+        $gm->setSelect('another');
+
+        $gm->setExportType($exportType);
+        $gm->setExportAlias('example_export');
+
+        $gm->setAction( array(
+                'alias'   => 'example_show',
+                'icon'  => 'icon-search',
+                'title' => 'Show',
             )
-        ;
+        );
 
-        $qb->select('count(example)');
-        $grid['total'] = $qb->getQuery()->getSingleScalarResult();
-        $grid['headers'] = Query::setOrder($grid['headers'],array('example.shortName','example.longName','example.description','example.modified'));
-        $grid['headers'] = Query::hideColumns($grid['headers'],array('example.id'));
-        $qb = Query::search($qb, $grid['search'], $grid['headers']);
-        $grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
+        $gm->setAction( array(
+                'alias'   => 'example_edit'
+                , 'icon'  => 'icon-pencil'
+                , 'title' => 'Edit'
+            )
+        );
 
-        if (!$export) {
-            if (0 < $grid['filtered']) {
-                $grid['last'] = ceil($grid['filtered'] / $grid['perPage']);
-            } else {
-                $grid['last'] = 1;
-            }
-            if (1 > $grid['page']) {
-                $grid['page'] = 1;
-            } elseif ($grid['last'] < $grid['page']) {
-                $grid['page'] = $grid['last'];
-            }
-            $qb->setFirstResult($grid['perPage'] * ($grid['page'] - 1))
-            ->setMaxResults($grid['perPage']);
-        }
+        $gm->setAction( array(
+                'alias' => 'another_show',
+                'icon' => 'icon-file',
+                'title' => 'Show Another',
+                'function' => function( $result, $router ) {
+                    if ( get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
+                        return array(
+                            'id' => $result->getExample()->getId(),
+                            'path' => $router->generate( 'another_show', array( 'id' => $result->getId() ) ),
+                        );
+                    }
+                    return array( 'path' => '' );
+                },
+            )
+        );
 
-        $qb->select('example')
-        ;
+        $gm->setHeader( array(
+                'field'   => 'example.shortName'
+                , 'title' => 'Short Name'
+            )
+        );
 
-        if (!is_null($grid['sortsString'])) {
-            $grid['sorts'] = json_decode($grid['sortsString']);
-            foreach($grid['sorts'] as $sort) {
-                $qb->addOrderBy($grid['headers'][intval($sort->column)]['column'], $sort->direction);
-                if ('asc' == $sort->direction) {
-                    $grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+        $gm->setHeader( array(
+                'field'   => 'example.longName'
+                , 'title' => 'Long Name'
+            )
+        );
+
+        $gm->setHeader( array(
+                'field'   => 'example.another.shortName'
+                , 'title' => 'Another'
+            )
+        );
+
+        $gm->setHeader( array(
+                'field'      => 'example.effective'
+                , 'title'    => 'Effective Date'
+                , 'function' => function( $result ) {
+                    return array( 'value' => $result ? $result->getDate()->format( 'm/d/Y' ) : '' );
                 }
-            }
-        }
+            )
+        );
 
-        $results = new Paginator($qb->getQuery(), $fetchJoinCollection = true);
-
-        $grid['entities'] = array();
-        foreach($results as $result) {
-            $grid['entities'][] = array(
-                'paths' => array(
-                    'example_show' => $this->generateUrl('example_show', array('id' => $result->getId())),
-                    'example_edit' => $this->generateUrl('example_edit', array('id' => $result->getId())),
-                ),
-                'values' => array(
-                    'example.shortName' => $result->getShortName(),
-                    'example.longName' => $result->getLongName(),
-                    'example.description' => $result->getDescription(),
-                    'example.modified' => $result->getModified()->format('Y-m-d H:i:s'),
-                    'example.active' => $result->getActive() ? '✔' : '✘',
-                ),
-            );
-        }
-
-        if ($export) {
-            $response = $this->render('MESDAngGridBundle:Grid:export.' . $grid['exportType'] . '.twig',
-                array(
-                    'entities' => $grid['entities'],
-                    'headers' => $grid['headers'],
-                )
-            );
-            $response->headers->set('Content-Type', 'text/' . $grid['exportType']);
-            $response->headers->set('Content-Disposition', 'attachment; filename="export.' . $grid['exportType'] . '"');
-
-            return $response;
-        }
-
-        if (is_null($grid['exportType'])) {
-            $grid['exportLink'] = '';
-        } else {
-            $grid['exportLink'] = $this->generateUrl('caseload_export', array('exportType' => $grid['exportType'])) . '?exportString=true&search=' . $grid['search'] . '&sorts=' . $grid['sortsString'];
-        }
-
-        return new JsonResponse($grid);
+        return $gm->getJsonResponse();
     }
 }
 ```
