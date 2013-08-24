@@ -75,7 +75,7 @@ class GridManager
     {
         $alias = $item['alias'];
         if (!isset($item['class'])) {
-            $item['class'] = 'btn-mini action btn-default';
+            $item['class'] = 'btn btn-mini btn-default action';
         }
         if (!isset($item['icon'])) {
             $item['icon'] = 'icon-search';
@@ -213,7 +213,7 @@ class GridManager
                         $columns = explode('.', $header['field']);
                         $value = $result;
                         foreach($columns as $key => $column){
-                            if ($key > 0) {
+                            if (($key > 0) && (isset($value))) {
                                 $value = call_user_func(array($value,'get' . ucwords($column)));
                             }
                         }

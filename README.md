@@ -123,7 +123,7 @@ class ChangeThisController extends Controller
                 'icon' => 'icon-file',
                 'title' => 'Show Another',
                 'function' => function( $result, $router ) {
-                    if ( get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
+                    if ( isset($result) && get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
                         return array(
                             'id' => $result->getExample()->getId(),
                             'path' => $router->generate( 'another_show', array( 'id' => $result->getId() ) ),
