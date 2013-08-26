@@ -49,6 +49,7 @@ function GridController($scope, $http) {
                 return;
             }
             $scope.data.actions = data.actions;
+            $scope.data.buttons = data.buttons;
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
             $scope.data.filtered = data.filtered;

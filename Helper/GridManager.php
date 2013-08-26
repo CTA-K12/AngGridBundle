@@ -221,12 +221,12 @@ class GridManager {
                     $function = $button['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        $paths[$button['alias']] = $path['path'];
+                        $buttons[$button['alias']] = $path['path'];
                     } else {
-                        $paths[$button['alias']] = $path;
+                        $buttons[$button['alias']] = $path;
                     }
                 } else {
-                    $paths[$button['alias']] = $this->router->generate( $button['alias'], array( 'id' => $result->getId() ) );
+                    $buttons[$button['alias']] = $this->router->generate( $button['alias'], array( 'id' => $result->getId() ) );
                 }
             }
             $values = array();
@@ -317,5 +317,9 @@ class GridManager {
         }
 
         return new JsonResponse( $this->grid );
+    }
+
+    public function setFormUrl($url) {
+        $this->grid['formUrl'] = $url;
     }
 }

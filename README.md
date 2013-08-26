@@ -99,7 +99,7 @@ class ChangeThisController extends Controller
         );
 
         $gm->setQueryBuilder($qb);
-        $gm->setRoot('rate', 'MESD\App\ChangeThisBundle\Entity\Example');
+        $gm->setRoot('example', 'MESD\App\ChangeThisBundle\Entity\Example');
         $gm->setSelect('another');
 
         $gm->setExportType($exportType);
@@ -119,6 +119,7 @@ class ChangeThisController extends Controller
             )
         );
 
+        // this is set with a function because the action is based on the id of an associated entity
         $gm->setAction( array(
                 'alias'      => 'another_show'
                 , 'icon'     => 'icon-file'
@@ -135,7 +136,7 @@ class ChangeThisController extends Controller
             )
         );
 
-        $gm->setAction( array(
+        $gm->setButton( array(
                 'alias'   => 'example_delete'
                 , 'class' => 'btn btn-danger btn-mini'
                 , 'icon'  => 'icon-remove'
@@ -162,6 +163,7 @@ class ChangeThisController extends Controller
             )
         );
 
+        // date and time fields have to be given a function or else you get [Object object]
         $gm->setHeader( array(
                 'field'      => 'example.effective'
                 , 'title'    => 'Effective Date'
