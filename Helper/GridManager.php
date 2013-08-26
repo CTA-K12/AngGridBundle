@@ -20,6 +20,7 @@ class GridManager {
     private $rootClass;
     private $selects;
     private $templating;
+    private $prepend;
 
     public function __construct( EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating ) {
         $this->entityManager = $entityManager;
@@ -27,6 +28,7 @@ class GridManager {
         $this->request = $request;
         $this->router = $router;
         $this->templating = $templating;
+        $this->prepend = '';
 
         $this->selects = array();
         $this->grid = array();
@@ -160,7 +162,8 @@ class GridManager {
     public function getJsonResponse() {
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
-        $qb = Query::search( $this->queryBuilder, $this->grid['search'], $this->grid['headers'] );
+        $search = $this->prepend.$this->grid['search'];
+        $qb = Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
         $this->grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
 
@@ -296,7 +299,6 @@ class GridManager {
                 }
             }
         }
-
         if ( $this->export ) {
             $response = $this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
                 array(
@@ -321,5 +323,9 @@ class GridManager {
 
     public function setFormUrl($url) {
         $this->grid['formUrl'] = $url;
+    }
+
+    public function prependSearch($search){
+        $this->prepend = $search[0].' ';
     }
 }
