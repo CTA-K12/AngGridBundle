@@ -26,12 +26,6 @@ app/AppKernel.php
         );
 ```
 
-app/config/config.yml
-```yml
-imports:
-    - { resource: "@MESDAngGridBundle/Resources/config/services.yml" }
-```
-
 app/Resources/views/base.html.twig
 ```twig
 {% extends 'MESDPresentationPresentationBundle::index.html.twig' %}
@@ -95,7 +89,13 @@ class ChangeThisController extends Controller
             ->createQueryBuilder('example');
         $qb->leftJoin('example.another', 'another');
 
-        $gm = $this->get('anggrid.gridmanager');
+        $gm = new GridManager(
+            $this->get('doctrine.orm.entity_manager')
+            , $this->get('knp_paginator')
+            , $this->get('request')
+            , $this->get('router')
+            , $this->get('templating')
+        );
 
         $gm->setQueryBuilder($qb);
         $gm->setRoot('rate', 'MESD\App\ChangeThisBundle\Entity\Example');
