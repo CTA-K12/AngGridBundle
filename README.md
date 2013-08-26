@@ -22,6 +22,7 @@ composer.json file
 app/AppKernel.php
 ```php
         $bundles = array(
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new MESD\Ang\GridBundle\MESDAngGridBundle(),
         );
 ```
@@ -105,9 +106,9 @@ class ChangeThisController extends Controller
         $gm->setExportAlias('example_export');
 
         $gm->setAction( array(
-                'alias'   => 'example_show',
-                'icon'  => 'icon-search',
-                'title' => 'Show',
+                'alias'   => 'example_show'
+                , 'icon'  => 'icon-search'
+                , 'title' => 'Show'
             )
         );
 
@@ -119,10 +120,10 @@ class ChangeThisController extends Controller
         );
 
         $gm->setAction( array(
-                'alias' => 'another_show',
-                'icon' => 'icon-file',
-                'title' => 'Show Another',
-                'function' => function( $result, $router ) {
+                'alias'      => 'another_show'
+                , 'icon'     => 'icon-file'
+                , 'title'    => 'Show Another'
+                , 'function' => function( $result, $router ) {
                     if ( isset($result) && get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
                         return array(
                             'id' => $result->getExample()->getId(),
@@ -130,9 +131,18 @@ class ChangeThisController extends Controller
                         );
                     }
                     return array( 'path' => '' );
-                },
+                }
             )
         );
+
+        $gm->setAction( array(
+                'alias'   => 'example_delete'
+                , 'class' => 'btn btn-danger btn-mini'
+                , 'icon'  => 'icon-remove'
+                , 'title' => 'Delete'
+            )
+        );
+
 
         $gm->setHeader( array(
                 'field'   => 'example.shortName'
