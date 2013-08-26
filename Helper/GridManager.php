@@ -71,8 +71,9 @@ class GridManager {
 
     public function setAction( $item ) {
         $alias = $item['alias'];
+
         if ( !isset( $item['class'] ) ) {
-            $item['class'] = 'btn-mini action btn-default';
+            $item['class'] = 'btn btn-mini btn-default action';
         }
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';
@@ -217,7 +218,6 @@ class GridManager {
                         $values[$header['column']] =
                             ( $value ? '<span class="icon-ok csuccess"></span>' : '<span class="icon-remove cdanger"></span>' );
                     }
-
                 } else {
                     if ( isset( $header['function'] ) ) {
                         $function = $header['function'];

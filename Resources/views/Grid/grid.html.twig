@@ -102,7 +102,7 @@
             <tr data-ng-repeat="entity in notSorted(data.entities)">
                 <td data-role-th="Actions">
                     <span class="btn-group">
-                        <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"btn {{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
+                        <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
                             <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
                         </a>
                     </span>

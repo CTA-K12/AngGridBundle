@@ -26,12 +26,6 @@ app/AppKernel.php
         );
 ```
 
-app/config/config.yml
-```yml
-imports:
-    - { resource: "@MESDAngGridBundle/Resources/config/services.yml" }
-```
-
 app/Resources/views/base.html.twig
 ```twig
 {% extends 'MESDPresentationPresentationBundle::index.html.twig' %}
@@ -95,7 +89,13 @@ class ChangeThisController extends Controller
             ->createQueryBuilder('example');
         $qb->leftJoin('example.another', 'another');
 
-        $gm = $this->get('anggrid.gridmanager');
+        $gm = new GridManager(
+            $this->get('doctrine.orm.entity_manager')
+            , $this->get('knp_paginator')
+            , $this->get('request')
+            , $this->get('router')
+            , $this->get('templating')
+        );
 
         $gm->setQueryBuilder($qb);
         $gm->setRoot('rate', 'MESD\App\ChangeThisBundle\Entity\Example');
@@ -123,7 +123,7 @@ class ChangeThisController extends Controller
                 'icon' => 'icon-file',
                 'title' => 'Show Another',
                 'function' => function( $result, $router ) {
-                    if ( get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
+                    if ( isset($result) && get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
                         return array(
                             'id' => $result->getExample()->getId(),
                             'path' => $router->generate( 'another_show', array( 'id' => $result->getId() ) ),
