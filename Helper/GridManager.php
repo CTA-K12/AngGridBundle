@@ -32,6 +32,7 @@ class GridManager {
         $this->grid = array();
 
         $this->grid['actions'] = array();
+        $this->grid['buttons'] = array();
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
         $this->grid['page'] = $request->query->get( 'page' );
@@ -82,6 +83,21 @@ class GridManager {
             $item['title'] = $alias;
         }
         $this->grid['actions'][$item['alias']] = $item;
+    }
+
+    public function setButton( $item ) {
+        $alias = $item['alias'];
+
+        if ( !isset( $item['class'] ) ) {
+            $item['class'] = 'btn btn-mini btn-default action';
+        }
+        if ( !isset( $item['icon'] ) ) {
+            $item['icon'] = 'icon-search';
+        }
+        if ( !isset( $item['title'] ) ) {
+            $item['title'] = $alias;
+        }
+        $this->grid['buttons'][$item['alias']] = $item;
     }
 
     public function setExportAlias( $alias ) {
@@ -199,6 +215,20 @@ class GridManager {
                     $paths[$action['alias']] = $this->router->generate( $action['alias'], array( 'id' => $result->getId() ) );
                 }
             }
+            $buttons = array();
+            foreach ( $this->grid['buttons'] as $button ) {
+                if ( isset( $button['function'] ) ) {
+                    $function = $button['function'];
+                    $path = $function( $result, $this->router );
+                    if ( get_class( $result ) == $this->rootClass ) {
+                        $paths[$button['alias']] = $path['path'];
+                    } else {
+                        $paths[$button['alias']] = $path;
+                    }
+                } else {
+                    $paths[$button['alias']] = $this->router->generate( $button['alias'], array( 'id' => $result->getId() ) );
+                }
+            }
             $values = array();
             foreach ( $this->grid['headers'] as $header ) {
                 if ( 'boolean' == $header['type'] ) {
@@ -245,12 +275,18 @@ class GridManager {
                 $this->grid['entities']['id_' . $result->getId()] = array(
                     'id' => $result->getId(),
                     'paths' => $paths,
+                    'buttons' => $buttons,
                     'values' => $values,
                 );
             } else {
                 foreach ( $values as $key => $value ) {
                     if ( isset( $value['id'] ) ) {
                         $this->grid['entities']['id_' . $value['id']]['values'][$key] = $value['value'];
+                    }
+                }
+                foreach ( $buttons as $key => $button ) {
+                    if ( isset( $button['id'] ) ) {
+                        $this->grid['entities']['id_' . $button['id']]['buttons'][$key] = $button['button'];
                     }
                 }
                 foreach ( $paths as $key => $path ) {
