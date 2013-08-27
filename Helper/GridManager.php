@@ -242,7 +242,7 @@ class GridManager {
                             $columns = explode( '.', $header['field'] );
                             $value = $result;
                             foreach ( $columns as $key => $column ) {
-                                if ( $key > 0 ) {
+                                if ( isset($value) && $key > 0 ) {
                                     $value = call_user_func( array( $value, 'get' . ucwords( $column ) ) );
                                 }
                             }
@@ -265,7 +265,7 @@ class GridManager {
                             $columns = explode( '.', $header['field'] );
                             $value = $result;
                             foreach ( $columns as $key => $column ) {
-                                if ( $key > 0 ) {
+                                if ( isset($value) && $key > 0 ) {
                                     $value = call_user_func( array( $value, 'get' . ucwords( $column ) ) );
                                 }
                             }
