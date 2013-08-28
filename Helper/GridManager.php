@@ -224,12 +224,14 @@ class GridManager {
                     $function = $action['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        $paths[$action['alias']] = $path['path'];
+                        if ('' != $path['path']) {
+                            $paths[$action['alias']] = $path['path'];
+                        }
                     } else {
                         if ('' != $path['path']) {
                             $path['id'] = $rootId;
+                            $paths[$action['alias']] = $path;
                         }
-                        $paths[$action['alias']] = $path;
                     }
                 } else {
                     $paths[$action['alias']] = $this->router->generate( $action['alias'], array( 'id' => $result->getId() ) );
@@ -241,12 +243,14 @@ class GridManager {
                     $function = $button['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        $buttons[$button['alias']] = $path['path'];
+                        if ('' != $path['path']) {
+                            $buttons[$button['alias']] = $path['path'];
+                        }
                     } else {
                         if ('' != $path['path']) {
                             $path['id'] = $rootId;
+                            $buttons[$button['alias']] = $path;
                         }
-                        $buttons[$button['alias']] = $path;
                     }
                 } else {
                     $buttons[$button['alias']] = $this->router->generate( $button['alias'], array( 'id' => $result->getId() ) );
