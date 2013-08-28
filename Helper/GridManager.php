@@ -159,7 +159,7 @@ class GridManager {
         $this->grid['headers'] = Query::hideColumns( $this->grid['headers'], $columns );
     }
 
-    public function getJsonResponse() {
+    public function getJsonResponse($distinct = true) {
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $search = $this->prepend.$this->grid['search'];
@@ -201,7 +201,7 @@ class GridManager {
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
             $this->grid['page'],
             $this->grid['perPage'],
-            array( 'distinct' => false ) );
+            array( 'distinct' => $distinct ) );
 
         foreach ( $results as $result ) {
             $paths = array();
