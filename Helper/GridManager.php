@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class GridManager {
     private $controller;
     private $export;
@@ -197,6 +199,14 @@ class GridManager {
                 }
             }
         }
+
+        if (is_null($this->grid['page'])) {
+            $this->grid['page'] = 1;
+        }
+        if (is_null($this->grid['perPage'])) {
+            $this->grid['perPage'] = 10;
+        }
+
         $results = $this->paginator->paginate(
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
             $this->grid['page'],
@@ -300,12 +310,12 @@ class GridManager {
             }
         }
         if ( $this->export ) {
-            $response = $this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+            $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
                 array(
                     'entities' => $this->grid['entities'],
                     'headers' => $this->grid['headers'],
                 )
-            );
+            ));
             $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
             $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
 
@@ -315,7 +325,11 @@ class GridManager {
         if ( is_null( $this->grid['exportType'] ) ) {
             $this->grid['exportLink'] = '';
         } else {
-            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . '?exportString=true&search=' . $this->grid['search'] . '&sorts=' . $this->grid['sortsString'];
+            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . 
+            '?exportString=true&search=' . $this->grid['search'] . 
+            '&sorts=' . $this->grid['sortsString'] . 
+            '&page=' . $this->grid['page'] . 
+            '&perPage=' . $this->grid['perPage'];
         }
 
         return new JsonResponse( $this->grid );
