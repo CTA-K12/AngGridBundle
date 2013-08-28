@@ -83,7 +83,7 @@
             <thead>
                 {% block tableheader %}
                     <tr>
-                        <th>
+                        <th data-ng-hide="''==data.actions">
                             <span>Actions</span>
                         </th>
                         <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
@@ -100,7 +100,7 @@
                         <td>No matches found.</td>
                     </tr>
                     <tr data-ng-repeat="entity in data.entities">
-                        <td data-role-th="Actions">
+                        <td data-role-th="Actions" data-ng-hide="''==data.actions">
                             <div class="btn-group">
                                 <a data-ng-repeat="action in notSorted(entity.paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ entity.paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
                                     <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}

@@ -1,132 +1,141 @@
 {% block grid %}
-{% block controls %}
-                                            {# {{ ngController }} is twig-- don't verbatim that#}
-<div class="row-fluid" data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
-    <div class="span5">
-        <div class="row-fluid search-control">
-            <div class="span6">
-                <input type="search" placeholder="Search" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search"/>
-            </div>
-            <div class="span1">
-            </div>
+    {% block controls %}
+        {# {{ ngController }} is twig-- don't verbatim that#}
+        <div class="row-fluid" data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
             <div class="span5">
-                <div class="row-fluid export-control">
-                    <div class="span5">
-                        <select data-ng-model="data.exportType" data-ng-change="makeRequest()" class="grid-export">
-                            <option value="csv">CSV</option>
-                            <option value="xls">Excel</option>
-                            <option value="tsv">TSV</option>
-                        </select>
-                    </div>
-                    <div class="span7">
-                        <a class="btn" data-ng-href="{% verbatim %}{{ data.exportLink }}{% endverbatim %}" target="_blank">
-                            <div class="icon-save"> Export</div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="span7">
-        <div class="row-fluid">
-            <div class="span7">
-                <div class="row-fluid">
-                    <div class="span2">
-                    </div>
-                    <div class="span4">
-                        <div class="row-fluid results-control">
-                            <strong>
-                                Showing
-                                <span data-ng-bind="data.filtered" class="filtered"></span>
-                                of
-                                <span data-ng-bind="data.total" class="total"></span>
-                            </strong>
-                        </div>
-                    </div>
+                <div class="row-fluid search-control">
                     <div class="span6">
-                        <div class="row-fluid items-per-page-control">
+                        <input type="search" placeholder="Search" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search"/>
+                    </div>
+                    <div class="span1">
+                    </div>
+                    <div class="span5">
+                        <div class="row-fluid export-control">
                             <div class="span5">
-                                <select data-ng-model="data.perPage" data-ng-change="makeRequest()" class="grid-pages">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
+                                <select data-ng-model="data.exportType" data-ng-change="makeRequest()" class="grid-export">
+                                    <option value="csv">CSV</option>
+                                    <option value="xls">Excel</option>
+                                    <option value="tsv">TSV</option>
                                 </select>
                             </div>
                             <div class="span7">
-                                per page
+                                <a class="btn" data-ng-href="{% verbatim %}{{ data.exportLink }}{% endverbatim %}" target="_blank">
+                                    <div class="icon-save"> Export</div>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="span5 page-control">
-                <span>Page</span>
-                <span class="btn-group">
-                    <button class="btn" data-ng-click="previousPage()" style="margin-bottom: 10px"><span class="icon-chevron-left"></button>
-                </span>
-                <span>
-                    <input data-ng-model="data.page" data-ng-change="makeRequest()" style="width:20%" type="text"/>
-                </span>
-                <span class="btn-group">
-                    <button class="btn" data-ng-click="nextPage()" style="margin-bottom: 10px"><span class="icon-chevron-right"></button>
-                </span>
-                <span> of</span>
-                <span data-ng-bind="data.last"></span>
-            </div>
-        </div>
-    </div>
-{% endblock controls %}
-{% if formUrl is defined %}
-    <form action="{{ formUrl }}" method="post">
-{% endif %}
-        <table class="table table-bordered table-condensed table-hover table-striped">
-            <thead>
-{% block tableheader %}
-                <tr>
-                    <th>
-                        <span>Actions</span>
-                    </th>
-                    <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                        <span>
-                        {% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}
-                        </span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-{% endblock tableheader %}
-{% block extraheader %}
-{% endblock extraheader %}
-{% block tablebody %}
-                <tr data-ng-show="!data.filtered">
-                    <td>No matches found.</td>
-                </tr>
-                <tr data-ng-repeat="entity in notSorted(data.entities)">
-                    <td data-role-th="Actions">
-                        <span class="btn-group">
-                            <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
-                                <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
-                            </a>
-                            <button data-ng-repeat="button in notSorted(data.entities[entity].buttons)"
-                                class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }}"{% endverbatim %} name={% verbatim %}"{{data.buttons[button].name}}"{% endverbatim %} value={% verbatim %}"{{ data.entities[entity].id }}"{% endverbatim %}>
-                                <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}>
-                                </span>
-                            </button>
-                        </span>
-                    </td>
-                    <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                        <div data-ng-switch on="data.headers[header].html">
-                            <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]"></div>
-                            <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]"></div>
+            <div class="span7">
+                <div class="row-fluid">
+                    <div class="span7">
+                        <div class="row-fluid">
+                            <div class="span2">
+                            </div>
+                            <div class="span4">
+                                <div class="row-fluid results-control">
+                                    <strong>
+                                        Showing
+                                        <span data-ng-bind="data.filtered" class="filtered"></span>
+                                        of
+                                        <span data-ng-bind="data.total" class="total"></span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="span6">
+                                <div class="row-fluid items-per-page-control">
+                                    <div class="span5">
+                                        <select data-ng-model="data.perPage" data-ng-change="makeRequest()" class="grid-pages">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="span7">
+                                        per page
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-{% if formUrl is defined %}
-    </form>
-{% endif %}
-</div>
-{% endblock tablebody %}
+                    </div>
+                    <div class="span5 page-control">
+                        <span>Page</span>
+                        <span class="btn-group">
+                            <button class="btn" data-ng-click="previousPage()" style="margin-bottom: 10px"><span class="icon-chevron-left"></button>
+                        </span>
+                        <span>
+                            <input data-ng-model="data.page" data-ng-change="makeRequest()" style="width:20%" type="text"/>
+                        </span>
+                        <span class="btn-group">
+                            <button class="btn" data-ng-click="nextPage()" style="margin-bottom: 10px"><span class="icon-chevron-right"></button>
+                        </span>
+                        <span> of</span>
+                        <span data-ng-bind="data.last"></span>
+                    </div>
+                </div>
+            </div>
+        {% endblock controls %}
+        {% if formUrl is defined %}
+            <form action="{{ formUrl }}" method="post">
+            {% endif %}
+            <table class="table table-bordered table-condensed table-hover table-striped">
+                {% block tableheader %}
+{#                     <thead data-ng-switch-when="">
+                        <tr>
+                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                                <span>
+                                    {% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}
+                                </span>
+                            </th>
+                        </tr>
+                    </thead> #}
+                    <thead>
+                        <tr>
+                            <th data-ng-hide="''==data.actions">
+                                <span>Actions</span>
+                            </th>
+                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                                <span>
+                                    {% verbatim %}{{data.headers[header].header}}{% endverbatim %} <span class={% verbatim %}"{{ data.headers[header].sortIcon }}">{% endverbatim %}
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                {% endblock tableheader %}
+                {% block extraheader %}
+                {% endblock extraheader %}
+                {% block tablebody %}
+                    <tbody>
+                        <tr data-ng-show="!data.filtered">
+                            <td>No matches found.</td>
+                        </tr>
+                        <tr data-ng-repeat="entity in notSorted(data.entities)">
+                            <td data-role-th="Actions" data-ng-hide="''==data.actions">
+                                <span class="btn-group">
+                                    <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.actions[action]" class={% verbatim %}"{{ data.actions[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.actions[action].title }}{% endverbatim %}">
+                                        <span class={% verbatim %}"{{data.actions[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.actions[action].text}}{% endverbatim %}
+                                    </a>
+                                    <button data-ng-repeat="button in notSorted(data.entities[entity].buttons)"
+                                        class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }}"{% endverbatim %} name={% verbatim %}"{{data.buttons[button].name}}"{% endverbatim %} value={% verbatim %}"{{ data.entities[entity].id }}"{% endverbatim %}>
+                                        <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}>
+                                        </span>
+                                    </button>
+                                </span>
+                            </td>
+                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]"data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                                <div data-ng-switch on="data.headers[header].html">
+                                    <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]"></div>
+                                    <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                {% endblock tablebody %}
+            </table>
+            {% if formUrl is defined %}
+            </form>
+        {% endif %}
+    </div>
 {% endblock grid %}
