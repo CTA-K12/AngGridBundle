@@ -213,7 +213,11 @@ class GridManager {
             $this->grid['perPage'],
             array( 'distinct' => $distinct ) );
 
+        $rootId = null;
         foreach ( $results as $result ) {
+            if ( isset( $result ) && get_class( $result ) == $this->rootClass ) {
+                $rootId = $result->getId();
+            }
             $paths = array();
             foreach ( $this->grid['actions'] as $action ) {
                 if ( isset( $action['function'] ) ) {
@@ -222,6 +226,9 @@ class GridManager {
                     if ( get_class( $result ) == $this->rootClass ) {
                         $paths[$action['alias']] = $path['path'];
                     } else {
+                        if ('' != $path['path']) {
+                            $path['id'] = $rootId;
+                        }
                         $paths[$action['alias']] = $path;
                     }
                 } else {
@@ -236,6 +243,9 @@ class GridManager {
                     if ( get_class( $result ) == $this->rootClass ) {
                         $buttons[$button['alias']] = $path['path'];
                     } else {
+                        if ('' != $path['path']) {
+                            $path['id'] = $rootId;
+                        }
                         $buttons[$button['alias']] = $path;
                     }
                 } else {
@@ -325,10 +335,10 @@ class GridManager {
         if ( is_null( $this->grid['exportType'] ) ) {
             $this->grid['exportLink'] = '';
         } else {
-            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . 
-            '?exportString=true&search=' . $this->grid['search'] . 
-            '&sorts=' . $this->grid['sortsString'] . 
-            '&page=' . $this->grid['page'] . 
+            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
+            '?exportString=true&search=' . $this->grid['search'] .
+            '&sorts=' . $this->grid['sortsString'] .
+            '&page=' . $this->grid['page'] .
             '&perPage=' . $this->grid['perPage'];
         }
 
