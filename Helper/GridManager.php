@@ -39,6 +39,7 @@ class GridManager {
         $this->grid = array();
 
         $this->grid['actions'] = array();
+        $this->grid['entities'] = array();
         $this->grid['buttons'] = array();
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
