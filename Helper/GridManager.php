@@ -9,7 +9,6 @@ use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
-use 
 
 use Symfony\Component\HttpFoundation\Response;
 
