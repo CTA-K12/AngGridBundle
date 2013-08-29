@@ -348,12 +348,23 @@ class GridManager {
 
         if ( is_null( $this->grid['exportType'] ) ) {
             $this->grid['exportLink'] = '';
+            foreach($this->grid['exportArray'] as $exType) {
+                $exType['exportLink'] = '';
+            }
         } else {
             $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
             '?exportString=true&search=' . $this->grid['search'] .
             '&sorts=' . $this->grid['sortsString'] .
             '&page=' . $this->grid['page'] .
             '&perPage=' . $this->grid['perPage'];
+            for($i = 0; $i < count($this->grid['exportArray']); $i++) {
+                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias, 
+                array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) . 
+                '?exportString=true&search=' . $this->grid['search'] . 
+                '&sorts=' . $this->grid['sortsString'] . 
+                '&page=' . $this->grid['page'] . 
+                '&perPage=' . $this->grid['perPage'];
+            }
         }
 
         return new JsonResponse( $this->grid );
