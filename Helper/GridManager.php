@@ -57,7 +57,6 @@ class GridManager {
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
                 array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
-
         if ( is_null( $this->grid['exportString'] ) ) {
             $this->export = false;
         } else {
