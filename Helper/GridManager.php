@@ -44,6 +44,16 @@ class GridManager {
         $this->grid['requestCount'] = $request->query->get( 'requestCount' );
         $this->grid['search'] = $request->query->get( 'search' );
         $this->grid['sortsString'] = $request->query->get( 'sorts' );
+        $this->grid['exportArray'] = is_null($snappy) 
+            ? array(
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
+                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
+                array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#') )
+            : array(
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
+                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
+                array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
+                array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
 
         if ( is_null( $this->grid['exportString'] ) ) {
             $this->export = false;
