@@ -41,6 +41,7 @@ class GridManager {
         $this->grid['actions'] = array();
         $this->grid['entities'] = array();
         $this->grid['buttons'] = array();
+        $this->grid['entities'] = array();
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
         $this->grid['page'] = $request->query->get( 'page' );
@@ -48,14 +49,14 @@ class GridManager {
         $this->grid['requestCount'] = $request->query->get( 'requestCount' );
         $this->grid['search'] = $request->query->get( 'search' );
         $this->grid['sortsString'] = $request->query->get( 'sorts' );
-        $this->grid['exportArray'] = is_null($snappy) 
+        $this->grid['exportArray'] = is_null($snappy)
             ? array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
-                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
+                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#') )
             : array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
-                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
+                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
                 array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
 
@@ -179,8 +180,8 @@ class GridManager {
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $search = $this->prepend.$this->grid['search'];
-        $qb = Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
-        $this->grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
+        Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
+        $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
 
         foreach ( $this->selects as $select ) {
@@ -188,37 +189,16 @@ class GridManager {
         }
 
         if ( !$this->export ) {
-            if ( 0 < $this->grid['filtered'] ) {
-                $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
-            } else {
-                $this->grid['last'] = 1;
-            }
-            if ( 1 > $this->grid['page'] ) {
-                $this->grid['page'] = 1;
-            } elseif ( $this->grid['last'] < $this->grid['page'] ) {
-                $this->grid['page'] = $this->grid['last'];
-            }
-            $qb->setFirstResult( $this->grid['perPage'] * ( $this->grid['page'] - 1 ) )
-            ->setMaxResults( $this->grid['perPage'] );
+            $this->calculatePages();
         }
 
-        if ( !is_null( $this->grid['sortsString'] ) ) {
-            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
-            foreach ( $this->grid['sorts'] as $sort ) {
-                $qb->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                if ( 'asc' == $sort->direction ) {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
-                }
-            }
-        }
+        $this->addSorts();
 
         if (is_null($this->grid['page'])) {
             $this->grid['page'] = 1;
         }
         if (is_null($this->grid['perPage'])) {
-            $this->grid['perPage'] = 10;
+            $this->grid['perPage'] = $this->grid['filtered'];
         }
 
         $results = $this->paginator->paginate(
@@ -376,16 +356,12 @@ class GridManager {
         } else {
             $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
             '?exportString=true&search=' . $this->grid['search'] .
-            '&sorts=' . $this->grid['sortsString'] .
-            '&page=' . $this->grid['page'] .
-            '&perPage=' . $this->grid['perPage'];
+            '&sorts=' . $this->grid['sortsString'];
             for($i = 0; $i < count($this->grid['exportArray']); $i++) {
-                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias, 
-                array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) . 
-                '?exportString=true&search=' . $this->grid['search'] . 
-                '&sorts=' . $this->grid['sortsString'] . 
-                '&page=' . $this->grid['page'] . 
-                '&perPage=' . $this->grid['perPage'];
+                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias,
+                array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
+                '?exportString=true&search=' . $this->grid['search'] .
+                '&sorts=' . $this->grid['sortsString'];
             }
         }
 
@@ -398,5 +374,34 @@ class GridManager {
 
     public function prependSearch($search){
         $this->prepend = $search[0].' ';
+    }
+
+    public function calculatePages() {
+            if ( 0 < $this->grid['filtered'] ) {
+                $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
+            } else {
+                $this->grid['last'] = 1;
+            }
+            if ( 1 > $this->grid['page'] ) {
+                $this->grid['page'] = 1;
+            } elseif ( $this->grid['last'] < $this->grid['page'] ) {
+                $this->grid['page'] = $this->grid['last'];
+            }
+            $this->queryBuilder->setFirstResult( $this->grid['perPage'] * ( $this->grid['page'] - 1 ) )
+            ->setMaxResults( $this->grid['perPage'] );
+    }
+
+    public function addSorts() {
+        if ( !is_null( $this->grid['sortsString'] ) ) {
+            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
+            foreach ( $this->grid['sorts'] as $sort ) {
+                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( 'asc' == $sort->direction ) {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                } else {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                }
+            }
+        }
     }
 }
