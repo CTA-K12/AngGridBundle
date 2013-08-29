@@ -1,5 +1,6 @@
 {
     "name": "mesd/ang-grid-bundle",
+    "bin": ["bin/wkhtmltopdf-amd64"]
     "license": "MIT",
     "type": "symfony-bundle",
     "description": "AngularJS Grid bundle",
