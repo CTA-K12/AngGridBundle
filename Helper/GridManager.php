@@ -179,8 +179,8 @@ class GridManager {
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $search = $this->prepend.$this->grid['search'];
-        $qb = Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
-        $this->grid['filtered'] = $qb->getQuery()->getSingleScalarResult();
+        Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
+        $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
 
         foreach ( $this->selects as $select ) {
@@ -188,31 +188,10 @@ class GridManager {
         }
 
         if ( !$this->export ) {
-            if ( 0 < $this->grid['filtered'] ) {
-                $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
-            } else {
-                $this->grid['last'] = 1;
-            }
-            if ( 1 > $this->grid['page'] ) {
-                $this->grid['page'] = 1;
-            } elseif ( $this->grid['last'] < $this->grid['page'] ) {
-                $this->grid['page'] = $this->grid['last'];
-            }
-            $qb->setFirstResult( $this->grid['perPage'] * ( $this->grid['page'] - 1 ) )
-            ->setMaxResults( $this->grid['perPage'] );
+            $this->calculatePages();
         }
 
-        if ( !is_null( $this->grid['sortsString'] ) ) {
-            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
-            foreach ( $this->grid['sorts'] as $sort ) {
-                $qb->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                if ( 'asc' == $sort->direction ) {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
-                }
-            }
-        }
+        $this->addSorts();
 
         if (is_null($this->grid['page'])) {
             $this->grid['page'] = 1;
@@ -394,5 +373,34 @@ class GridManager {
 
     public function prependSearch($search){
         $this->prepend = $search[0].' ';
+    }
+
+    public function calculatePages() {
+            if ( 0 < $this->grid['filtered'] ) {
+                $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
+            } else {
+                $this->grid['last'] = 1;
+            }
+            if ( 1 > $this->grid['page'] ) {
+                $this->grid['page'] = 1;
+            } elseif ( $this->grid['last'] < $this->grid['page'] ) {
+                $this->grid['page'] = $this->grid['last'];
+            }
+            $this->queryBuilder->setFirstResult( $this->grid['perPage'] * ( $this->grid['page'] - 1 ) )
+            ->setMaxResults( $this->grid['perPage'] );
+    }
+
+    public function addSorts() {
+        if ( !is_null( $this->grid['sortsString'] ) ) {
+            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
+            foreach ( $this->grid['sorts'] as $sort ) {
+                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( 'asc' == $sort->direction ) {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                } else {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                }
+            }
+        }
     }
 }
