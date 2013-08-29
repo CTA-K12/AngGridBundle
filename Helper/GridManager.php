@@ -4,10 +4,12 @@ namespace MESD\Ang\GridBundle\Helper;
 
 use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
+use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
+use 
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,13 +25,15 @@ class GridManager {
     private $selects;
     private $templating;
     private $prepend;
+    private $snappy;
 
-    public function __construct( EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating ) {
+    public function __construct( EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating, LoggableGenerator $snappy = null ) {
         $this->entityManager = $entityManager;
         $this->paginator = $paginator;
         $this->request = $request;
         $this->router = $router;
         $this->templating = $templating;
+        $this->snappy = $snappy;
         $this->prepend = '';
 
         $this->selects = array();
