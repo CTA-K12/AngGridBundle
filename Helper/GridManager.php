@@ -334,14 +334,32 @@ class GridManager {
             }
         }
         if ( $this->export ) {
-            $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
-                array(
-                    'entities' => $this->grid['entities'],
-                    'headers' => $this->grid['headers'],
-                )
-            ));
-            $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
-            $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
+            if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
+                $html = $this->templating->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
+                    array(
+                        'entities' => $this->grid['entities'],
+                        'headers' => $this->grid['headers'],
+                    )
+                );
+
+                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape')),
+                    200,
+                    array(
+                        'Content-Type'          => 'application/pdf',
+                        'Content-Disposition'   => 'attachment; filename="export.pdf"'
+                    )
+                );
+            }
+            else {
+                $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+                    array(
+                        'entities' => $this->grid['entities'],
+                        'headers' => $this->grid['headers'],
+                    )
+                ));
+                $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
+                $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
+            }
 
             return $response;
         }
