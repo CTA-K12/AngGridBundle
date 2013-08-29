@@ -174,7 +174,7 @@ class GridManager {
         $this->grid['headers'] = Query::hideColumns( $this->grid['headers'], $columns );
     }
 
-    public function getJsonResponse() {
+    public function getJsonResponse($distinct = true) {
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $search = $this->prepend.$this->grid['search'];
@@ -217,18 +217,27 @@ class GridManager {
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
             $this->grid['page'],
             $this->grid['perPage'],
-            array( 'distinct' => false ) );
+            array( 'distinct' => $distinct ) );
 
+        $rootId = null;
         foreach ( $results as $result ) {
+            if ( isset( $result ) && get_class( $result ) == $this->rootClass ) {
+                $rootId = $result->getId();
+            }
             $paths = array();
             foreach ( $this->grid['actions'] as $action ) {
                 if ( isset( $action['function'] ) ) {
                     $function = $action['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        $paths[$action['alias']] = $path['path'];
+                        if ('' != $path['path']) {
+                            $paths[$action['alias']] = $path['path'];
+                        }
                     } else {
-                        $paths[$action['alias']] = $path;
+                        if ('' != $path['path']) {
+                            $path['id'] = $rootId;
+                            $paths[$action['alias']] = $path;
+                        }
                     }
                 } else {
                     $paths[$action['alias']] = $this->router->generate( $action['alias'], array( 'id' => $result->getId() ) );
@@ -240,9 +249,14 @@ class GridManager {
                     $function = $button['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        $buttons[$button['alias']] = $path['path'];
+                        if ('' != $path['path']) {
+                            $buttons[$button['alias']] = $path['path'];
+                        }
                     } else {
-                        $buttons[$button['alias']] = $path;
+                        if ('' != $path['path']) {
+                            $path['id'] = $rootId;
+                            $buttons[$button['alias']] = $path;
+                        }
                     }
                 } else {
                     $buttons[$button['alias']] = $this->router->generate( $button['alias'], array( 'id' => $result->getId() ) );
@@ -352,10 +366,10 @@ class GridManager {
                 $exType['exportLink'] = '';
             }
         } else {
-            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) . 
-            '?exportString=true&search=' . $this->grid['search'] . 
-            '&sorts=' . $this->grid['sortsString'] . 
-            '&page=' . $this->grid['page'] . 
+            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
+            '?exportString=true&search=' . $this->grid['search'] .
+            '&sorts=' . $this->grid['sortsString'] .
+            '&page=' . $this->grid['page'] .
             '&perPage=' . $this->grid['perPage'];
             for($i = 0; $i < count($this->grid['exportArray']); $i++) {
                 $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias, 
