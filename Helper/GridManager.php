@@ -4,7 +4,6 @@ namespace MESD\Ang\GridBundle\Helper;
 
 use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
-use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,15 +23,13 @@ class GridManager {
     private $selects;
     private $templating;
     private $prepend;
-    private $snappy;
 
-    public function __construct( EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating, LoggableGenerator $snappy = null ) {
+    public function __construct( EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating ) {
         $this->entityManager = $entityManager;
         $this->paginator = $paginator;
         $this->request = $request;
         $this->router = $router;
         $this->templating = $templating;
-        $this->snappy = $snappy;
         $this->prepend = '';
 
         $this->selects = array();
@@ -47,16 +44,6 @@ class GridManager {
         $this->grid['requestCount'] = $request->query->get( 'requestCount' );
         $this->grid['search'] = $request->query->get( 'search' );
         $this->grid['sortsString'] = $request->query->get( 'sorts' );
-        $this->grid['exportArray'] = is_null($snappy) 
-            ? array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
-                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
-                array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#') )
-            : array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
-                array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
-                array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
-                array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
 
         if ( is_null( $this->grid['exportString'] ) ) {
             $this->export = false;
@@ -213,6 +200,13 @@ class GridManager {
             }
         }
 
+        if (is_null($this->grid['page'])) {
+            $this->grid['page'] = 1;
+        }
+        if (is_null($this->grid['perPage'])) {
+            $this->grid['perPage'] = 10;
+        }
+
         $results = $this->paginator->paginate(
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
             $this->grid['page'],
@@ -230,11 +224,11 @@ class GridManager {
                     $function = $action['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        if ('' != $path['path']) {
+                        if (null !== $path['path']) {
                             $paths[$action['alias']] = $path['path'];
                         }
                     } else {
-                        if ('' != $path['path']) {
+                        if (null !== $path['path']) {
                             $path['id'] = $rootId;
                             $paths[$action['alias']] = $path;
                         }
@@ -249,11 +243,11 @@ class GridManager {
                     $function = $button['function'];
                     $path = $function( $result, $this->router );
                     if ( get_class( $result ) == $this->rootClass ) {
-                        if ('' != $path['path']) {
+                        if (null !== $path['path']) {
                             $buttons[$button['alias']] = $path['path'];
                         }
                     } else {
-                        if ('' != $path['path']) {
+                        if (null !== $path['path']) {
                             $path['id'] = $rootId;
                             $buttons[$button['alias']] = $path;
                         }
@@ -330,55 +324,26 @@ class GridManager {
             }
         }
         if ( $this->export ) {
-            if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
-                $html = $this->templating->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
-                    array(
-                        'entities' => $this->grid['entities'],
-                        'headers' => $this->grid['headers'],
-                    )
-                );
-
-                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape')),
-                    200,
-                    array(
-                        'Content-Type'          => 'application/pdf',
-                        'Content-Disposition'   => 'attachment; filename="export.pdf"'
-                    )
-                );
-            }
-            else {
-                $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
-                    array(
-                        'entities' => $this->grid['entities'],
-                        'headers' => $this->grid['headers'],
-                    )
-                ));
-                $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
-                $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
-            }
+            $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+                array(
+                    'entities' => $this->grid['entities'],
+                    'headers' => $this->grid['headers'],
+                )
+            ));
+            $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
+            $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
 
             return $response;
         }
 
         if ( is_null( $this->grid['exportType'] ) ) {
             $this->grid['exportLink'] = '';
-            foreach($this->grid['exportArray'] as $exType) {
-                $exType['exportLink'] = '';
-            }
         } else {
             $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
             '?exportString=true&search=' . $this->grid['search'] .
             '&sorts=' . $this->grid['sortsString'] .
             '&page=' . $this->grid['page'] .
             '&perPage=' . $this->grid['perPage'];
-            for($i = 0; $i < count($this->grid['exportArray']); $i++) {
-                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias, 
-                array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) . 
-                '?exportString=true&search=' . $this->grid['search'] . 
-                '&sorts=' . $this->grid['sortsString'] . 
-                '&page=' . $this->grid['page'] . 
-                '&perPage=' . $this->grid['perPage'];
-            }
         }
 
         return new JsonResponse( $this->grid );
