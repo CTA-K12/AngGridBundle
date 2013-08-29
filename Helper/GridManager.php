@@ -51,11 +51,11 @@ class GridManager {
             ? array(
                 array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
-                array('label' => 'Excel', 'value' => 'excel', 'exportLink' => '#') )
+                array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#') )
             : array(
                 array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'), 
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'), 
-                array('label' => 'Excel', 'value' => 'excel', 'exportLink' => '#'),
+                array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
                 array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
 
         if ( is_null( $this->grid['exportString'] ) ) {
