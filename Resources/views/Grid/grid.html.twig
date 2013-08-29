@@ -11,17 +11,15 @@
                     </div>
                     <div class="span5">
                         <div class="row-fluid export-control">
-                            <div class="span5">
-                                <select data-ng-model="data.exportType" data-ng-change="makeRequest()" class="grid-export">
-                                    <option value="csv">CSV</option>
-                                    <option value="xls">Excel</option>
-                                    <option value="tsv">TSV</option>
-                                </select>
-                            </div>
-                            <div class="span7">
-                                <a class="btn" data-ng-href="{% verbatim %}{{ data.exportLink }}{% endverbatim %}" target="_blank">
-                                    <div class="icon-save"> Export</div>
-                                </a>
+                            Export: 
+                            <div class="btn-group">
+                                <a data-ng-href="{% verbatim %}{{ data.exportArray[0].exportLink }}{% endverbatim %}" class="btn">{% verbatim %}{{ data.exportArray[0].label }}{% endverbatim %}</a>
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a data-ng-repeat="option in data.exportArray" data-ng-click="data.setExportType(option.value)" data-ng-href="{% verbatim %}{{ option.exportLink }}{% endverbatim %}">{% verbatim %}{{ option.label }}{% endverbatim %}</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

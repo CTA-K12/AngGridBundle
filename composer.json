@@ -4,7 +4,8 @@
     "type": "symfony-bundle",
     "description": "AngularJS Grid bundle",
     "require": {
-        "knplabs/knp-paginator-bundle": "dev-master"
+        "knplabs/knp-paginator-bundle": "dev-master",
+        "knplabs/knp-snappy-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "MESD\\Ang\\GridBundle": "" }

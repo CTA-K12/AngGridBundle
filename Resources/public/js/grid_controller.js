@@ -1,6 +1,6 @@
 'use strict';
 
-function GridController($scope, $http) {
+function GridController($scope, $http, $location) {
     $scope.data = {};
     $scope.data.last = 1;
     $scope.data.page = 1;
@@ -9,6 +9,7 @@ function GridController($scope, $http) {
     $scope.data.search = '';
     $scope.data.sorts = {};
     $scope.data.requestCount = 0;
+    $scope.data.exportArray = {};
 
     $scope.notSorted = function(obj){
         if (!obj) {
@@ -57,6 +58,7 @@ function GridController($scope, $http) {
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
             $scope.data.total = data.total;
+            $scope.data.exportArray = data.exportArray;
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
