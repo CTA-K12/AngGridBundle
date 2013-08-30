@@ -23,8 +23,18 @@ app/AppKernel.php
 ```php
         $bundles = array(
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new MESD\Ang\GridBundle\MESDAngGridBundle(),
         );
+```
+
+app/config/config.yml
+```yml
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     "%kernel.root_dir%/../bin/wkhtmltopdf-amd64"
+        options:    []
 ```
 
 app/Resources/views/base.html.twig
@@ -96,6 +106,7 @@ class ChangeThisController extends Controller
             , $this->get('request')
             , $this->get('router')
             , $this->get('templating')
+            , $this->get('knp_snappy.pdf') //This can also be null, which will hide the pdf option from the export menu
         );
 
         $gm->setQueryBuilder($qb);

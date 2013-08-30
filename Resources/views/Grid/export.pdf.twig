@@ -1,7 +1,5 @@
 {% block stylesheets %}
-
     {% include 'MESDAngGridBundle:css:pdf.css.twig' %}
-
 {% endblock stylesheets %}
 
 <table>
@@ -13,7 +11,7 @@
     {% for entity in entities %}
         <tr>
             {% for header in headers %}
-                <td>{{ entity.values[header.column] }}</td>
+                <td>{{ entity.values[header.column]|raw }}</td>
             {% endfor %}
         </tr>
     {% endfor %}
