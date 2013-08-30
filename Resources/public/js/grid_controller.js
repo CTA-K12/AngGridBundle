@@ -49,7 +49,6 @@ function GridController($scope, $http, $location) {
             if (parseInt(data.requestCount) != $scope.data.requestCount) {
                 return;
             }
-            $scope.data.actions = data.actions;
             $scope.data.buttons = data.buttons;
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
@@ -57,6 +56,7 @@ function GridController($scope, $http, $location) {
             $scope.data.last = data.last;
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
+            $scope.data.paths = data.paths;
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
         }).error(function(data, status, headers, config) {

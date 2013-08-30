@@ -38,7 +38,7 @@ class GridManager {
         $this->selects = array();
         $this->grid = array();
 
-        $this->grid['actions'] = array();
+        $this->grid['paths'] = array();
         $this->grid['entities'] = array();
         $this->grid['buttons'] = array();
         $this->grid['entities'] = array();
@@ -89,7 +89,7 @@ class GridManager {
         $this->selects[$select] = $select;
     }
 
-    public function setAction( $item ) {
+    public function setPath( $item ) {
         $alias = $item['alias'];
 
         if ( !isset( $item['class'] ) ) {
@@ -101,7 +101,7 @@ class GridManager {
         if ( !isset( $item['title'] ) ) {
             $item['title'] = $alias;
         }
-        $this->grid['actions'][$item['alias']] = $item;
+        $this->grid['paths'][$item['alias']] = $item;
     }
 
     public function setButton( $item ) {
@@ -321,20 +321,20 @@ class GridManager {
     }
 
     public function processResultSet() {
-        $actions = $this->processActions();
-        $buttons = $this->processButtons();
+        $paths = $this->processActions('paths');
+        $buttons = $this->processActions('buttons');
         $values = $this->processValues();
         $this->grid['entities']['id_' . $this->resultSet['root']->getId()] = array(
             'id' => $this->resultSet['root']->getId(),
-            'paths' => $actions,
+            'paths' => $paths,
             'buttons' => $buttons,
             'values' => $values,
         );
     }
 
-    public function processActions() {
+    public function processActions($name) {
         $actions = array();
-        foreach($this->grid['actions'] as $action) {
+        foreach($this->grid[$name] as $action) {
             if (isset($action['function'])) {
                 $function = $action['function'];
                 $path = $function($this->resultSet, $this->router);
@@ -348,18 +348,23 @@ class GridManager {
         return $actions;
     }
 
-    public function processButtons() {
-        $buttons = array();
-        foreach($this->grid['buttons'] as $button) {
-            if (isset($button['function'])) {
-            }
-        }
-        return $buttons;
-    }
-
     public function processValues() {
         $values = array();
         foreach($this->grid['headers'] as $header) {
+            if (isset($header['function'])) {
+                $function = $header['function'];
+                $value = $function($this->resultSet);
+                $values[$header['column']] = $value['value'];
+            } else {
+                $columns = explode( '.', $header['field'] );
+                $value = $this->resultSet['root'];
+                foreach ( $columns as $key => $column ) {
+                    if ( isset($value) && $key > 0 ) {
+                        $value = call_user_func( array( $value, 'get' . ucwords( $column ) ) );
+                    }
+                }
+                $values[$header['column']] = $value;
+            }
         }
         return $values;
     }
@@ -367,44 +372,6 @@ class GridManager {
             /*
             if ( isset( $result ) && get_class( $result ) == $this->rootClass ) {
                 $rootId = $result->getId();
-            }
-            $paths = array();
-            foreach ( $this->grid['actions'] as $action ) {
-                if ( isset( $action['function'] ) ) {
-                    $function = $action['function'];
-                    $path = $function( $result, $this->router );
-                    if ( get_class( $result ) == $this->rootClass ) {
-                        if (null !== $path['path']) {
-                            $paths[$action['alias']] = $path['path'];
-                        }
-                    } else {
-                        if (null !== $path['path']) {
-                            $path['id'] = $rootId;
-                            $paths[$action['alias']] = $path;
-                        }
-                    }
-                } else {
-                    $paths[$action['alias']] = $this->router->generate( $action['alias'], array( 'id' => $result->getId() ) );
-                }
-            }
-            $buttons = array();
-            foreach ( $this->grid['buttons'] as $button ) {
-                if ( isset( $button['function'] ) ) {
-                    $function = $button['function'];
-                    $path = $function( $result, $this->router );
-                    if ( get_class( $result ) == $this->rootClass ) {
-                        if (null !== $path['path']) {
-                            $buttons[$button['alias']] = $path['path'];
-                        }
-                    } else {
-                        if (null !== $path['path']) {
-                            $path['id'] = $rootId;
-                            $buttons[$button['alias']] = $path;
-                        }
-                    }
-                } else {
-                    $buttons[$button['alias']] = $this->router->generate( $button['alias'], array( 'id' => $result->getId() ) );
-                }
             }
             $values = array();
             foreach ( $this->grid['headers'] as $header ) {
