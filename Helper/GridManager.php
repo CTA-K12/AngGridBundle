@@ -326,8 +326,7 @@ class GridManager {
                     )
                 );
 
-                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape',
-                        'footer-html' => 'End of Page')),
+                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape')),
                     200,
                     array(
                         'Content-Type'          => 'application/pdf',
