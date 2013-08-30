@@ -363,6 +363,9 @@ class GridManager {
                         $value = call_user_func( array( $value, 'get' . ucwords( $column ) ) );
                     }
                 }
+                if (is_null($value)) {
+                    $value = '-';
+                }
                 $values[$header['column']] = $value;
             }
         }
