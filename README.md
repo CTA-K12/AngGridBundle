@@ -98,7 +98,7 @@ class ChangeThisController extends Controller
         $em = $this->getDoctrine()->getManager();
         $qb = $em->getRepository('MESDAppChangeThisBundle:Example')
             ->createQueryBuilder('example');
-        $qb->leftJoin('example.another', 'another');
+        $qb->leftJoin('example.notAssociated', 'notAssociated');
 
         $gm = new GridManager(
             $this->get('doctrine.orm.entity_manager')
@@ -116,71 +116,110 @@ class ChangeThisController extends Controller
         $gm->setExportType($exportType);
         $gm->setExportAlias('example_export');
 
-        $gm->setAction( array(
-                'alias'   => 'example_show'
-                , 'icon'  => 'icon-search'
-                , 'title' => 'Show'
+        $gm->setPath( array(
+                'alias'    => 'example_show',
+                'icon'     => 'icon-search',
+                'title'    => 'Show',
             )
         );
 
-        $gm->setAction( array(
-                'alias'   => 'example_edit'
-                , 'icon'  => 'icon-pencil'
-                , 'title' => 'Edit'
+        $gm->setPath( array(
+                'alias'    => 'example_edit',
+                'icon'     => 'icon-pencil',
+                'title'    => 'Edit',
             )
         );
 
         // this is set with a function because the action is based on the id of an associated entity
-        $gm->setAction( array(
-                'alias'      => 'another_show'
-                , 'icon'     => 'icon-file'
-                , 'title'    => 'Show Another'
-                , 'function' => function( $result, $router ) {
-                    if ( isset($result) && get_class( $result ) == 'MESD\App\ChangeThisBundle\Entity\Another' ) {
+        $gm->setPath( array(
+                'alias'    => 'associated_show',
+                'icon'     => 'icon-file',
+                'title'    => 'Show Associated',
+                'function' => function($resultSet, $router) {
+                    $class = 'MESD\ORMed\ORMedBundle\Entity\Associated';
+                    if (isset($resultSet[$class]) && 0 < count($resultSet[$class])) {
                         return array(
-                            'id' => $result->getExample()->getId(),
-                            'path' => $router->generate( 'another_show', array( 'id' => $result->getId() ) ),
+                            'path' => $router->generate('associated_show', array('id' => $resultSet['root']->getAssociated()->getId())),
                         );
                     }
-                    return array( 'path' => '' );
-                }
+                    return array('path' => null);
+                },
+            )
+        );
+
+        // this is set with a function because the action is based on the id of a non associated entity
+        $gm->setPath( array(
+                'alias'    => 'not_associated_show',
+                'icon'     => 'icon-file',
+                'title'    => 'Show Not Associated',
+                'function' => function($resultSet, $router) {
+                    $class = 'MESD\ORMed\ORMedBundle\Entity\NotAssociated';
+                    if (isset($resultSet[$class]) && 0 < count($resultSet[$class])) {
+                        return array(
+                            'path' => $router->generate('not_associated_show', array('id' => $resultSet[$class][0]->getId())),
+                        );
+                    }
+                    return array('path' => null);
+                },
             )
         );
 
         $gm->setButton( array(
-                'alias'   => 'example_delete'
-                , 'class' => 'btn btn-danger btn-mini'
-                , 'icon'  => 'icon-remove'
-                , 'title' => 'Delete'
+                'alias'    => 'example_delete'
+                'class'    => 'btn btn-danger btn-mini'
+                'icon'     => 'icon-remove'
+                'title'    => 'Delete'
             )
         );
 
 
         $gm->setHeader( array(
-                'field'   => 'example.shortName'
-                , 'title' => 'Short Name'
+                'field'    => 'example.shortName'
+                'title'    => 'Short Name'
             )
         );
 
         $gm->setHeader( array(
-                'field'   => 'example.longName'
-                , 'title' => 'Long Name'
+                'field'    => 'example.longName'
+                'title'    => 'Long Name'
             )
         );
 
         $gm->setHeader( array(
-                'field'   => 'example.another.shortName'
-                , 'title' => 'Another'
+                'field'    => 'example.another.shortName'
+                'title'    => 'Another'
             )
         );
 
         // date and time fields have to be given a function or else you get [Object object]
         $gm->setHeader( array(
-                'field'      => 'example.effective'
-                , 'title'    => 'Effective Date'
-                , 'function' => function( $result ) {
-                    return array( 'value' => $result ? $result->getDate()->format( 'm/d/Y' ) : '' );
-                }
+                'field'    => 'example.effective'
+                'title'    => 'Effective Date'
+                'function' => function($resultSet) {
+                    return array('value' => $resultSet['root']->getDate() ? $resultSet['root']->getDate()->format( 'm/d/Y' ) : '-' );
+                },
+            )
+        );
+
+        if ($gm->isExport()) {
+            $getItemOutput = function($resultSet) {
+                    $items = $resultSet['root']->getItem()->toArray();
+                    sort($items);
+                    return array('value' => implode($items, ', ' ));
+            };
+        } else {
+            $getItemOutput = function($resultSet) {
+                    $items = $resultSet['root']->items()->toArray();
+                    sort($items);
+                    return array('value' => '<div>'.implode($items, '</div><div>' ).'</div>');
+            };
+        }
+
+        $gm->setHeader(array(
+                'field'    => 'example.item.shortName',
+                'title'    => 'Items',
+                'html'     => 'true',
+                'function' => $getItemOutput,
             )
         );
 
