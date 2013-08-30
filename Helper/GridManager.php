@@ -201,14 +201,170 @@ class GridManager {
             $this->grid['perPage'] = $this->grid['filtered'];
         }
 
-        $results = $this->paginator->paginate(
+        $this->results = $this->paginator->paginate(
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
             $this->grid['page'],
             $this->grid['perPage'],
             array( 'distinct' => $distinct ) );
 
         $rootId = null;
-        foreach ( $results as $result ) {
+
+        $this->processResults();
+
+        if ( $this->export ) {
+            if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
+                $html = $this->templating->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
+                    array(
+                        'entities' => $this->grid['entities'],
+                        'headers' => $this->grid['headers'],
+                    )
+                );
+
+                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape')),
+                    200,
+                    array(
+                        'Content-Type'          => 'application/pdf',
+                        'Content-Disposition'   => 'attachment; filename="export.pdf"'
+                    )
+                );
+            }
+            else {
+                $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+                    array(
+                        'entities' => $this->grid['entities'],
+                        'headers' => $this->grid['headers'],
+                    )
+                ));
+                $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
+                $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
+            }
+
+            return $response;
+        }
+
+        if ( is_null( $this->grid['exportType'] ) ) {
+            $this->grid['exportLink'] = '';
+            foreach($this->grid['exportArray'] as $exType) {
+                $exType['exportLink'] = '';
+            }
+        } else {
+            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
+            '?exportString=true&search=' . $this->grid['search'] .
+            '&sorts=' . $this->grid['sortsString'];
+            for($i = 0; $i < count($this->grid['exportArray']); $i++) {
+                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias,
+                array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
+                '?exportString=true&search=' . $this->grid['search'] .
+                '&sorts=' . $this->grid['sortsString'];
+            }
+        }
+
+        return new JsonResponse( $this->grid );
+    }
+
+    public function setFormUrl($url) {
+        $this->grid['formUrl'] = $url;
+    }
+
+    public function prependSearch($search){
+        $this->prepend = $search[0].' ';
+    }
+
+    public function calculatePages() {
+            if ( 0 < $this->grid['filtered'] ) {
+                $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
+            } else {
+                $this->grid['last'] = 1;
+            }
+            if ( 1 > $this->grid['page'] ) {
+                $this->grid['page'] = 1;
+            } elseif ( $this->grid['last'] < $this->grid['page'] ) {
+                $this->grid['page'] = $this->grid['last'];
+            }
+            $this->queryBuilder->setFirstResult( $this->grid['perPage'] * ( $this->grid['page'] - 1 ) )
+            ->setMaxResults( $this->grid['perPage'] );
+    }
+
+    public function addSorts() {
+        if ( !is_null( $this->grid['sortsString'] ) ) {
+            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
+            foreach ( $this->grid['sorts'] as $sort ) {
+                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( 'asc' == $sort->direction ) {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                } else {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                }
+            }
+        }
+    }
+
+    public function isExport() {
+        return $this->export;
+    }
+
+    public function processResults() {
+        $this->resultSet = null;
+        foreach ($this->results as $result) {
+            if (isset($result)) {
+                $class = get_class($result);
+                if ($class == $this->rootClass) {
+                    if (isset($this->resultSet)) {
+                        $this->processResultSet();
+                    }
+                    $this->resultSet = array('root' => $result);
+                }
+                $this->resultSet[$class][] = $result;
+            }
+        }
+        $this->processResultSet();
+    }
+
+    public function processResultSet() {
+        $actions = $this->processActions();
+        $buttons = $this->processButtons();
+        $values = $this->processValues();
+        $this->grid['entities']['id_' . $this->resultSet['root']->getId()] = array(
+            'id' => $this->resultSet['root']->getId(),
+            'paths' => $actions,
+            'buttons' => $buttons,
+            'values' => $values,
+        );
+    }
+
+    public function processActions() {
+        $actions = array();
+        foreach($this->grid['actions'] as $action) {
+            if (isset($action['function'])) {
+                $function = $action['function'];
+                $path = $function($this->resultSet, $this->router);
+                if (isset($path['path'])) {
+                    $actions[$action['alias']] = $path['path'];
+                }
+            } else {
+                $actions[$action['alias']] = $this->router->generate($action['alias'], array('id' => $this->resultSet['root']->getId()));
+            }
+        }
+        return $actions;
+    }
+
+    public function processButtons() {
+        $buttons = array();
+        foreach($this->grid['buttons'] as $button) {
+            if (isset($button['function'])) {
+            }
+        }
+        return $buttons;
+    }
+
+    public function processValues() {
+        $values = array();
+        foreach($this->grid['headers'] as $header) {
+        }
+        return $values;
+    }
+
+            /*
             if ( isset( $result ) && get_class( $result ) == $this->rootClass ) {
                 $rootId = $result->getId();
             }
@@ -317,95 +473,6 @@ class GridManager {
                 }
             }
         }
-        if ( $this->export ) {
-            if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
-                $html = $this->templating->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
-                    array(
-                        'entities' => $this->grid['entities'],
-                        'headers' => $this->grid['headers'],
-                    )
-                );
-
-                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape')),
-                    200,
-                    array(
-                        'Content-Type'          => 'application/pdf',
-                        'Content-Disposition'   => 'attachment; filename="export.pdf"'
-                    )
-                );
-            }
-            else {
-                $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
-                    array(
-                        'entities' => $this->grid['entities'],
-                        'headers' => $this->grid['headers'],
-                    )
-                ));
-                $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
-                $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
-            }
-
-            return $response;
-        }
-
-        if ( is_null( $this->grid['exportType'] ) ) {
-            $this->grid['exportLink'] = '';
-            foreach($this->grid['exportArray'] as $exType) {
-                $exType['exportLink'] = '';
-            }
-        } else {
-            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
-            '?exportString=true&search=' . $this->grid['search'] .
-            '&sorts=' . $this->grid['sortsString'];
-            for($i = 0; $i < count($this->grid['exportArray']); $i++) {
-                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias,
-                array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
-                '?exportString=true&search=' . $this->grid['search'] .
-                '&sorts=' . $this->grid['sortsString'];
-            }
-        }
-
-        return new JsonResponse( $this->grid );
     }
-
-    public function setFormUrl($url) {
-        $this->grid['formUrl'] = $url;
-    }
-
-    public function prependSearch($search){
-        $this->prepend = $search[0].' ';
-    }
-
-    public function calculatePages() {
-            if ( 0 < $this->grid['filtered'] ) {
-                $this->grid['last'] = ceil( $this->grid['filtered'] / $this->grid['perPage'] );
-            } else {
-                $this->grid['last'] = 1;
-            }
-            if ( 1 > $this->grid['page'] ) {
-                $this->grid['page'] = 1;
-            } elseif ( $this->grid['last'] < $this->grid['page'] ) {
-                $this->grid['page'] = $this->grid['last'];
-            }
-            $this->queryBuilder->setFirstResult( $this->grid['perPage'] * ( $this->grid['page'] - 1 ) )
-            ->setMaxResults( $this->grid['perPage'] );
-    }
-
-    public function addSorts() {
-        if ( !is_null( $this->grid['sortsString'] ) ) {
-            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
-            foreach ( $this->grid['sorts'] as $sort ) {
-                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                if ( 'asc' == $sort->direction ) {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
-                }
-            }
-        }
-    }
-
-    public function isExport() {
-        return $this->export;
-    }
+            */
 }
