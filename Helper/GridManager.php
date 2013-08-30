@@ -403,4 +403,8 @@ class GridManager {
             }
         }
     }
+
+    public function isExport() {
+        return $this->export;
+    }
 }
