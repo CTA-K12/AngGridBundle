@@ -3,18 +3,17 @@
         {% block controls %}
             {# {{ ngController }} is twig-- don't verbatim that#}
             <div class="row-fluid">
-                <div class="span5">
+                <div class="span4">
                     <div class="row-fluid search-control">
                         <div class="span6">
                             <input type="search" placeholder="Search" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search"/>
                         </div>
-                        <div class="span1">
-                        </div>
-                        <div class="span5">
+{#                         <div class="span1">
+                        </div> #}
+                        <div class="span6">
                             <div class="row-fluid export-control">
-                                Export:
                                 <div class="btn-group">
-                                    <a data-ng-href="{% verbatim %}{{ data.exportArray[0].exportLink }}{% endverbatim %}" class="btn">{% verbatim %}{{ data.exportArray[0].label }}{% endverbatim %}</a>
+                                    <a data-ng-href="{% verbatim %}{{ data.exportArray[0].exportLink }}{% endverbatim %}" class="btn">Export</a>
                                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                                         <span class="caret"></span>
                                     </button>
@@ -26,13 +25,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="span7">
+                <div class="span8">
                     <div class="row-fluid">
                         <div class="span7">
                             <div class="row-fluid">
-                                <div class="span2">
-                                </div>
-                                <div class="span4">
+                                <div class="span5">
                                     <div class="row-fluid results-control">
                                         <strong>
                                             Showing
@@ -42,7 +39,7 @@
                                         </strong>
                                     </div>
                                 </div>
-                                <div class="span6">
+                                <div class="span7">
                                     <div class="row-fluid items-per-page-control">
                                         <div class="span5">
                                             <select data-ng-model="data.perPage" data-ng-change="makeRequest()" class="grid-pages">
