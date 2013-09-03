@@ -1,15 +1,9 @@
 'use strict';
 
-function GridController($scope, $http, $location) {
-    $scope.data = {};
-    $scope.data.last = 1;
-    $scope.data.page = 1;
-    $scope.data.perPage = 10;
+function GridController($scope, $http, $location, initData) {
+    $scope.data = initData.initData();
     $scope.data.exportType ='csv';
-    $scope.data.search = '';
-    $scope.data.sorts = {};
     $scope.data.requestCount = 0;
-    $scope.data.exportArray = {};
     $scope.data.addView=false;
 
     $scope.toggleAdd = function(obj){
@@ -69,7 +63,7 @@ function GridController($scope, $http, $location) {
         });
     }
 
-    $scope.makeRequest();
+    //$scope.makeRequest();
 
     if (typeof $("select.grid-export").select2 == 'function'){
 
@@ -112,7 +106,7 @@ function GridController($scope, $http, $location) {
         }
     }
     $scope.sort = function(event, column) {
-        if (undefined == $scope.data.sorts.length) {
+        if (undefined == $scope.data.sorts) {
             $scope.data.sorts = [{column: column, direction: 'asc'}];
         } else {
             if (event.shiftKey) {

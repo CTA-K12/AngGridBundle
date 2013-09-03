@@ -265,7 +265,49 @@ class GridManager {
             }
         }
 
-        return new JsonResponse( $this->grid );
+        if ('js' == $this->grid['exportType']) {
+            $response = new JsonResponse( $this->grid );
+            //$initData = 'var initData = ' . $response->getContent();
+            /*
+myApp.service('helloWorldFromService', function() {
+    this.sayHello = function() {
+        return "Hello, World!"
+    };
+});
+*/
+            //$initData = 'gridModule.provider(\'initData\', function() {this.initData = function() {return ' . $response->getContent() . '};});';
+
+            $initData = <<<EOT
+//provider style, full blown, configurable version
+gridModule.provider('initData', function() {
+    // In the provider function, you cannot inject any
+    // service or factory. This can only be done at the
+    // "\$get" method.
+
+    this.name = 'Default';
+
+    this.\$get = function() {
+        var name = this.name;
+        return {
+            initData: function() {
+EOT;
+                $initData .= 'return ' . $response->getContent();
+                $initData .= <<<EOT
+;
+            }
+        }
+    };
+
+    this.setName = function(name) {
+        this.name = name;
+    };
+});
+EOT;
+
+            return new Response($initData);
+        } else {
+            return new JsonResponse( $this->grid );
+        }
     }
 
     public function setFormUrl($url) {
@@ -293,13 +335,15 @@ class GridManager {
 
     public function addSorts() {
         if ( !is_null( $this->grid['sortsString'] ) ) {
-            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
-            foreach ( $this->grid['sorts'] as $sort ) {
-                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                if ( 'asc' == $sort->direction ) {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+            if ('' != $this->grid['sortsString']) {
+                $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
+                foreach ( $this->grid['sorts'] as $sort ) {
+                    $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                    if ( 'asc' == $sort->direction ) {
+                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                    } else {
+                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                    }
                 }
             }
         }
