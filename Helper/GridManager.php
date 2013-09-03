@@ -209,7 +209,9 @@ class GridManager {
 
         $rootId = null;
 
-        $this->processResults();
+        if (0 < count($this->results)) {
+            $this->processResults();
+        }
 
         if ( $this->export ) {
             if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
@@ -220,7 +222,7 @@ class GridManager {
                     )
                 );
 
-                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape', 
+                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape',
                         'print-media-type' => true,
                         'footer-left'  => 'Exported on [date] at [time]',
                         'footer-right' => 'Page [page] of [toPage]')),
