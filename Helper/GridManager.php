@@ -184,32 +184,33 @@ class GridManager {
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
 
-        foreach ( $this->selects as $select ) {
-            $this->queryBuilder->addSelect( $select );
-        }
+        if (0 < $this->grid['filtered']) {
 
-        if (is_null($this->grid['page'])) {
-            $this->grid['page'] = 1;
-        }
-        if (is_null($this->grid['perPage'])) {
-            $this->grid['perPage'] = $this->grid['filtered'];
-        }
+            foreach ( $this->selects as $select ) {
+                $this->queryBuilder->addSelect( $select );
+            }
 
-        if ( !$this->export ) {
-            $this->calculatePages();
-        }
+            if (is_null($this->grid['page'])) {
+                $this->grid['page'] = 1;
+            }
+            if (is_null($this->grid['perPage'])) {
+                $this->grid['perPage'] = $this->grid['filtered'];
+            }
 
-        $this->addSorts();
+            if ( !$this->export ) {
+                $this->calculatePages();
+            }
 
-        $this->results = $this->paginator->paginate(
-            $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
-            $this->grid['page'],
-            $this->grid['perPage'],
-            array( 'distinct' => $distinct ) );
+            $this->addSorts();
 
-        $rootId = null;
+            $this->results = $this->paginator->paginate(
+                $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
+                $this->grid['page'],
+                $this->grid['perPage'],
+                array( 'distinct' => $distinct ) );
 
-        if (0 < count($this->results)) {
+            $rootId = null;
+
             $this->processResults();
         }
 
