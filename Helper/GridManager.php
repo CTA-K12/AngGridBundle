@@ -188,18 +188,18 @@ class GridManager {
             $this->queryBuilder->addSelect( $select );
         }
 
-        if ( !$this->export ) {
-            $this->calculatePages();
-        }
-
-        $this->addSorts();
-
         if (is_null($this->grid['page'])) {
             $this->grid['page'] = 1;
         }
         if (is_null($this->grid['perPage'])) {
             $this->grid['perPage'] = $this->grid['filtered'];
         }
+
+        if ( !$this->export ) {
+            $this->calculatePages();
+        }
+
+        $this->addSorts();
 
         $this->results = $this->paginator->paginate(
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
@@ -209,7 +209,9 @@ class GridManager {
 
         $rootId = null;
 
-        $this->processResults();
+        if (0 < count($this->results)) {
+            $this->processResults();
+        }
 
         if ( $this->export ) {
             if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
@@ -220,7 +222,7 @@ class GridManager {
                     )
                 );
 
-                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape', 
+                $response = new Response($this->snappy->getOutputFromHtml($html, array('orientation' => 'Landscape',
                         'print-media-type' => true,
                         'footer-left'  => 'Exported on [date] at [time]',
                         'footer-right' => 'Page [page] of [toPage]')),
