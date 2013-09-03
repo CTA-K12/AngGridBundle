@@ -11,7 +11,7 @@
     {% for entity in entities %}
         <tr>
             {% for header in headers %}
-                <td>{{ entity.values[header.column]|raw }}</td>
+                <td><p>{{ entity.values[header.column] }}</p></td>
             {% endfor %}
         </tr>
     {% endfor %}
