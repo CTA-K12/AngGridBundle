@@ -363,8 +363,9 @@ EOT;
                         $this->processResultSet();
                     }
                     $this->resultSet = array('root' => $result);
+                } else {
+                    $this->resultSet[$class][] = $result;
                 }
-                $this->resultSet[$class][] = $result;
             }
         }
         $this->processResultSet();
@@ -403,7 +404,7 @@ EOT;
         foreach($this->grid['headers'] as $header) {
             if (isset($header['function'])) {
                 $function = $header['function'];
-                $value = $function($this->resultSet);
+                $value = $function($this->resultSet, $this->router, $this->templating);
                 $values[$header['column']] = $value['value'];
             } else {
                 $columns = explode( '.', $header['field'] );

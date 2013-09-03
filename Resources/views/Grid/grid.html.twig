@@ -152,9 +152,21 @@
                 </div>
             </td>
         </tr>
+{% if saveAll is defined %}
+        <tr>
+            <td colspan='100'>
+                <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+                    <span class="icon-save">
+                    </span>
+                    Save All
+                </button>
+            </td>
+        </tr>
     </tbody>
+{% endif %}
 {% endblock tablebody %}
-</table>{% if formUrl is defined %}</form>{% endif %}
+</table>
+{% if formUrl is defined %}</form>{% endif %}
 </div>
 {% endblock grid %}
 
