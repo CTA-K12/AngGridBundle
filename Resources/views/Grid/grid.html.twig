@@ -101,6 +101,17 @@
                             </span>
                         </span>
                     </span>
+                {% elseif newFormUrl is defined %}
+                    <span class="row-fluid">
+                        <span class="span6">
+                            <span> Actions</span>
+                        </span>
+                        <span class="span6">
+                            <a href="{{ newFormUrl }}" class="btn">
+                                <span class="icon-plus"></span> {{ newForm is defined ? newForm : 'New' }}
+                            </a>
+                        </span>
+                    </span>
                 {% else %}
                     <span> Actions</span>
                 {% endif %}
