@@ -188,18 +188,18 @@ class GridManager {
             $this->queryBuilder->addSelect( $select );
         }
 
-        if ( !$this->export ) {
-            $this->calculatePages();
-        }
-
-        $this->addSorts();
-
         if (is_null($this->grid['page'])) {
             $this->grid['page'] = 1;
         }
         if (is_null($this->grid['perPage'])) {
             $this->grid['perPage'] = $this->grid['filtered'];
         }
+
+        if ( !$this->export ) {
+            $this->calculatePages();
+        }
+
+        $this->addSorts();
 
         $this->results = $this->paginator->paginate(
             $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
