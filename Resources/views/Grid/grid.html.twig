@@ -88,11 +88,11 @@
             <thead>
                 <tr>
                     <th data-ng-click="toggleControl()">
-                        <span class="icon-collapse-top" data-ng-show="data.showControl"></span>
-                        <span class="icon-collapse" data-ng-show="data.showControl"></span>
-                    </th>
-                    <th data-ng-hide="null==data.paths || ''==data.paths">
+                        <span class="icon-meh" data-ng-show="data.showControl"></span>
+                        <span class="icon-user" data-ng-show="!data.showControl"></span>
+                    <span data-ng-hide="null==data.paths || ''==data.paths">
                         <span> Actions</span>
+                    </span>
                     </th>
                     <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
                         <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
@@ -109,7 +109,7 @@
                     <td>No matches found.</td>
                 </tr>
                 <tr data-ng-repeat="entity in notSorted(data.entities)">
-                    <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" colspan="2">
+                    <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl">
                         <span class="btn-group">
                             <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{% endverbatim %}">
                                 <span class={% verbatim %}"{{data.paths[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.paths[action].text}}{% endverbatim %}
