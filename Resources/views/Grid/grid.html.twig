@@ -1,15 +1,13 @@
 {% block grid %}
     <div data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
+    {# {{ ngController }} is twig-- don't verbatim that#}
         {% block controls %}
-            {# {{ ngController }} is twig-- don't verbatim that#}
             <div class="row-fluid">
                 <div class="span4">
                     <div class="row-fluid search-control">
                         <div class="span6">
                             <input type="search" placeholder="Search" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search"/>
                         </div>
-{#                         <div class="span1">
-</div> #}
 <div class="span6">
     <div class="row-fluid export-control">
         <div class="btn-group">
@@ -42,15 +40,17 @@
                 <div class="span7">
                     <div class="row-fluid items-per-page-control">
                         <div class="span5">
-                            <select data-ng-model="data.perPage" data-ng-change="makeRequest()" class="grid-pages">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </div>
-                        <div class="span7">
-                            per page
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    {% verbatim %}{{ data.perPage }}{% endverbatim %} per page <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a ng-click="changePage(10)">10 per page</a></li>
+                                    <li><a ng-click="changePage(25)">25 per page</a></li>
+                                    <li><a ng-click="changePage(50)">50 per page</a></li>
+                                    <li><a ng-click="changePage(100)">100 per page</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

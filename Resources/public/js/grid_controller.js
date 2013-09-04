@@ -63,8 +63,6 @@ function GridController($scope, $http, $location, initData) {
         });
     }
 
-    //$scope.makeRequest();
-
     if (typeof $("select.grid-export").select2 == 'function'){
 
         $("select.grid-export").select2({
@@ -140,6 +138,11 @@ function GridController($scope, $http, $location, initData) {
                 }
             }
         }
+        $scope.makeRequest();
+    }
+
+    $scope.changePage = function(perPage) {
+        $scope.data.perPage = perPage;
         $scope.makeRequest();
     }
 }
