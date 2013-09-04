@@ -7,9 +7,14 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
     $scope.data.requestCount = 0;
     $scope.data.addView=false;
     $scope.data.page = $cookieStore.get('page');
+    $scope.data.showControl=true;
 
-    $scope.toggleAdd = function(obj){
+    $scope.toggleAdd = function(){
       $scope.data.addView=!$scope.data.addView;
+    }
+
+    $scope.toggleControl = function(){
+      $scope.data.showControl=!$scope.data.showControl;
     }
 
     $scope.notSorted = function(obj){
@@ -28,6 +33,10 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
         setTimeout(function() {
             $scope.getData(i)
         }, 300);
+    }
+
+    $scope.logThis = function(i) {
+console.log(i);
     }
 
     $scope.getData = function(count) {
