@@ -1,10 +1,12 @@
 'use strict';
 
-function GridController($scope, $http, $location, initData) {
+function GridController($scope, $http, $location, $cookieStore, initData) {
     $scope.data = initData.initData();
+    //$scope.data = {};
     $scope.data.exportType ='csv';
     $scope.data.requestCount = 0;
     $scope.data.addView=false;
+    $scope.data.page = $cookieStore.get('page');
 
     $scope.toggleAdd = function(obj){
       $scope.data.addView=!$scope.data.addView;
@@ -58,6 +60,7 @@ function GridController($scope, $http, $location, initData) {
             $scope.data.paths = data.paths;
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
+            $cookieStore.put('page', $scope.data.page);
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
@@ -145,4 +148,5 @@ function GridController($scope, $http, $location, initData) {
         $scope.data.perPage = perPage;
         $scope.makeRequest();
     }
+    //$scope.makeRequest();
 }
