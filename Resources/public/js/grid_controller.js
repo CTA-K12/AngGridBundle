@@ -33,6 +33,10 @@ function GridController($scope, $http, $location, initData) {
         }, 300);
     }
 
+    $scope.logThis = function(i) {
+console.log(i);
+    }
+
     $scope.getData = function(count) {
         if (count != $scope.data.requestCount) {
             return;

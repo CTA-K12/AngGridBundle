@@ -96,16 +96,19 @@
                 {% block tableheader %}
                     <thead>
                         <tr>
-                            <th data-ng-click="toggleControl()">
+                            <th data-ng-click="toggleControl()" data-ng-hide="null==data.paths || ''==data.paths">
                                 <span class="icon-meh" data-ng-show="data.showControl"></span>
                                 <span class="icon-user" data-ng-show="!data.showControl"></span>
-                                <span data-ng-hide="null==data.paths || ''==data.paths">
+                                <span>
                                     <span> Actions</span>
                                 </span>
                             </th>
-                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-ng-click="sort($event, data.headers[header].column)" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                                <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
-                                <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}></span>
+                             {# data-ng-click="sort($event, data.headers[header].column)" #}
+                            <th data-ng-click="sort($event, data.headers[header].column)" data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                                <span data-ng-click="logThis('meh');toggleControl()" class="icon-meh" data-ng-show="data.showControl && $first && (null==data.paths || ''==data.paths)"></span>
+                                <span data-ng-click="toggleControl()" class="icon-user" data-ng-show="!data.showControl && $first && (null==data.paths || ''==data.paths)"></span>
+                                <span data-ng-click="sort($event, data.headers[header].column)">{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
+                                <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %} data-ng-click="sort($event, data.headers[header].column)"></span>
                             </th>
                         </tr>
                     </thead>
