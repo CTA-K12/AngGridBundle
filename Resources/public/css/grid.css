@@ -1,0 +1,34 @@
+.toggle-control {
+    margin: 1px;
+    left: 5px;
+    position: relative;
+    line-height: 1em;
+}
+
+.mini-page {
+    float:right;
+    margin: 1px;
+    right: 5px;
+    position: relative;
+    line-height: 1em;
+}
+
+.widget-bar {
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    border-top-left-radius: 4px;
+    background-color: #dddddd;
+    line-height: 1em;
+}
+
+.grid-controls {
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    border-top-left-radius: 4px;
+    background-color: #eeeeee;
+}
+
+.grid-filter-select-query-from {
+    width:100% !important;
+    margin: 1px !important;
+}

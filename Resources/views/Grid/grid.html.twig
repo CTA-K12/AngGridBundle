@@ -1,8 +1,30 @@
 {% block grid %}
+{% stylesheets
+    'bundles/mesdormedormed/css/jquery-ui-1.9.0.redmond.css'
+    'bundles/mesdormedormed/css/select2-3.2.css'
+    'bundles/mesdormedormed/css/grid.css'
+    'bundles/mesdanggrid/css/grid.css'
+    filter='cssrewrite'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
     <div data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
         {# {{ ngController }} is twig-- don't verbatim that#}
         {% block controls %}
-            <div class="row-fluid grid-controls" data-ng-show="data.showControl">
+            <div class="widget-bar row-fluid">
+                <div class="span1">
+                    <span class="icon-double-angle-down toggle-control" data-ng-show="data.showControl" data-ng-click="toggleControl()"></span>
+                    <span class="icon-double-angle-up toggle-control" data-ng-show="!data.showControl" data-ng-click="toggleControl()"></span>
+                </div>
+                <div class="span10">
+                </div>
+                <div class="span1">
+                    <span class="icon-angle-right mini-page" data-ng-show="!data.showControl" data-ng-click="nextPage()"> </span>
+                    <span class="icon-angle-none mini-page" data-ng-show="!data.showControl" > </span>
+                    <span class="icon-angle-left mini-page" data-ng-show="!data.showControl" data-ng-click="previousPage()"> </span>
+                </div>
+            </div>
+            <div class="row-fluid grid-controls widgets" data-ng-show="data.showControl">
                 {# {{ ngController }} is twig-- don't verbatim that#}
                 {% if addForm is defined %}
                     <div class="grid-form span2">
@@ -28,6 +50,10 @@
                 <div class="search-control span3">
                     <input type="search" placeholder="Search" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search"/>
                 </div>
+                {% if addForm is not defined and newFormUrl is not defined %}
+                    <div class="span2">
+                    </div>
+                {% endif %}
                 <div class="btn-group export-control span1">
                     <a data-ng-href="{% verbatim %}{{ data.exportArray[0].exportLink }}{% endverbatim %}" class="btn">Export</a>
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -43,15 +69,14 @@
                     <div class="row-fluid">
                         <div class="results-control span5">
                             <strong>
-                                Showing
                                 <span data-ng-bind="0 < data.filtered && (data.perPage * (data.page - 1)) + 1 || 0" class="filtered"></span>
-                                to
+                                -
                                 <span data-ng-bind="(data.perPage * data.page) < data.filtered && (data.perPage * data.page) || data.filtered" class="filtered"></span>
                                 of
                                 <span data-ng-bind="data.filtered" class="filtered"></span>
                             </strong>
                         </div>
-                        <div class="items-per-page-control span7">
+                        <div class="items-per-page-control span5">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                     {% verbatim %}{{ data.perPage }}{% endverbatim %} per page <span class="caret"></span>
@@ -67,8 +92,8 @@
                     </div>
                 </div>
                 <div class="page-control span2">
-                    <div class="pull-right">
-                        <span>Page</span>
+                    {# <div class="pull-right"> #}
+                        {# <span>Page</span> #}
                         <span class="btn-group">
                             <button class="btn" data-ng-click="previousPage()" style="margin-bottom: 10px">
                                 <span class="icon-chevron-left">
@@ -87,7 +112,7 @@
                         <span> of</span>
                         <span data-ng-bind="data.last">
                         </span>
-                    </div>
+                    {# </div> #}
                 </div>
             </div>
         {% endblock controls %}
@@ -96,18 +121,11 @@
                 {% block tableheader %}
                     <thead>
                         <tr>
-                            <th data-ng-click="toggleControl()" data-ng-hide="null==data.paths || ''==data.paths">
-                                <span class="icon-meh" data-ng-show="data.showControl"></span>
-                                <span class="icon-user" data-ng-show="!data.showControl"></span>
-                                <span>
-                                    <span> Actions</span>
-                                </span>
+                            <th data-ng-hide="null==data.paths || ''==data.paths">
+                                <span> Actions</span>
                             </th>
-                             {# data-ng-click="sort($event, data.headers[header].column)" #}
-                            <th data-ng-click="sort($event, data.headers[header].column)" data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                                <span data-ng-click="logThis('meh');toggleControl()" class="icon-meh" data-ng-show="data.showControl && $first && (null==data.paths || ''==data.paths)"></span>
-                                <span data-ng-click="toggleControl()" class="icon-user" data-ng-show="!data.showControl && $first && (null==data.paths || ''==data.paths)"></span>
-                                <span data-ng-click="sort($event, data.headers[header].column)">{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
+                            <th data-ng-click="sort($event, data.headers[header].column)" data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                                <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
                                 <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %} data-ng-click="sort($event, data.headers[header].column)"></span>
                             </th>
                         </tr>
