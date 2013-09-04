@@ -31,9 +31,11 @@
                     <div class="row-fluid results-control">
                         <strong>
                             Showing
-                            <span data-ng-bind="data.filtered" class="filtered"></span>
+                            <span data-ng-bind="0 < data.filtered && (data.perPage * (data.page - 1)) + 1 || 0" class="filtered"></span>
+                            to
+                            <span data-ng-bind="(data.perPage * data.page) < data.filtered && (data.perPage * data.page) || data.filtered" class="filtered"></span>
                             of
-                            <span data-ng-bind="data.total" class="total"></span>
+                            <span data-ng-bind="data.filtered" class="filtered"></span>
                         </strong>
                     </div>
                 </div>
