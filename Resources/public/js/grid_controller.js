@@ -2,11 +2,9 @@
 
 function GridController($scope, $http, $location, $cookieStore, initData) {
     $scope.data = initData.initData();
-    //$scope.data = {};
     $scope.data.exportType ='csv';
     $scope.data.requestCount = 0;
     $scope.data.addView=false;
-    $scope.data.page = $cookieStore.get('page');
     $scope.data.showControl=true;
 
     $scope.toggleAdd = function(){
@@ -36,7 +34,7 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
     }
 
     $scope.logThis = function(i) {
-console.log(i);
+        console.log(i);
     }
 
     $scope.getData = function(count) {
@@ -70,7 +68,14 @@ console.log(i);
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
             $cookieStore.put('page', $scope.data.page);
+            $cookieStore.put('perPage', $scope.data.perPage);
+            $cookieStore.put('search', $scope.data.search);
+            $cookieStore.put('sorts', $scope.data.sorts);
         }).error(function(data, status, headers, config) {
+            $cookieStore.remove('page');
+            $cookieStore.remove('perPage');
+            $cookieStore.remove('search');
+            $cookieStore.remove('sorts');
             $scope.status = status;
         });
     }
@@ -157,5 +162,12 @@ console.log(i);
         $scope.data.perPage = perPage;
         $scope.makeRequest();
     }
-    //$scope.makeRequest();
+
+    if (undefined != $cookieStore.get('page')) {
+        $scope.data.page = $cookieStore.get('page');
+        $scope.data.perPage = $cookieStore.get('perPage');
+        $scope.data.search = $cookieStore.get('search');
+        $scope.data.sorts = $cookieStore.get('sorts');
+        $scope.makeRequest();
+    }
 }
