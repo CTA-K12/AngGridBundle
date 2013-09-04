@@ -51,12 +51,12 @@ class GridManager {
         $this->grid['sortsString'] = $request->query->get( 'sorts' );
         $this->grid['exportArray'] = is_null($snappy)
             ? array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#') )
             : array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
                 array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
 
