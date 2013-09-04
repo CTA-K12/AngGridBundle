@@ -1,6 +1,6 @@
 'use strict';
 
-var gridModule = angular.module('gridModule', [])
+var gridModule = angular.module('gridModule', ['ngCookies'])
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider
     .when('/', {
