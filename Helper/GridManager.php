@@ -51,12 +51,12 @@ class GridManager {
         $this->grid['sortsString'] = $request->query->get( 'sorts' );
         $this->grid['exportArray'] = is_null($snappy)
             ? array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#') )
             : array(
-                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
+                array('label' => 'CSV', 'value' => 'csv', 'exportLink' => '#'),
                 array('label' => 'Excel', 'value' => 'xls', 'exportLink' => '#'),
                 array('label' => 'PDF', 'value' => 'pdf', 'exportLink' => '#') );
 
@@ -184,32 +184,33 @@ class GridManager {
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
 
-        foreach ( $this->selects as $select ) {
-            $this->queryBuilder->addSelect( $select );
-        }
+        if (0 < $this->grid['filtered']) {
 
-        if (is_null($this->grid['page'])) {
-            $this->grid['page'] = 1;
-        }
-        if (is_null($this->grid['perPage'])) {
-            $this->grid['perPage'] = $this->grid['filtered'];
-        }
+            foreach ( $this->selects as $select ) {
+                $this->queryBuilder->addSelect( $select );
+            }
 
-        if ( !$this->export ) {
-            $this->calculatePages();
-        }
+            if (is_null($this->grid['page'])) {
+                $this->grid['page'] = 1;
+            }
+            if (is_null($this->grid['perPage'])) {
+                $this->grid['perPage'] = $this->grid['filtered'];
+            }
 
-        $this->addSorts();
+            if ( !$this->export ) {
+                $this->calculatePages();
+            }
 
-        $this->results = $this->paginator->paginate(
-            $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
-            $this->grid['page'],
-            $this->grid['perPage'],
-            array( 'distinct' => $distinct ) );
+            $this->addSorts();
 
-        $rootId = null;
+            $this->results = $this->paginator->paginate(
+                $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
+                $this->grid['page'],
+                $this->grid['perPage'],
+                array( 'distinct' => $distinct ) );
 
-        if (0 < count($this->results)) {
+            $rootId = null;
+
             $this->processResults();
         }
 
@@ -264,7 +265,49 @@ class GridManager {
             }
         }
 
-        return new JsonResponse( $this->grid );
+        if ('js' == $this->grid['exportType']) {
+            $response = new JsonResponse( $this->grid );
+            //$initData = 'var initData = ' . $response->getContent();
+            /*
+myApp.service('helloWorldFromService', function() {
+    this.sayHello = function() {
+        return "Hello, World!"
+    };
+});
+*/
+            //$initData = 'gridModule.provider(\'initData\', function() {this.initData = function() {return ' . $response->getContent() . '};});';
+
+            $initData = <<<EOT
+//provider style, full blown, configurable version
+gridModule.provider('initData', function() {
+    // In the provider function, you cannot inject any
+    // service or factory. This can only be done at the
+    // "\$get" method.
+
+    this.name = 'Default';
+
+    this.\$get = function() {
+        var name = this.name;
+        return {
+            initData: function() {
+EOT;
+                $initData .= 'return ' . $response->getContent();
+                $initData .= <<<EOT
+;
+            }
+        }
+    };
+
+    this.setName = function(name) {
+        this.name = name;
+    };
+});
+EOT;
+
+            return new Response($initData);
+        } else {
+            return new JsonResponse( $this->grid );
+        }
     }
 
     public function setFormUrl($url) {
@@ -292,13 +335,15 @@ class GridManager {
 
     public function addSorts() {
         if ( !is_null( $this->grid['sortsString'] ) ) {
-            $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
-            foreach ( $this->grid['sorts'] as $sort ) {
-                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                if ( 'asc' == $sort->direction ) {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+            if ('' != $this->grid['sortsString']) {
+                $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
+                foreach ( $this->grid['sorts'] as $sort ) {
+                    $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                    if ( 'asc' == $sort->direction ) {
+                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                    } else {
+                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                    }
                 }
             }
         }
@@ -318,8 +363,9 @@ class GridManager {
                         $this->processResultSet();
                     }
                     $this->resultSet = array('root' => $result);
+                } else {
+                    $this->resultSet[$class][] = $result;
                 }
-                $this->resultSet[$class][] = $result;
             }
         }
         $this->processResultSet();
@@ -358,7 +404,7 @@ class GridManager {
         foreach($this->grid['headers'] as $header) {
             if (isset($header['function'])) {
                 $function = $header['function'];
-                $value = $function($this->resultSet);
+                $value = $function($this->resultSet, $this->router, $this->templating);
                 $values[$header['column']] = $value['value'];
             } else {
                 $columns = explode( '.', $header['field'] );
