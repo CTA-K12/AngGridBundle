@@ -11,9 +11,14 @@ function GridController($scope, $http, $location) {
     $scope.data.requestCount = 0;
     $scope.data.exportArray = {};
     $scope.data.addView=false;
+    $scope.data.showControl=true;
 
-    $scope.toggleAdd = function(obj){
+    $scope.toggleAdd = function(){
       $scope.data.addView=!$scope.data.addView;
+    }
+
+    $scope.toggleControl = function(){
+      $scope.data.showControl=!$scope.data.showControl;
     }
 
     $scope.notSorted = function(obj){
