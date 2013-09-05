@@ -67,10 +67,10 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
             $scope.data.paths = data.paths;
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
-            $cookieStore.put('page', $scope.data.page);
-            $cookieStore.put('perPage', $scope.data.perPage);
-            $cookieStore.put('search', $scope.data.search);
-            $cookieStore.put('sorts', $scope.data.sorts);
+            $cookieStore.remove('page');
+            $cookieStore.remove('perPage');
+            $cookieStore.remove('search');
+            $cookieStore.remove('sorts');
         }).error(function(data, status, headers, config) {
             $cookieStore.remove('page');
             $cookieStore.remove('perPage');
