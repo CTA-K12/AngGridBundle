@@ -162,12 +162,4 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
         $scope.data.perPage = perPage;
         $scope.makeRequest();
     }
-
-    if (undefined != $cookieStore.get('page')) {
-        $scope.data.page = $cookieStore.get('page');
-        $scope.data.perPage = $cookieStore.get('perPage');
-        $scope.data.search = $cookieStore.get('search');
-        $scope.data.sorts = $cookieStore.get('sorts');
-        $scope.makeRequest();
-    }
 }
