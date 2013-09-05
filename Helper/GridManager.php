@@ -85,7 +85,7 @@ class GridManager {
         if (isset($sorts)) {
             $this->grid['sortsString'] = $sorts;
         } else {
-            $this->grid['sortsString'] = json_decode($request->cookies->get('sorts'));
+            $this->grid['sortsString'] = $request->cookies->get('sorts');
         }
 
     }
