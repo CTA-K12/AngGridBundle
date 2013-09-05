@@ -119,6 +119,7 @@ class GridManager {
 
     public function setHeader( $item ) {
         $name = $item['field'];
+
         if ( !isset( $item['column'] ) ) {
             $last = strrpos( $name, '.' );
             $nextLast = strrpos( $name, '.', $last - strlen( $name ) - 1 );
@@ -128,6 +129,7 @@ class GridManager {
                 $item['column'] = substr( $name, $nextLast + 1 );
             }
         }
+
         if ( !isset( $item['header'] ) ) {
             if ( isset( $item['title'] ) ) {
                 $item['header'] = $item['title'];
@@ -135,15 +137,23 @@ class GridManager {
                 $item['header'] = $name;
             }
         }
+
+        if ( !isset( $item['hidden'] ) ) {
+            $item['hidden'] = false;
+        }
+
         if ( !isset( $item['id'] ) ) {
             $item['id'] = str_replace( '.', '-', $name );
         }
+
         if ( !isset( $item['searchable'] ) ) {
             $item['searchable'] = 'true';
         }
+
         if ( !isset( $item['sortIcon'] ) ) {
             $item['sortIcon'] = 'icon-sort';
         }
+
         if ( !isset( $item['title'] ) ) {
             if ( isset( $item['header'] ) ) {
                 $item['title'] = $item['header'];
@@ -159,6 +169,7 @@ class GridManager {
         if ( 'boolean' == $item['type'] ) {
             $item['html'] = true;
         }
+
         $this->grid['headers'][$item['column']] = $item;
     }
 
@@ -196,6 +207,8 @@ class GridManager {
             }
 
             $this->addSorts();
+
+            $this->removeHidden();
 
             $this->results = $this->paginator->paginate(
                 $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
@@ -406,5 +419,15 @@ EOT;
             }
         }
         return $values;
+    }
+
+    public function removeHidden() {
+        $columns = array();
+        foreach($this->grid['headers'] as $headerKey => $header) {
+            if ($header['hidden']) {
+                $columns[] = $headerKey;
+            }
+        }
+        $this->hideColumns($columns);
     }
 }
