@@ -2,14 +2,11 @@
 
 namespace MESD\Ang\GridBundle\Helper;
 
-use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
-use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Router;
-
 use Symfony\Component\HttpFoundation\Response;
 
 class GridManager {
@@ -19,19 +16,16 @@ class GridManager {
     private $grid;
     private $queryBuilder;
     private $root;
-    private $router;
     private $rootClass;
     private $selects;
-    private $templating;
     private $prepend;
     private $snappy;
 
-    public function __construct( EntityManager $entityManager, Paginator $paginator, Request $request, Router $router, TimedTwigEngine $templating, LoggableGenerator $snappy = null ) {
-        $this->entityManager = $entityManager;
+    public function __construct( $controller, Paginator $paginator, LoggableGenerator $snappy = null ) {
+        $this->controller = $controller;
+        $this->entityManager = $this->controller->getDoctrine()->getManager();
         $this->paginator = $paginator;
-        $this->request = $request;
-        $this->router = $router;
-        $this->templating = $templating;
+        $this->request = $this->controller->getRequest();
         $this->snappy = $snappy;
         $this->prepend = '';
 
@@ -42,13 +36,13 @@ class GridManager {
         $this->grid['entities'] = array();
         $this->grid['buttons'] = array();
         $this->grid['entities'] = array();
-        $this->grid['exportString'] = $request->query->get( 'exportString' );
+        $this->grid['exportString'] = $this->request->query->get( 'exportString' );
         $this->grid['headers'] = array();
-        $this->grid['page'] = $request->query->get( 'page' );
-        $this->grid['perPage'] = $request->query->get( 'perPage' );
-        $this->grid['requestCount'] = $request->query->get( 'requestCount' );
-        $this->grid['search'] = $request->query->get( 'search' );
-        $this->grid['sortsString'] = $request->query->get( 'sorts' );
+        $this->grid['page'] = $this->request->query->get( 'page' );
+        $this->grid['perPage'] = $this->request->query->get( 'perPage' );
+        $this->grid['requestCount'] = $this->request->query->get( 'requestCount' );
+        $this->grid['search'] = $this->request->query->get( 'search' );
+        $this->grid['sortsString'] = $this->request->query->get( 'sorts' );
         $this->grid['exportArray'] = is_null($snappy)
             ? array(
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
@@ -216,7 +210,7 @@ class GridManager {
 
         if ( $this->export ) {
             if ($this->grid['exportType'] == 'pdf' && !is_null($this->snappy)) {
-                $html = $this->templating->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
+                $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
                     array(
                         'entities' => $this->grid['entities'],
                         'headers' => $this->grid['headers'],
@@ -235,7 +229,7 @@ class GridManager {
                 );
             }
             else {
-                $response = new Response($this->templating->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+                $response = new Response($this->controller->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
                     array(
                         'entities' => $this->grid['entities'],
                         'headers' => $this->grid['headers'],
@@ -254,11 +248,11 @@ class GridManager {
                 $exType['exportLink'] = '';
             }
         } else {
-            $this->grid['exportLink'] = $this->router->generate( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
+            $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
             '?exportString=true&search=' . $this->grid['search'] .
             '&sorts=' . $this->grid['sortsString'];
             for($i = 0; $i < count($this->grid['exportArray']); $i++) {
-                $this->grid['exportArray'][$i]['exportLink'] = $this->router->generate( $this->exportAlias,
+                $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
                 array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
                 '?exportString=true&search=' . $this->grid['search'] .
                 '&sorts=' . $this->grid['sortsString'];
@@ -267,15 +261,6 @@ class GridManager {
 
         if ('js' == $this->grid['exportType']) {
             $response = new JsonResponse( $this->grid );
-            //$initData = 'var initData = ' . $response->getContent();
-            /*
-myApp.service('helloWorldFromService', function() {
-    this.sayHello = function() {
-        return "Hello, World!"
-    };
-});
-*/
-            //$initData = 'gridModule.provider(\'initData\', function() {this.initData = function() {return ' . $response->getContent() . '};});';
 
             $initData = <<<EOT
 //provider style, full blown, configurable version
@@ -388,12 +373,12 @@ EOT;
         foreach($this->grid[$name] as $action) {
             if (isset($action['function'])) {
                 $function = $action['function'];
-                $path = $function($this->resultSet, $this->router);
+                $path = $function($this->resultSet, $this->controller);
                 if (isset($path['path'])) {
                     $actions[$action['alias']] = $path['path'];
                 }
             } else {
-                $actions[$action['alias']] = $this->router->generate($action['alias'], array('id' => $this->resultSet['root']->getId()));
+                $actions[$action['alias']] = $this->controller->generateUrl($action['alias'], array('id' => $this->resultSet['root']->getId()));
             }
         }
         return $actions;
@@ -404,7 +389,7 @@ EOT;
         foreach($this->grid['headers'] as $header) {
             if (isset($header['function'])) {
                 $function = $header['function'];
-                $value = $function($this->resultSet, $this->router, $this->templating);
+                $value = $function($this->resultSet, $this->controller);
                 $values[$header['column']] = $value['value'];
             } else {
                 $columns = explode( '.', $header['field'] );
