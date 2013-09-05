@@ -171,8 +171,14 @@ class GridManager {
             $item['searchable'] = 'true';
         }
 
-        if ( !isset( $item['sortIcon'] ) ) {
+        if ( !isset( $item['sortable'] ) ) {
+            $item['sortable'] = true;
+        }
+
+        if ( $item['sortable'] ) {
             $item['sortIcon'] = 'icon-sort';
+        } else {
+            $item['sortIcon'] = '';
         }
 
         if ( !isset( $item['title'] ) ) {
