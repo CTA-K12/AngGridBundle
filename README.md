@@ -72,7 +72,21 @@ example_export:
     defaults: { _controller: "MESDAppChangeThisBundle:ChangeThis:data" }
 ```
 
-src/MESD/App/ChangeThisBundle/ChangeThisController.php
+src/MESD/App/ChangeThisBundle/Resources/views/Example/index.html.twig
+```twig
+{% extends '::base.html.twig' %}
+{% set subtitle = 'Grid' %}
+{% set ngApp = 'gridModule' %}
+{% block main %}
+    <div data-ng-view>Loading...</div>
+{% endblock main %}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="export.js?perPage=10"></script>
+{% endblock javascripts %}
+```
+
+src/MESD/App/ChangeThisBundle/Controller/ChangeThisController.php
 ```php
 <?php
 
