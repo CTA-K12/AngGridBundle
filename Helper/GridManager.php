@@ -44,11 +44,7 @@ class GridManager {
         $this->grid['entities'] = array();
         $this->grid['exportString'] = $request->query->get( 'exportString' );
         $this->grid['headers'] = array();
-        $this->grid['page'] = $request->query->get( 'page' );
-        $this->grid['perPage'] = $request->query->get( 'perPage' );
         $this->grid['requestCount'] = $request->query->get( 'requestCount' );
-        $this->grid['search'] = $request->query->get( 'search' );
-        $this->grid['sortsString'] = $request->query->get( 'sorts' );
         $this->grid['exportArray'] = is_null($snappy)
             ? array(
                 array('label' => 'TSV', 'value' => 'tsv', 'exportLink' => '#'),
@@ -65,6 +61,33 @@ class GridManager {
         } else {
             $this->export = true;
         }
+
+
+        $page = $request->query->get( 'page' );
+        if (isset($page)) {
+            $this->grid['page'] = $page;
+        } else {
+            $this->grid['page'] = json_decode($request->cookies->get('page'));
+        }
+        $perPage = $request->query->get( 'perPage' );
+        if (isset($perPage)) {
+            $this->grid['perPage'] = $perPage;
+        } else {
+            $this->grid['perPage'] = json_decode($request->cookies->get('perPage'));
+        }
+        $search = $request->query->get( 'search' );
+        if (isset($search)) {
+            $this->grid['search'] = $search;
+        } else {
+            $this->grid['search'] = json_decode($request->cookies->get('search'));
+        }
+        $sorts = $request->query->get( 'sorts' );
+        if (isset($sorts)) {
+            $this->grid['sortsString'] = $sorts;
+        } else {
+            $this->grid['sortsString'] = json_decode($request->cookies->get('sorts'));
+        }
+
     }
 
     public function setRoot( $root, $rootClass ) {
