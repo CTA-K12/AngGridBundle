@@ -123,6 +123,8 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
     $scope.sort = function(event, column) {
         if (undefined == $scope.data.sorts) {
             $scope.data.sorts = [{column: column, direction: 'asc'}];
+        } else if (undefined == $scope.data.sorts[0]) {
+            $scope.data.sorts = [{column: column, direction: 'asc'}];
         } else {
             if (event.shiftKey) {
                 if (column == $scope.data.sorts[$scope.data.sorts.length - 1]['column']) {
