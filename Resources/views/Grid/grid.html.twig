@@ -6,23 +6,20 @@
 <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
     <div data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
-        {# {{ ngController }} is twig-- don't verbatim that#}
         {% block controls %}
             <div class="widget-bar row-fluid">
                 <div class="span1">
-                    <span class="icon-double-angle-up toggle-control" data-ng-show="data.showControl" data-ng-click="toggleControl()"></span>
-                    <span class="icon-double-angle-down toggle-control" data-ng-show="!data.showControl" data-ng-click="toggleControl()"></span>
+                    <span data-ng-class="{true:'icon-double-angle-up toggle-control', false:'icon-double-angle-down toggle-control'}[data.showControl]" data-ng-click="toggleControl()"></span>
                 </div>
                 <div class="span10">
                 </div>
-                <div class="span1">
-                    <span class="icon-angle-right mini-page" data-ng-show="!data.showControl" data-ng-click="nextPage()"> </span>
-                    <span class="icon-angle-none mini-page" data-ng-show="!data.showControl" > </span>
-                    <span class="icon-angle-left mini-page" data-ng-show="!data.showControl" data-ng-click="previousPage()"> </span>
+                <div class="span1" data-ng-hide="data.showControl" >
+                    <span class="icon-angle-right mini-page" data-ng-click="nextPage()"> </span>
+                    <span class="icon-angle-none mini-page"> </span>
+                    <span class="icon-angle-left mini-page" data-ng-click="previousPage()"> </span>
                 </div>
             </div>
             <div class="row-fluid grid-controls widgets" data-ng-show="data.showControl">
-                {# {{ ngController }} is twig-- don't verbatim that#}
                 {% if addForm is defined %}
                     <div class="grid-form span2">
                         <div class="grid-button">
