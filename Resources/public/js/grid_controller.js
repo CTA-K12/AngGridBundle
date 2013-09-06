@@ -1,6 +1,6 @@
 'use strict';
 
-function GridController($scope, $http, $location, $cookieStore, initData) {
+var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($scope, $http, $cookieStore, initData) {
     $scope.data = initData.initData();
     $scope.data.exportType ='csv';
     $scope.data.requestCount = 0;
@@ -173,4 +173,4 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
         $scope.data.perPage = perPage;
         $scope.makeRequest();
     }
-}
+}];
