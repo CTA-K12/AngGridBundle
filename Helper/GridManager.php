@@ -60,6 +60,15 @@ class GridManager {
         if (isset($grid0)) {
             $cookie =  json_decode($grid0);
         }
+        $addView = $this->request->query->get( 'addView' );
+        if (isset($addView)) {
+            $this->grid['addView'] = $addView;
+        } else {
+            $this->grid['addView'] = json_decode($this->request->cookies->get('addView'));
+            if (isset($cookie->addView)) {
+                $this->grid['addView'] = $cookie->addView;
+            }
+        }
         $page = $this->request->query->get( 'page' );
         if (isset($page)) {
             $this->grid['page'] = $page;
@@ -87,6 +96,15 @@ class GridManager {
                 $this->grid['search'] = $cookie->search;
             }
         }
+        $showControl = $this->request->query->get( 'showControl' );
+        if (isset($showControl)) {
+            $this->grid['showControl'] = $showControl;
+        } else {
+            $this->grid['showControl'] = json_decode($this->request->cookies->get('showControl'));
+            if (isset($cookie->showControl)) {
+                $this->grid['showControl'] = $cookie->showControl;
+            }
+        }
         $sorts = json_decode($this->request->query->get( 'sorts' ));
         if (isset($sorts)) {
             $this->grid['sorts'] = $sorts;
@@ -95,6 +113,14 @@ class GridManager {
             if (isset($cookie->sorts)) {
                 $this->grid['sorts'] = $cookie->sorts;
             }
+        }
+
+        if (!isset($this->grid['addView'])) {
+            $this->grid['addView'] = false;
+        }
+
+        if (!isset($this->grid['showControl'])) {
+            $this->grid['showControl'] = true;
         }
 
         if (!isset($this->grid['sorts'])) {
