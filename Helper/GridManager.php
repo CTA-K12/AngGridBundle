@@ -105,7 +105,7 @@ class GridManager {
         }
 
         if (!isset($this->grid['sorts'])) {
-            $this->grid['sorts'] = array();
+            $this->grid['sorts'] = null;
         }
     }
 
@@ -386,12 +386,14 @@ EOT;
     }
 
     public function addSorts() {
-        foreach ( $this->grid['sorts'] as $sort ) {
-            $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-            if ( 'asc' == $sort->direction ) {
-                $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-            } else {
-                $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+        if (isset($this->grid['sorts']) && '[]' != $this->grid['sorts']) {
+            foreach ( $this->grid['sorts'] as $sort ) {
+                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( 'asc' == $sort->direction ) {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                } else {
+                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                }
             }
         }
     }
