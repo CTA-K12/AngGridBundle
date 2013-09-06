@@ -185,15 +185,24 @@ class GridManager {
     }
 
     public function setHeader( $item ) {
-        $name = $item['field'];
-
-        if ( !isset( $item['column'] ) ) {
-            $last = strrpos( $name, '.' );
-            $nextLast = strrpos( $name, '.', $last - strlen( $name ) - 1 );
-            if ( false == $nextLast ) {
-                $item['column'] = $name;
-            } else {
-                $item['column'] = substr( $name, $nextLast + 1 );
+        if ( !isset( $item['field'] ) ) {
+            $name = $item['title'];
+            $item['field'] = $name;
+            $item['column'] = $name;
+        } else {
+            $name = $item['field'];
+            if ( !isset( $item['column'] ) ) {
+                $last = strrpos( $name, '.' );
+                if (false == $last) {
+                    $item['column'] = $name;
+                } else {
+                    $nextLast = strrpos( $name, '.', $last - strlen( $name ) - 1 );
+                    if ( false == $nextLast ) {
+                        $item['column'] = $name;
+                    } else {
+                        $item['column'] = substr( $name, $nextLast + 1 );
+                    }
+                }
             }
         }
 
