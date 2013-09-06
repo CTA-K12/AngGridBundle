@@ -59,6 +59,9 @@ class GridManager {
         $grid0 = $this->request->cookies->get('grid0');
         if (isset($grid0)) {
             $cookie =  json_decode($grid0);
+            if (isset($cookie->addView)) {
+                $this->grid['addView'] = $cookie->addView;
+            }
             if (isset($cookie->page)) {
                 $this->grid['page'] = $cookie->page;
             }
@@ -68,8 +71,11 @@ class GridManager {
             if (isset($cookie->search)) {
                 $this->grid['search'] = $cookie->search;
             }
+            if (isset($cookie->showControl)) {
+                $this->grid['showControl'] = $cookie->showControl;
+            }
             if (isset($cookie->sorts)) {
-                $this->grid['sortsString'] = $cookie->sorts;
+                $this->grid['sorts'] = $cookie->sorts;
             }
         } else {
             $page = $this->request->query->get( 'page' );
@@ -92,14 +98,14 @@ class GridManager {
             }
             $sorts = $this->request->query->get( 'sorts' );
             if (isset($sorts)) {
-                $this->grid['sortsString'] = $sorts;
+                $this->grid['sorts'] = $sorts;
             } else {
-                $this->grid['sortsString'] = $this->request->cookies->get('sorts');
+                $this->grid['sorts'] = json_decode($this->request->cookies->get('sorts'));
             }
         }
 
-        if (!isset($this->grid['sortsString'])) {
-            $this->grid['sortsString'] = '';
+        if (!isset($this->grid['sorts'])) {
+            $this->grid['sorts'] = array();
         }
     }
 
@@ -311,12 +317,12 @@ class GridManager {
         } else {
             $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
             '?exportString=true&search=' . $this->grid['search'] .
-            '&sorts=' . $this->grid['sortsString'];
+            '&sorts=' . json_encode($this->grid['sorts']);
             for($i = 0; $i < count($this->grid['exportArray']); $i++) {
                 $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
                 array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
                 '?exportString=true&search=' . $this->grid['search'] .
-                '&sorts=' . $this->grid['sortsString'];
+                '&sorts=' . json_encode($this->grid['sorts']);
             }
         }
 
@@ -380,17 +386,12 @@ EOT;
     }
 
     public function addSorts() {
-        if ( !is_null( $this->grid['sortsString'] ) ) {
-            if ('' != $this->grid['sortsString']) {
-                $this->grid['sorts'] = json_decode( $this->grid['sortsString'] );
-                foreach ( $this->grid['sorts'] as $sort ) {
-                    $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                    if ( 'asc' == $sort->direction ) {
-                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                    } else {
-                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
-                    }
-                }
+        foreach ( $this->grid['sorts'] as $sort ) {
+            $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+            if ( 'asc' == $sort->direction ) {
+                $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+            } else {
+                $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
             }
         }
     }
