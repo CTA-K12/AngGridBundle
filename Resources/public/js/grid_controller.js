@@ -4,15 +4,15 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
     $scope.data = initData.initData();
     $scope.data.exportType ='csv';
     $scope.data.requestCount = 0;
-    $scope.data.addView=false;
-    $scope.data.showControl=true;
 
     $scope.toggleAdd = function(){
-      $scope.data.addView=!$scope.data.addView;
+      $scope.data.addView = !$scope.data.addView;
+      $scope.makeRequest();
     }
 
     $scope.toggleControl = function(){
-      $scope.data.showControl=!$scope.data.showControl;
+      $scope.data.showControl = !$scope.data.showControl;
+      $scope.makeRequest();
     }
 
     $scope.notSorted = function(obj){
@@ -45,11 +45,13 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             method: 'GET',
             url: 'data.json',
             params: {
+                "addView": $scope.data.addView,
                 "exportType": $scope.data.exportType,
                 "page": $scope.data.page,
                 "perPage": $scope.data.perPage,
                 "requestCount": $scope.data.requestCount,
                 "search": $scope.data.search,
+                "showControl": $scope.data.showControl,
                 "sorts": $scope.data.sorts,
             }
         }).success(
@@ -68,9 +70,11 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
             var cookie = {
+                addView: $scope.data.addView,
                 page: $scope.data.page,
                 perPage: $scope.data.perPage,
                 search: $scope.data.search,
+                showControl: $scope.data.showControl,
                 sorts: $scope.data.sorts
             };
             $cookieStore.put('grid0', cookie);

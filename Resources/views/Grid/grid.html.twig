@@ -23,11 +23,11 @@
                 {% if addForm is defined %}
                     <div class="grid-form span2">
                         <div class="grid-button">
-                            <span class="btn btn-primary" data-ng-show="!data.addView" data-ng-click="toggleAdd()">
+                            <span class="btn btn-primary" data-ng-hide="data.addView"  data-ng-click="toggleAdd()">
                                 <span class="icon-plus"></span> Add
                             </span>
                             <span class="btn" data-ng-show="data.addView" data-ng-click="toggleAdd()">
-                                <span class="icon-minus" data-ng-click="toggleAdd()"></span>
+                                <span class="icon-minus"></span>
                             </span>
                         </div>
                     </div>
