@@ -57,7 +57,6 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
             if (parseInt(data.requestCount) != $scope.data.requestCount) {
                 return;
             }
-            $scope.data.addView = data.addView;
             $scope.data.buttons = data.buttons;
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
@@ -66,15 +65,12 @@ function GridController($scope, $http, $location, $cookieStore, initData) {
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
             $scope.data.paths = data.paths;
-            $scope.data.showControl = data.showControl;
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
             var cookie = {
-                addView: $scope.data.addView,
                 page: $scope.data.page,
                 perPage: $scope.data.perPage,
                 search: $scope.data.search,
-                showControl: $scope.data.showControl,
                 sorts: $scope.data.sorts
             };
             $cookieStore.put('grid0', cookie);

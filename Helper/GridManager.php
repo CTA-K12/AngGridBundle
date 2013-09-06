@@ -59,48 +59,41 @@ class GridManager {
         $grid0 = $this->request->cookies->get('grid0');
         if (isset($grid0)) {
             $cookie =  json_decode($grid0);
-            if (isset($cookie->addView)) {
-                $this->grid['addView'] = $cookie->addView;
-            }
+        }
+        $page = $this->request->query->get( 'page' );
+        if (isset($page)) {
+            $this->grid['page'] = $page;
+        } else {
+            $this->grid['page'] = json_decode($this->request->cookies->get('page'));
             if (isset($cookie->page)) {
                 $this->grid['page'] = $cookie->page;
             }
+        }
+        $perPage = $this->request->query->get( 'perPage' );
+        if (isset($perPage)) {
+            $this->grid['perPage'] = $perPage;
+        } else {
+            $this->grid['perPage'] = json_decode($this->request->cookies->get('perPage'));
             if (isset($cookie->perPage)) {
                 $this->grid['perPage'] = $cookie->perPage;
             }
+        }
+        $search = $this->request->query->get( 'search' );
+        if (isset($search)) {
+            $this->grid['search'] = $search;
+        } else {
+            $this->grid['search'] = json_decode($this->request->cookies->get('search'));
             if (isset($cookie->search)) {
                 $this->grid['search'] = $cookie->search;
             }
-            if (isset($cookie->showControl)) {
-                $this->grid['showControl'] = $cookie->showControl;
-            }
+        }
+        $sorts = json_decode($this->request->query->get( 'sorts' ));
+        if (isset($sorts)) {
+            $this->grid['sorts'] = $sorts;
+        } else {
+            $this->grid['sorts'] = json_decode($this->request->cookies->get('sorts'));
             if (isset($cookie->sorts)) {
                 $this->grid['sorts'] = $cookie->sorts;
-            }
-        } else {
-            $page = $this->request->query->get( 'page' );
-            if (isset($page)) {
-                $this->grid['page'] = $page;
-            } else {
-                $this->grid['page'] = json_decode($this->request->cookies->get('page'));
-            }
-            $perPage = $this->request->query->get( 'perPage' );
-            if (isset($perPage)) {
-                $this->grid['perPage'] = $perPage;
-            } else {
-                $this->grid['perPage'] = json_decode($this->request->cookies->get('perPage'));
-            }
-            $search = $this->request->query->get( 'search' );
-            if (isset($search)) {
-                $this->grid['search'] = $search;
-            } else {
-                $this->grid['search'] = json_decode($this->request->cookies->get('search'));
-            }
-            $sorts = $this->request->query->get( 'sorts' );
-            if (isset($sorts)) {
-                $this->grid['sorts'] = $sorts;
-            } else {
-                $this->grid['sorts'] = json_decode($this->request->cookies->get('sorts'));
             }
         }
 
