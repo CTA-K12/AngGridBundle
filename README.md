@@ -194,8 +194,10 @@ class ChangeThisController extends Controller
         );
 
         $gm->setHeader( array(
-                'field'    => 'example.longName'
-                'title'    => 'Long Name'
+                'field'    => 'example.longName',
+                'title'    => 'Long Name',
+                'align'    => 'right' 
+                // center, left, and right are only options,  left is set if none are picked.
             )
         );
 
