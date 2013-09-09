@@ -9,7 +9,7 @@
         {% block controls %}
             <div class="widget-bar row-fluid">
                 <div class="span1">
-                    <span class="{true:'icon-double-angle-up toggle-control', false:'icon-double-angle-down toggle-control'}[data.showControl]" data-ng-click="toggleControl()"></span>
+                    <span data-ng-class="{true:'icon-double-angle-up toggle-control', false:'icon-double-angle-down toggle-control'}[data.showControl]" data-ng-click="toggleControl()"></span>
                 </div>
                 <div class="span10">
                 </div>
