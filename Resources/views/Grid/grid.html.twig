@@ -133,7 +133,7 @@
                             <td>No matches found.</td>
                         </tr>
                         <tr data-ng-repeat="entity in notSorted(data.entities)">
-                            <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" class="{% verbatim %}{{data.headers[header].align}}{% endverbatim %}">
+                            <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align">
                                 <span class="btn-group">
                                     <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{% endverbatim %}">
                                         <span class={% verbatim %}"{{data.paths[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.paths[action].text}}{% endverbatim %}
@@ -145,7 +145,7 @@
                                     </button>
                                 </span>
                             </td>
-                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="{% verbatim %}{{data.headers[header].align}}{% endverbatim %}">
+                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} data-ng-class="data.headers[header].align">
                                 <div data-ng-switch on="data.headers[header].html">
                                     <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]">
                                     </div>
