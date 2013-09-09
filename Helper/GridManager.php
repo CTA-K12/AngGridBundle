@@ -283,39 +283,29 @@ class GridManager {
         Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
-
+        $this->removeHidden();
         if ( 0 < $this->grid['filtered'] ) {
-
             foreach ( $this->selects as $select ) {
                 $this->queryBuilder->addSelect( $select );
             }
-
             if ( is_null( $this->grid['page'] ) ) {
                 $this->grid['page'] = 1;
             }
             if ( is_null( $this->grid['perPage'] ) ) {
                 $this->grid['perPage'] = $this->grid['filtered'];
             }
-
             if ( !$this->export ) {
                 $this->calculatePages();
             }
-
             $this->addSorts();
-
-            $this->removeHidden();
-
             $this->results = $this->paginator->paginate(
                 $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
                 $this->grid['page'],
                 $this->grid['perPage'],
                 array( 'distinct' => $distinct ) );
-
             $rootId = null;
-
             $this->processResults();
         }
-
         if ( $this->export ) {
             if ( $this->grid['exportType'] == 'pdf' && !is_null( $this->snappy ) ) {
                 $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
@@ -324,7 +314,6 @@ class GridManager {
                         'headers' => $this->grid['headers'],
                     )
                 );
-
                 $response = new Response( $this->snappy->getOutputFromHtml( $html, array( 'orientation' => 'Landscape',
                             'print-media-type' => true,
                             'footer-left'  => 'Exported on [date] at [time]',
