@@ -32,3 +32,16 @@
     width:100% !important;
     margin: 1px !important;
 }
+
+td.td-align-left {
+    text-align:left;
+}
+
+td.td-align-right {
+    background-color:#990000;
+    text-align:right;
+}
+
+td.td-align-center {
+    text-align:center;
+}
