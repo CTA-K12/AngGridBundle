@@ -284,10 +284,10 @@ class GridManager {
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
+        foreach ( $this->selects as $select ) {
+            $this->queryBuilder->addSelect( $select );
+        }
         if ( 0 < $this->grid['filtered'] ) {
-            foreach ( $this->selects as $select ) {
-                $this->queryBuilder->addSelect( $select );
-            }
             if ( is_null( $this->grid['page'] ) ) {
                 $this->grid['page'] = 1;
             }
