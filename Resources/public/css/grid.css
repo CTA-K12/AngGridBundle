@@ -5,6 +5,10 @@
     line-height: 2em;
 }
 
+.toggle-control:hover {
+    background-color: #ffffff;
+}
+
 .mini-page {
     float:right;
     margin: 1px;
@@ -20,6 +24,17 @@
     background-color: #dddddd;
     line-height: 2em;
 }
+
+.mini-page {
+    text-align:center;
+    width: 100%;
+    background-color: #eeeeee;
+}
+
+.mini-page:hover {
+    background-color: #ffffff;
+}
+
 
 .grid-controls {
     -webkit-border-top-left-radius: 4px;
