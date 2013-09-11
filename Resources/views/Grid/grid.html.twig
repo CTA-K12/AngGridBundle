@@ -24,7 +24,7 @@
             </div>
             <div class="row-fluid grid-controls widgets" data-ng-show="data.showControl">
                 {% if addForm is defined %}
-                    <div class="grid-form span2">
+                    <div class="grid-form span1">
                         <div class="grid-button">
                             <span class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-plus"></span> Add
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                 {% elseif newFormUrl is defined %}
-                    <div class="grid-form span2">
+                    <div class="grid-form span1">
                         <div class="grid-button">
                             <a href="{{ newFormUrl }}" title="{{ formTitle is defined ? formTitle }}" class="btn btn-primary">
                                 <span class="icon-plus"></span> {{ newForm is defined ? newForm : 'New' }}
@@ -46,6 +46,9 @@
                 {% endif %}
                 <div class="search-control span3">
                     <input type="search" placeholder="{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search"/>
+                </div>
+                <div class="span1">
+                    <a class="btn" data-ng-click="reset()">Reset</a>
                 </div>
                 {% if addForm is not defined and newFormUrl is not defined %}
                     <div class="span2">

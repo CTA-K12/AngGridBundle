@@ -83,6 +83,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $cookieStore.remove('search');
             $cookieStore.remove('sorts');
         }).error(function(data, status, headers, config) {
+            $cookieStore.remove('grid0');
             $cookieStore.remove('page');
             $cookieStore.remove('perPage');
             $cookieStore.remove('search');
@@ -175,6 +176,19 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
 
     $scope.changePage = function(perPage) {
         $scope.data.perPage = perPage;
+        $scope.makeRequest();
+    }
+
+    $scope.reset = function() {
+        $cookieStore.remove('grid0');
+        $cookieStore.remove('page');
+        $cookieStore.remove('perPage');
+        $cookieStore.remove('search');
+        $cookieStore.remove('sorts');
+        $scope.data.page = 1;
+        $scope.data.perPage = 10;
+        $scope.data.search = '';
+        $scope.data.sorts = [];
         $scope.makeRequest();
     }
 }];
