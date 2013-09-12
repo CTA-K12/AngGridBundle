@@ -20,6 +20,7 @@ class GridManager {
     private $selects;
     private $prepend;
     private $snappy;
+    private $debug;
 
     public function __construct( $controller, Paginator $paginator, LoggableGenerator $snappy = null ) {
         $this->controller = $controller;
@@ -31,6 +32,8 @@ class GridManager {
 
         $this->selects = array();
         $this->grid = array();
+
+        $this->debug = $this->request->query->get('debug');
 
         $this->grid['paths'] = array();
         $this->grid['entities'] = array();
@@ -128,13 +131,17 @@ class GridManager {
         }
     }
 
+
+    // setRoot is deprecated (it happens on construct now)
     public function setRoot( $root, $rootClass ) {
-        $this->root = $root;
-        $this->rootClass = $rootClass;
+        // $this->root = $root;
+        // $this->rootClass = $rootClass;
     }
 
     public function setQueryBuilder( $queryBuilder ) {
         $this->queryBuilder = $queryBuilder;
+        $this->root=$queryBuilder->getDQLPart('from')[0]->getAlias();
+        $this->rootClass=$queryBuilder->getDQLPart('from')[0]->getFrom();
     }
 
     public function setExportType( $exportType ) {
@@ -145,9 +152,9 @@ class GridManager {
         }
 
     }
-
+    // setSelect is deprecated (it happens in JSON respone now)
     public function setSelect( $select ) {
-        $this->selects[$select] = $select;
+        // $this->selects[$select] = $select;
     }
 
     public function setPath( $item ) {
@@ -284,9 +291,16 @@ class GridManager {
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
-        foreach ( $this->selects as $select ) {
-            $this->queryBuilder->addSelect( $select );
-        }
+
+        $qb=$this->queryBuilder;
+        array_map(
+            function( $element ) use ( $qb ) {
+                $qb->addSelect( $element->getAlias() );
+            },
+            $this->queryBuilder->getDqlPart( 'join' )[$this->root]
+        )
+        ;
+
         if ( 0 < $this->grid['filtered'] ) {
             if ( is_null( $this->grid['page'] ) ) {
                 $this->grid['page'] = 1;
@@ -355,6 +369,10 @@ class GridManager {
                     '&sorts=' . json_encode( $this->grid['sorts'] );
             }
         }
+
+            if ( isset($this->debug) ) {
+                return $this->controller->render('MESDAngGridBundle:Grid:debug.html.twig', array('grid' => $this->grid));
+            }
 
         if ( 'js' == $this->grid['exportType'] ) {
             $response = new JsonResponse( $this->grid );
