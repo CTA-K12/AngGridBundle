@@ -437,6 +437,13 @@ EOT;
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
                 $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( isset($this->grid['headers'][$sort->column]['addSort'])
+                    // && 'array' == gettype($this->grid['headers'][$sort->column]['column']['addSort'])
+                    ) {
+                    foreach ($this->grid['headers'][$sort->column]['addSort'] as $newSort) {
+                        // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort));
+                        }
+                }
                 if ( 'asc' == $sort->direction ) {
                     $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
                 } else {
