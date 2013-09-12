@@ -13,7 +13,7 @@
                 </div>
                 <div class="span10">
                 </div>
-                <div class="span1 row-fluid widget-bar-page-control" data-ng-hide="data.showControl">
+                <div class="span1 row-fluid widget-bar-page-control">
                     <div class="span1">
                     </div>
                     <div class="span5 icon-angle-left mini-page" data-ng-click="previousPage()">
@@ -91,28 +91,21 @@
                         </div>
                     </div>
                 </div>
+                                <div class="span2">
+                                </div>
                 <div class="page-control span2">
                     {# <div class="pull-right"> #}
                     {# <span>Page</span> #}
-                    <span class="btn-group">
-                        <button class="btn" data-ng-click="previousPage()" style="margin-bottom: 10px">
-                            <span class="icon-chevron-left">
-                            </span>
-                        </button>
-                    </span>
-                    <span>
-                        <input data-ng-model="data.page" data-ng-change="makeRequest()" style="width:20%" type="text"/>
-                    </span>
-                    <span class="btn-group">
-                        <button class="btn" data-ng-click="nextPage()" style="margin-bottom: 10px">
-                            <span class="icon-chevron-right">
-                            </span>
-                        </button>
-                    </span>
-                    <span> of</span>
-                    <span data-ng-bind="data.last">
-                    </span>
-                    {# </div> #}
+                    <div class="row-fluid">
+                    <div class="span5">
+                    </div>
+                    <div class="span4">
+                        <input data-ng-model="data.page" data-ng-change="makeRequest()" type="text"/>
+                    </div>
+                    <div class="span1"> of</div>
+                    <div class="span1" data-ng-bind="data.last">
+                    </div>
+                    </div>
                 </div>
             </div>
         {% endblock controls %}
