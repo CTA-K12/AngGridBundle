@@ -44,6 +44,7 @@ app/Resources/views/base.html.twig
     {{parent()}}
     {% javascripts
         'bundles/mesdanggrid/js/angular-1.0.7.js'
+        'bundles/mesdanggrid/js/angular-cookies-1.0.7.js'
         'bundles/mesdanggrid/js/angular-resource-1.0.7.js'
         'bundles/mesdanggrid/js/grid_config.js'
         'bundles/mesdanggrid/js/grid_controller.js'
