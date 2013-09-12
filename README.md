@@ -115,17 +115,13 @@ class ChangeThisController extends Controller
         $qb->leftJoin('example.notAssociated', 'notAssociated');
 
         $gm = new GridManager(
-            $this->get('doctrine.orm.entity_manager')
-            , $this->get('knp_paginator')
-            , $this->get('request')
-            , $this->get('router')
-            , $this->get('templating')
-            , $this->get('knp_snappy.pdf') //This can also be null, which will hide the pdf option from the export menu
+            $this,
+            $this->get( 'knp_paginator' ),
+            $this->get( 'knp_snappy.pdf' ),
+            null
         );
 
         $gm->setQueryBuilder($qb);
-        $gm->setRoot('example', 'MESD\App\ChangeThisBundle\Entity\Example');
-        $gm->setSelect('another');
 
         $gm->setExportType($exportType);
         $gm->setExportAlias('example_export');
