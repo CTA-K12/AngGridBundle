@@ -239,3 +239,11 @@ class ChangeThisController extends Controller
     }
 }
 ```
+
+Debugging the JSON Response
+---------------------------
+
+Add ?debug=1 or &debug=1 to the query string to pull up the symfony 
+debugging page for the json response.  This might be useful to count queries.
+
+
