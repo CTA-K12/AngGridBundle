@@ -291,15 +291,17 @@ class GridManager {
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
-
-        $qb=$this->queryBuilder;
-        array_map(
-            function( $element ) use ( $qb ) {
-                $qb->addSelect( $element->getAlias() );
-            },
-            $this->queryBuilder->getDqlPart( 'join' )[$this->root]
-        )
-        ;
+        
+        if( 0 < count($this->queryBuilder->getDqlPart( 'join' ))) {
+            $qb=$this->queryBuilder;
+            array_map(
+                function( $element ) use ( $qb ) {
+                    $qb->addSelect( $element->getAlias() );
+                },
+                $this->queryBuilder->getDqlPart( 'join' )[$this->root]
+            )
+            ;
+        }
 
         if ( 0 < $this->grid['filtered'] ) {
             if ( is_null( $this->grid['page'] ) ) {
