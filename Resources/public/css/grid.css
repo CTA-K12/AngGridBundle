@@ -34,8 +34,6 @@
 .mini-page:hover {
     background-color: #ffffff;
 }
-
-
 .grid-controls {
     -webkit-border-top-left-radius: 4px;
     -moz-border-radius-topleft: 4px;
@@ -59,3 +57,10 @@ td.td-align-right {
 td.td-align-center {
     text-align:center;
 }
+.grid-controls{
+  padding-top:10px;
+}
+#grid-search{
+  margin-left:10px;
+}
+
