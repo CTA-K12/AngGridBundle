@@ -324,7 +324,7 @@ class GridManager {
         $numPaths=0;
         $numButtons=0;
         if ( isset($this->grid['paths']) ) {
-            $numPaths=round(count($this->grid['paths']);
+            $numPaths=round(count($this->grid['paths']));
             $maxWidth += $numPaths;
         }
 

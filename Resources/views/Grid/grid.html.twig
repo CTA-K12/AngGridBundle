@@ -119,20 +119,28 @@
                                 <span> Actions</span>
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
-                                <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="filter dropdown" data-header-filter={% verbatim %}"{{ data.headers[header].type }}"{% endverbatim %} data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
-                                    <span data-ng-click="toggleFilter(header)" class="dropdown-toggle icon-filter clickable"></span>
-                                    <ul class="dropdown-menu" data-ng-switch-when="string">
-                                        <li>Filter: <input data-ng-bind="data.filters[header].filter"></input></li>
-                                    </ul>
-                                    <ul class="dropdown-menu" data-ng-switch-when="date">
-                                        <li>From: <input data-ng-bind="data.filters[header].from"></input></li>
-                                        <li>To: <input data-ng-bind="data.filters[header].to"></input></li>
-                                    </ul>
-                                    <ul class="dropdown-menu" data-ng-switch-default="">
-                                    </ul>
-                                </span>
-                                <span class="clickable" data-ng-click="sort($event, data.headers[header].column)">{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
-                                <span data-ng-class="data.headers[header].sortIcon" class="sort clickable" data-ng-click="sort($event, data.headers[header].column)"></span>
+                                <div class="row-fluid">
+                                    <div class="span1">
+                                        <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="filter dropdown" data-header-filter={% verbatim %}"{{ data.headers[header].type }}"{% endverbatim %} data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
+                                            <span data-ng-click="toggleFilter(header)" class="dropdown-toggle icon-filter clickable"></span>
+                                            <ul class="dropdown-menu" data-ng-switch-when="string">
+                                                <li>Filter: <input data-ng-bind="data.filters[header].filter"></input></li>
+                                            </ul>
+                                            <ul class="dropdown-menu" data-ng-switch-when="date">
+                                                <li>From: <input data-ng-bind="data.filters[header].from"></input></li>
+                                                <li>To: <input data-ng-bind="data.filters[header].to"></input></li>
+                                            </ul>
+                                            <ul class="dropdown-menu" data-ng-switch-default="">
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    <div class="span10">
+                                        <span class="clickable" data-ng-click="sort($event, data.headers[header].column)">{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
+                                    </div>
+                                    <div class="span1">
+                                        <span data-ng-class="data.headers[header].sortIcon" class="sort clickable" data-ng-click="sort($event, data.headers[header].column)"></span>
+                                    </div>
+                                </div>
                             </th>
                         </tr>
                     </thead>
