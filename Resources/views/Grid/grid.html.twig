@@ -121,7 +121,7 @@
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
                                 <div class="row-fluid">
-                                    <div class="span1">
+                                    <div class="span3">
                                         <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="dropdown" data-header-filter={% verbatim %}"{{ data.headers[header].type }}"{% endverbatim %} data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
                                             <span data-ng-click="toggleFilter(header)" class="clickable dropdown-toggle"><span class="icon-filter"></span></span>
                                             <ul class="dropdown-menu" data-ng-switch-when="string">
@@ -136,10 +136,10 @@
                                             </ul>
                                         </span>
                                     </div>
-                                    <div class="span10" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                    <div class="span6" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
                                         <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
                                     </div>
-                                    <div class="span1" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                    <div class="span3" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
                                         <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}</span>
                                     </div>
                                 </div>
