@@ -203,6 +203,11 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         console.log('[]' == $scope.data.filters);
         if ('[]' == $scope.data.filters) {
             $scope.data.filters = [];
+        }
+        console.log($scope.data.filters);
+        console.log($scope.data.filters.hasOwnProperty(column));
+        console.log(!($scope.data.filters.hasOwnProperty(column)));
+        if (!($scope.data.filters.hasOwnProperty(column))) {
             $scope.data.filters[column] = {
                 open: false,
                 filter: '',
@@ -211,7 +216,6 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             };
         }
         /*
-        console.log($scope.data.filters);
         if (!($scope.data.filters.hasOwnProperty(column))) {
             $scope.data.filters[column] = {
                 open: false,
