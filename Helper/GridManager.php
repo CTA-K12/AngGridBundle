@@ -312,6 +312,20 @@ class GridManager {
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
 
+        // for weighting
+        $maxWidth = 0;
+        foreach ($this->grid['headers'] as &$header){
+            if (!isset($header['width'])) {
+                $header['width']=1;
+            }
+            $maxWidth+=$header['width'];
+        }
+
+        // integral percentage
+        foreach ($this->grid['headers'] as &$header){
+            $header['width']=floor($header['width']/$maxWidth*100);
+        }
+
         if( 0 < count($this->queryBuilder->getDqlPart( 'join' ))) {
             $qb=$this->queryBuilder;
             array_map(

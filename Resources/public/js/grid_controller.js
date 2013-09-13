@@ -190,6 +190,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         $cookieStore.remove('perPage');
         $cookieStore.remove('search');
         $cookieStore.remove('sorts');
+        $scope.data.filters = {};
         $scope.data.page = 1;
         $scope.data.perPage = 10;
         $scope.data.search = '';
@@ -198,6 +199,19 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
     };
 
     $scope.toggleFilter = function(column) {
+        console.log('[]' == $scope.data.filters);
+        console.log(undefined == $scope.data.filters[column]);
+        if (undefined == $scope.data.filters[column]) {
+            $scope.data.filters.push({ column: {
+                open: false,
+                filter: '',
+                to: '',
+                from: ''
+            }});
+        }
+        console.log(undefined == $scope.data.filters[column]);
+        console.log($scope.data.filters[column]);
+        console.log($scope.data.filters);
         /*
         console.log(column);
         console.log($scope.data.filters);
