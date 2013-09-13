@@ -14,7 +14,7 @@ class Query
                     if ( false === $header['searchable']) {
                         continue;
                     }
-                    if ( 'text' == $header['type'] ) {
+                    if ( 'string' == $header['type'] ) {
                         $oqb[]=$query->expr()
                         ->like( "LOWER(CONCAT(" . $header['column'] . ", ''))", ':term' . $k );
                     } elseif ( 'date' == $header['type'] ) {
