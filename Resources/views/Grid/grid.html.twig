@@ -111,7 +111,8 @@
             <table class="table table-bordered table-condensed table-hover table-striped grid">
                 {% block tableheader %}
                     <colgroup>
-                        <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></colgroup>
+                        <col data-ng-show="data.actionWidth" class="grid" style="width:{% verbatim %}{{data.actionWidth}}{% endverbatim %}%;" span="1"></col>
+                        <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
                     </colgroup>
                     <thead>
                         <tr>
