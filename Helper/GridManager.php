@@ -63,6 +63,7 @@ class GridManager {
         if ( isset( $grid0 ) ) {
             $cookie =  json_decode( $grid0 );
         }
+
         $addView = $this->request->query->get( 'addView' );
         if ( isset( $addView ) ) {
             $this->grid['addView'] = $addView;
@@ -72,6 +73,17 @@ class GridManager {
                 $this->grid['addView'] = $cookie->addView;
             }
         }
+
+        $filters = $this->request->query->get( 'filters' );
+        if ( isset( $filters ) ) {
+            $this->grid['filters'] = $filters;
+        } else {
+            $this->grid['filters'] = json_decode( $this->request->cookies->get( 'filters' ) );
+            if ( isset( $cookie->filters ) ) {
+                $this->grid['filters'] = $cookie->filters;
+            }
+        }
+
         $page = $this->request->query->get( 'page' );
         if ( isset( $page ) ) {
             $this->grid['page'] = $page;
@@ -81,6 +93,7 @@ class GridManager {
                 $this->grid['page'] = $cookie->page;
             }
         }
+
         $perPage = $this->request->query->get( 'perPage' );
         if ( isset( $perPage ) ) {
             $this->grid['perPage'] = $perPage;
@@ -90,6 +103,7 @@ class GridManager {
                 $this->grid['perPage'] = $cookie->perPage;
             }
         }
+
         $search = $this->request->query->get( 'search' );
         if ( isset( $search ) ) {
             $this->grid['search'] = $search;
@@ -99,6 +113,7 @@ class GridManager {
                 $this->grid['search'] = $cookie->search;
             }
         }
+
         $showControl = $this->request->query->get( 'showControl' );
         if ( isset( $showControl ) ) {
             $this->grid['showControl'] = $showControl;
@@ -108,6 +123,7 @@ class GridManager {
                 $this->grid['showControl'] = $cookie->showControl;
             }
         }
+
         $sorts = json_decode( $this->request->query->get( 'sorts' ) );
         if ( isset( $sorts ) ) {
             $this->grid['sorts'] = $sorts;
@@ -226,6 +242,10 @@ class GridManager {
             $item['align'] = 'td-align-left';
         }
 
+        if ( !isset( $item['filterable'] ) ) {
+            $item['filterable'] = true;
+        }
+
         if ( !isset( $item['header'] ) ) {
             if ( isset( $item['title'] ) ) {
                 $item['header'] = $item['title'];
@@ -265,7 +285,7 @@ class GridManager {
         }
 
         if ( !isset( $item['type'] ) ) {
-            $item['type'] = 'text';
+            $item['type'] = 'string';
         }
 
         if ( 'boolean' == $item['type'] ) {

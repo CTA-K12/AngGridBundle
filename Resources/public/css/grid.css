@@ -64,6 +64,10 @@ td.td-align-center {
   margin-left:10px;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 table.grid {
   table-layout:fixed;
   max-width:100%;
