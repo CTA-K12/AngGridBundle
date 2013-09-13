@@ -74,7 +74,7 @@ table.grid {
   width:100%;
 }
 
-td > div > div.grid, th.grid {
+td > div > div.grid, th.grid > div.row-fluid > div.grid {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
