@@ -64,3 +64,26 @@ td.td-align-center {
   margin-left:10px;
 }
 
+table.grid {
+  table-layout:fixed;
+  max-width:100%;
+  width:100%;
+}
+
+td > div > div.grid, th.grid {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    td.td-align-right {
+            text-align:left;
+    }
+    td.td-align-left {
+            text-align:left;
+    }
+    td.td-align-center {
+            text-align:left;
+    }
+}
