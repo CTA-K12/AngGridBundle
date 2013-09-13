@@ -301,6 +301,20 @@ class GridManager {
             $maxWidth+=$header['width'];
         }
 
+        $numPaths=0;
+        $numButtons=0;
+        if ( isset($this->grid['paths']) ) {
+            $numPaths=round(count($this->grid['paths']);
+            $maxWidth += $numPaths;
+        }
+
+        if ( isset($this->grid['buttons']) ) {
+            $numButtons=sizeof($this->grid['buttons']);
+            $maxWidth += $numButtons;
+        }
+
+        $this->grid['actionWidth']=round(($numButtons+$numPaths)/3);
+        // var_dump($this->grid);die;
         // integral percentage
         foreach ($this->grid['headers'] as &$header){
             $header['width']=floor($header['width']/$maxWidth*100);
@@ -316,6 +330,7 @@ class GridManager {
             )
             ;
         }
+        $this->grid['actionWidth']=floor($this->grid['actionWidth']/$maxWidth*100);
 
         if ( 0 < $this->grid['filtered'] ) {
             if ( is_null( $this->grid['page'] ) ) {
