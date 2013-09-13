@@ -190,7 +190,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         $cookieStore.remove('perPage');
         $cookieStore.remove('search');
         $cookieStore.remove('sorts');
-        $scope.data.filters = {};
+        $scope.data.filters = [];
         $scope.data.page = 1;
         $scope.data.perPage = 10;
         $scope.data.search = '';
@@ -199,18 +199,27 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
     };
 
     $scope.toggleFilter = function(column) {
+        console.log($scope.data.filters);
         console.log('[]' == $scope.data.filters);
-        console.log(undefined == $scope.data.filters[column]);
-        if (undefined == $scope.data.filters[column]) {
-            $scope.data.filters.push({ column: {
+        if ('[]' == $scope.data.filters) {
+            $scope.data.filters = [];
+            $scope.data.filters[column] = {
                 open: false,
                 filter: '',
                 to: '',
                 from: ''
-            }});
+            };
         }
-        console.log(undefined == $scope.data.filters[column]);
-        console.log($scope.data.filters[column]);
+        /*
+        console.log($scope.data.filters);
+        if (!($scope.data.filters.hasOwnProperty(column))) {
+            $scope.data.filters[column] = {
+                open: false,
+                filter: '',
+                to: '',
+                from: ''
+            };
+        }
         console.log($scope.data.filters);
         /*
         console.log(column);
@@ -235,7 +244,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         console.log($scope.data.filters);
         console.log($scope.data.filters[column]);
         console.log(undefined == $scope.data.filters[column]);
-        $scope.data.filters[column]['open'] = !$scope.data.filters[column]['open'];
         */
+        $scope.data.filters[column]['open'] = !$scope.data.filters[column]['open'];
     };
 }];
