@@ -67,82 +67,63 @@ class GridManager {
         $addView = $this->request->query->get( 'addView' );
         if ( isset( $addView ) ) {
             $this->grid['addView'] = $addView;
+        } elseif ( isset( $cookie->addView ) ) {
+            $this->grid['addView'] = $cookie->addView;
         } else {
-            $this->grid['addView'] = json_decode( $this->request->cookies->get( 'addView' ) );
-            if ( isset( $cookie->addView ) ) {
-                $this->grid['addView'] = $cookie->addView;
-            }
+            $this->grid['addView'] = false;
         }
 
-        $filters = $this->request->query->get( 'filters' );
+        $filters = json_decode($this->request->query->get( 'filters' ));
         if ( isset( $filters ) ) {
             $this->grid['filters'] = $filters;
+        } elseif ( isset( $cookie->filters ) ) {
+            $this->grid['filters'] = $cookie->filters;
         } else {
-            $this->grid['filters'] = json_decode( $this->request->cookies->get( 'filters' ) );
-            if ( isset( $cookie->filters ) ) {
-                $this->grid['filters'] = $cookie->filters;
-            }
+            $this->grid['filters'] = null;
         }
 
         $page = $this->request->query->get( 'page' );
         if ( isset( $page ) ) {
             $this->grid['page'] = $page;
+        } elseif ( isset( $cookie->page ) ) {
+            $this->grid['page'] = $cookie->page;
         } else {
-            $this->grid['page'] = json_decode( $this->request->cookies->get( 'page' ) );
-            if ( isset( $cookie->page ) ) {
-                $this->grid['page'] = $cookie->page;
-            }
+            $this->grid['page'] = null;
         }
 
         $perPage = $this->request->query->get( 'perPage' );
         if ( isset( $perPage ) ) {
             $this->grid['perPage'] = $perPage;
+        } elseif ( isset( $cookie->perPage ) ) {
+            $this->grid['perPage'] = $cookie->perPage;
         } else {
-            $this->grid['perPage'] = json_decode( $this->request->cookies->get( 'perPage' ) );
-            if ( isset( $cookie->perPage ) ) {
-                $this->grid['perPage'] = $cookie->perPage;
-            }
+            $this->grid['perPage'] = null;
         }
 
         $search = $this->request->query->get( 'search' );
         if ( isset( $search ) ) {
             $this->grid['search'] = $search;
+        } elseif ( isset( $cookie->search ) ) {
+            $this->grid['search'] = $cookie->search;
         } else {
-            $this->grid['search'] = json_decode( $this->request->cookies->get( 'search' ) );
-            if ( isset( $cookie->search ) ) {
-                $this->grid['search'] = $cookie->search;
-            }
+            $this->grid['search'] = null;
         }
 
         $showControl = $this->request->query->get( 'showControl' );
         if ( isset( $showControl ) ) {
             $this->grid['showControl'] = $showControl;
+        } elseif ( isset( $cookie->showControl ) ) {
+            $this->grid['showControl'] = $cookie->showControl;
         } else {
-            $this->grid['showControl'] = json_decode( $this->request->cookies->get( 'showControl' ) );
-            if ( isset( $cookie->showControl ) ) {
-                $this->grid['showControl'] = $cookie->showControl;
-            }
+            $this->grid['showControl'] = true;
         }
 
         $sorts = json_decode( $this->request->query->get( 'sorts' ) );
         if ( isset( $sorts ) ) {
             $this->grid['sorts'] = $sorts;
+        } elseif ( isset( $cookie->sorts ) ) {
+            $this->grid['sorts'] = $cookie->sorts;
         } else {
-            $this->grid['sorts'] = json_decode( $this->request->cookies->get( 'sorts' ) );
-            if ( isset( $cookie->sorts ) ) {
-                $this->grid['sorts'] = $cookie->sorts;
-            }
-        }
-
-        if ( !isset( $this->grid['addView'] ) ) {
-            $this->grid['addView'] = false;
-        }
-
-        if ( !isset( $this->grid['showControl'] ) ) {
-            $this->grid['showControl'] = true;
-        }
-
-        if ( !isset( $this->grid['sorts'] ) ) {
             $this->grid['sorts'] = null;
         }
     }
