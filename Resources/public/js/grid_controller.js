@@ -8,34 +8,34 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
     $scope.toggleAdd = function(){
       $scope.data.addView = !$scope.data.addView;
       $scope.makeRequest();
-    }
+    };
 
     $scope.toggleControl = function(){
       $scope.data.showControl = !$scope.data.showControl;
       $scope.makeRequest();
-    }
+    };
 
     $scope.notSorted = function(obj){
         if (!obj) {
             return [];
         }
         return Object.keys(obj);
-    }
+    };
 
     $scope.makeRequest = function() {
         $scope.data.requestCount += 1;
         $scope.sendRequest($scope.data.requestCount);
-    }
+    };
 
     $scope.sendRequest = function(i) {
         setTimeout(function() {
             $scope.getData(i)
         }, 300);
-    }
+    };
 
     $scope.logThis = function(i) {
         console.log(i);
-    }
+    };
 
     $scope.getData = function(count) {
         if (count != $scope.data.requestCount) {
@@ -45,24 +45,29 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             method: 'GET',
             url: 'data.json',
             params: {
-                "addView": $scope.data.addView,
-                "exportType": $scope.data.exportType,
-                "page": $scope.data.page,
-                "perPage": $scope.data.perPage,
-                "requestCount": $scope.data.requestCount,
-                "search": $scope.data.search,
-                "showControl": $scope.data.showControl,
-                "sorts": $scope.data.sorts,
+                'addView': $scope.data.addView,
+                'exportType': $scope.data.exportType,
+                'filters': $scope.data.filters,
+                'page': $scope.data.page,
+                'perPage': $scope.data.perPage,
+                'requestCount': $scope.data.requestCount,
+                'search': $scope.data.search,
+                'showControl': $scope.data.showControl,
+                'sorts': $scope.data.sorts,
             }
         }).success(
         function(data, status, headers, config) {
             if (parseInt(data.requestCount) != $scope.data.requestCount) {
                 return;
             }
+
             $scope.data.buttons = data.buttons;
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
             $scope.data.filtered = data.filtered;
+            console.log($scope.data.filters);
+            $scope.data.filters = data.filters;
+            console.log($scope.data.filters);
             $scope.data.last = data.last;
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
@@ -71,12 +76,14 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $scope.data.exportArray = data.exportArray;
             var cookie = {
                 addView: $scope.data.addView,
+                filters: $scope.data.filters,
                 page: $scope.data.page,
                 perPage: $scope.data.perPage,
                 search: $scope.data.search,
                 showControl: $scope.data.showControl,
                 sorts: $scope.data.sorts
             };
+            console.log(cookie);
             $cookieStore.put('grid0', cookie);
             $cookieStore.remove('page');
             $cookieStore.remove('perPage');
@@ -90,7 +97,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $cookieStore.remove('sorts');
             $scope.status = status;
         });
-    }
+    };
 
     if (typeof $("select.grid-export").select2 == 'function'){
 
@@ -125,13 +132,15 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $scope.data.page = parseInt($scope.data.page) - 1;
             $scope.makeRequest();
         }
-    }
+    };
+
     $scope.nextPage = function() {
         if (parseInt($scope.data.last) > parseInt($scope.data.page)) {
             $scope.data.page = parseInt($scope.data.page) + 1;
             $scope.makeRequest();
         }
-    }
+    };
+
     $scope.sort = function(event, column) {
         if ($scope.data.headers[column].sortable) {
             if (undefined == $scope.data.sorts) {
@@ -172,12 +181,12 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             }
             $scope.makeRequest();
         }
-    }
+    };
 
     $scope.changePage = function(perPage) {
         $scope.data.perPage = perPage;
         $scope.makeRequest();
-    }
+    };
 
     $scope.reset = function() {
         $cookieStore.remove('grid0');
@@ -185,10 +194,78 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         $cookieStore.remove('perPage');
         $cookieStore.remove('search');
         $cookieStore.remove('sorts');
+        $scope.data.filters = [];
         $scope.data.page = 1;
         $scope.data.perPage = 10;
         $scope.data.search = '';
         $scope.data.sorts = [];
         $scope.makeRequest();
-    }
+    };
+
+    $scope.toggleFilter = function(headerName) {
+        console.log($scope.data.filters);
+        console.log('[]' == $scope.data.filters);
+        if ((null == $scope.data.filters) || ('[]' == $scope.data.filters)) {
+            $scope.data.filters = [];
+        }
+        console.log($scope.data.filters);
+        console.log($scope.data.filters.hasOwnProperty(headerName));
+        console.log(!($scope.data.filters.hasOwnProperty(headerName)));
+        if (!($scope.data.filters.hasOwnProperty(headerName))) {
+            console.log('not has own property');
+            $scope.data.filters.push({
+                column: headerName,
+                from: '',
+                open: false,
+                string: '',
+                to: ''
+            });
+
+/*            var column = []
+            column['open'] = false;
+            column['string'] = '';
+            column['to'] = '';
+            column['from'] = '';
+            $scope.data.filters[headerName] = column;
+*/        }
+        console.log($scope.data.filters);
+        /*
+        if (!($scope.data.filters.hasOwnProperty(column))) {
+            $scope.data.filters[headerName] = {
+                open: false,
+                string: '',
+                to: '',
+                from: ''
+            };
+        }
+        console.log($scope.data.filters);
+        /*
+        console.log(column);
+        console.log($scope.data.filters);
+        if (undefined == $scope.data.filters) {
+            console.log('undefined!');
+            console.log(column);
+            $scope.data.filters = {};
+        }
+        console.log($scope.data.filters);
+        if (undefined == $scope.data.filters[column]) {
+            console.log('undefined again!');
+            console.log(column);
+            $scope.data.filters[column] = {
+                open: false,
+                filter: '',
+                to: '',
+                from: ''
+            };
+            console.log($scope.data.filters[column]);
+        }
+        console.log($scope.data.filters);
+        console.log($scope.data.filters[column]);
+        console.log(undefined == $scope.data.filters[column]);
+        */
+        $scope.data.filters[headerName]['open'] = !$scope.data.filters[headerName]['open'];
+        if(!$scope.data.filters[headerName]['open']) {
+            $scope.makeRequest();
+        }
+    };
 }];

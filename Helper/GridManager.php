@@ -66,70 +66,67 @@ class GridManager {
         if ( isset( $grid0 ) ) {
             $cookie =  json_decode( $grid0 );
         }
+
         $addView = $this->request->query->get( 'addView' );
         if ( isset( $addView ) ) {
             $this->grid['addView'] = $addView;
+        } elseif ( isset( $cookie->addView ) ) {
+            $this->grid['addView'] = $cookie->addView;
         } else {
-            $this->grid['addView'] = json_decode( $this->request->cookies->get( 'addView' ) );
-            if ( isset( $cookie->addView ) ) {
-                $this->grid['addView'] = $cookie->addView;
-            }
-        }
-        $page = $this->request->query->get( 'page' );
-        if ( isset( $page ) ) {
-            $this->grid['page'] = $page;
-        } else {
-            $this->grid['page'] = json_decode( $this->request->cookies->get( 'page' ) );
-            if ( isset( $cookie->page ) ) {
-                $this->grid['page'] = $cookie->page;
-            }
-        }
-        $perPage = $this->request->query->get( 'perPage' );
-        if ( isset( $perPage ) ) {
-            $this->grid['perPage'] = $perPage;
-        } else {
-            $this->grid['perPage'] = json_decode( $this->request->cookies->get( 'perPage' ) );
-            if ( isset( $cookie->perPage ) ) {
-                $this->grid['perPage'] = $cookie->perPage;
-            }
-        }
-        $search = $this->request->query->get( 'search' );
-        if ( isset( $search ) ) {
-            $this->grid['search'] = $search;
-        } else {
-            $this->grid['search'] = json_decode( $this->request->cookies->get( 'search' ) );
-            if ( isset( $cookie->search ) ) {
-                $this->grid['search'] = $cookie->search;
-            }
-        }
-        $showControl = $this->request->query->get( 'showControl' );
-        if ( isset( $showControl ) ) {
-            $this->grid['showControl'] = $showControl;
-        } else {
-            $this->grid['showControl'] = json_decode( $this->request->cookies->get( 'showControl' ) );
-            if ( isset( $cookie->showControl ) ) {
-                $this->grid['showControl'] = $cookie->showControl;
-            }
-        }
-        $sorts = json_decode( $this->request->query->get( 'sorts' ) );
-        if ( isset( $sorts ) ) {
-            $this->grid['sorts'] = $sorts;
-        } else {
-            $this->grid['sorts'] = json_decode( $this->request->cookies->get( 'sorts' ) );
-            if ( isset( $cookie->sorts ) ) {
-                $this->grid['sorts'] = $cookie->sorts;
-            }
-        }
-
-        if ( !isset( $this->grid['addView'] ) ) {
             $this->grid['addView'] = false;
         }
 
-        if ( !isset( $this->grid['showControl'] ) ) {
+        $filters = json_decode( $this->request->query->get( 'filters' ) );
+        if ( isset( $filters ) ) {
+            $this->grid['filters'] = $filters;
+        } elseif ( isset( $cookie->filters ) ) {
+            $this->grid['filters'] = $cookie->filters;
+        } else {
+            $this->grid['filters'] = null;
+        }
+
+        $page = $this->request->query->get( 'page' );
+        if ( isset( $page ) ) {
+            $this->grid['page'] = $page;
+        } elseif ( isset( $cookie->page ) ) {
+            $this->grid['page'] = $cookie->page;
+        } else {
+            $this->grid['page'] = null;
+        }
+
+        $perPage = $this->request->query->get( 'perPage' );
+        if ( isset( $perPage ) ) {
+            $this->grid['perPage'] = $perPage;
+        } elseif ( isset( $cookie->perPage ) ) {
+            $this->grid['perPage'] = $cookie->perPage;
+        } else {
+            $this->grid['perPage'] = null;
+        }
+
+        $search = $this->request->query->get( 'search' );
+        if ( isset( $search ) ) {
+            $this->grid['search'] = $search;
+        } elseif ( isset( $cookie->search ) ) {
+            $this->grid['search'] = $cookie->search;
+        } else {
+            $this->grid['search'] = null;
+        }
+
+        $showControl = $this->request->query->get( 'showControl' );
+        if ( isset( $showControl ) ) {
+            $this->grid['showControl'] = $showControl;
+        } elseif ( isset( $cookie->showControl ) ) {
+            $this->grid['showControl'] = $cookie->showControl;
+        } else {
             $this->grid['showControl'] = true;
         }
 
-        if ( !isset( $this->grid['sorts'] ) ) {
+        $sorts = json_decode( $this->request->query->get( 'sorts' ) );
+        if ( isset( $sorts ) ) {
+            $this->grid['sorts'] = $sorts;
+        } elseif ( isset( $cookie->sorts ) ) {
+            $this->grid['sorts'] = $cookie->sorts;
+        } else {
             $this->grid['sorts'] = null;
         }
     }
@@ -143,8 +140,8 @@ class GridManager {
 
     public function setQueryBuilder( $queryBuilder ) {
         $this->queryBuilder = $queryBuilder;
-        $this->root=$queryBuilder->getDQLPart('from')[0]->getAlias();
-        $this->rootClass=$queryBuilder->getDQLPart('from')[0]->getFrom();
+        $this->root=$queryBuilder->getDQLPart( 'from' )[0]->getAlias();
+        $this->rootClass=$queryBuilder->getDQLPart( 'from' )[0]->getFrom();
     }
 
     public function setExportType( $exportType ) {
@@ -230,6 +227,10 @@ class GridManager {
             $item['align'] = 'td-align-left';
         }
 
+        if ( !isset( $item['filterable'] ) ) {
+            $item['filterable'] = true;
+        }
+
         if ( !isset( $item['header'] ) ) {
             if ( isset( $item['title'] ) ) {
                 $item['header'] = $item['title'];
@@ -269,7 +270,7 @@ class GridManager {
         }
 
         if ( !isset( $item['type'] ) ) {
-            $item['type'] = 'text';
+            $item['type'] = 'string';
         }
 
         if ( 'boolean' == $item['type'] ) {
@@ -296,14 +297,58 @@ class GridManager {
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
 
-        $qb=$this->queryBuilder;
-        array_map(
-            function( $element ) use ( $qb ) {
-                $qb->addSelect( $element->getAlias() );
-            },
-            $this->queryBuilder->getDqlPart( 'join' )[$this->root]
-        )
-        ;
+        // for weighting
+        $maxWidth = 0;
+        foreach ( $this->grid['headers'] as &$header ) {
+            if ( !isset( $header['width'] ) ) {
+                $header['width']=1;
+            }
+            $maxWidth+=$header['width'];
+            // var_dump($header['column'].' => '.$maxWidth);
+        }
+
+        if ( 0 < ( count( $this->grid['paths'] ) + count( $this->grid['buttons'] ) ) ) {
+            $buttons=0;
+            if ( isset( $this->grid['paths'] ) ) {
+                $numPaths=round( count( $this->grid['paths'] ) );
+                $buttons += $numPaths;
+            }
+
+            if ( isset( $this->grid['buttons'] ) ) {
+                $numButtons=count( $this->grid['buttons'] );
+                $buttons += $numButtons;
+            }
+
+            $this->grid['numButtons']=$buttons;
+            $buttonsWidth=floor( $buttons/3 )+1;
+            $maxWidth+=$buttonsWidth;
+        }
+
+        // integral percentage
+        foreach ( $this->grid['headers'] as &$header ) {
+            $header['width']=floor( $header['width']/$maxWidth*100 );
+            // var_dump($header['column'].' => '.$header['width']);
+        }
+        // var_dump($this->grid);die;
+
+        if ( 0 < count( $this->queryBuilder->getDqlPart( 'join' ) ) ) {
+            $qb=$this->queryBuilder;
+            array_map(
+                function( $element ) use ( $qb ) {
+                    $qb->addSelect( $element->getAlias() );
+                    // print_r($qb->getQuery()->getDql());
+                    // print_r("<br><br>");
+                },
+                $this->queryBuilder->getDqlPart( 'join' )[$this->root]
+            )
+            ;
+            if ( isset( $this->grid['numButtons'] ) ) {
+                $this->grid['actionWidth']=floor( $this->grid['numButtons']/$maxWidth*100 );
+                $this->grid['numButtons']*=30;
+            } else {
+                $this->grid['actionWidth']=0;
+            }
+        }
 
         if ( 0 < $this->grid['filtered'] ) {
             if ( is_null( $this->grid['page'] ) ) {
@@ -324,6 +369,7 @@ class GridManager {
             $rootId = null;
             $this->processResults();
         }
+
         if ( $this->export ) {
             if ( $this->grid['exportType'] == 'pdf' && !is_null( $this->snappy ) ) {
                 $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
@@ -389,9 +435,9 @@ class GridManager {
             }
         }
 
-            if ( isset($this->debug) ) {
-                return $this->controller->render('MESDAngGridBundle:Grid:debug.html.twig', array('grid' => $this->grid));
-            }
+        if ( isset( $this->debug ) ) {
+            return $this->controller->render( 'MESDAngGridBundle:Grid:debug.html.twig', array( 'grid' => $this->grid ) );
+        }
 
         if ( 'js' == $this->grid['exportType'] ) {
             $response = new JsonResponse( $this->grid );
@@ -456,6 +502,13 @@ EOT;
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
                 $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
+                    // && 'array' == gettype($this->grid['headers'][$sort->column]['column']['addSort'])
+                ) {
+                    foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
+                        // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort));
+                    }
+                }
                 if ( 'asc' == $sort->direction ) {
                     $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
                 } else {

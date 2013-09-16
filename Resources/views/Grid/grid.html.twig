@@ -92,32 +92,57 @@
                     </div>
                 </div>
                 <div class="page-control span2">
-                    {# <div class="pull-right"> #}
-                    {# <span>Page</span> #}
                     <div class="row-fluid">
-                        <div class="span5">
+                        <div class="span4">
                         </div>
                         <div class="span4">
                             <input data-ng-model="data.page" data-ng-change="makeRequest()" type="text"/>
                         </div>
                         <div class="span1"> of</div>
-                        <div class="span1" data-ng-bind="data.last">
+                        <div class="span2" data-ng-bind="data.last">
                         </div>
                     </div>
                 </div>
             </div>
         {% endblock controls %}
         {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post">{% endif %}
-            <table class="table table-bordered table-condensed table-hover table-striped">
+            <table class="table table-bordered table-condensed table-hover table-striped grid">
                 {% block tableheader %}
+                    <colgroup>
+                        <col data-ng-show="data.actionWidth" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;" {#width:{% verbatim %}{{data.actionWidth}}{% endverbatim %}%;#} span="1"></col>
+                        <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th data-ng-hide="null==data.paths || ''==data.paths">
+                            <th data-ng-hide="null==data.paths || ''==data.paths" class="grid">
                                 <span> Actions</span>
                             </th>
-                            <th data-ng-click="sort($event, data.headers[header].column)" data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" style="cursor:pointer" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
-                                <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
-                                <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %} data-ng-click="sort($event, data.headers[header].column)"></span>
+                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
+                                <div class="row-fluid">
+                                    {#
+                                    <div class="span3">
+                                        <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="dropdown" data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
+                                            <span data-ng-click="toggleFilter(header)" class="clickable dropdown-toggle"><span class="icon-filter"></span></span>
+                                            <ul class="dropdown-menu" data-ng-switch-when="string">
+                                                <li>Filter: <input data-ng-model="data.filters[header].string"></input></li>
+                                            </ul>
+                                            <ul class="dropdown-menu" data-ng-switch-when="date">
+                                                <li>From: <input data-ng-model="data.filters[header].from"></input></li>
+                                                <li>To: <input data-ng-model="data.filters[header].to"></input></li>
+                                            </ul>
+                                            <ul class="dropdown-menu" data-ng-switch-default="">
+                                                <li>{% verbatim %}{{ data.headers[header].type }}{% endverbatim %}</li>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    #}
+                                    <div class="span9 grid clickable" class="" data-ng-click="sort($event, data.headers[header].column)" >
+                                        <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
+                                    </div>
+                                    <div class="span3 grid clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                        <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}</span>
+                                    </div>
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -130,23 +155,22 @@
                             <td>No matches found.</td>
                         </tr>
                         <tr data-ng-repeat="entity in notSorted(data.entities)">
-                            <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align">
+                            <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align" class="grid">
                                 <span class="btn-group">
                                     <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{% endverbatim %}">
                                         <span class={% verbatim %}"{{data.paths[action].icon}}"{% endverbatim %}></span> {% verbatim %}{{data.paths[action].text}}{% endverbatim %}
                                     </a>
                                     <button data-ng-repeat="button in notSorted(data.entities[entity].buttons)"
                                         class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }}"{% endverbatim %} name={% verbatim %}"{{data.buttons[button].name}}"{% endverbatim %} value={% verbatim %}"{{ data.entities[entity].id }}"{% endverbatim %}>
-                                        <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}>
-                                        </span>
+                                        <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}></span>
                                     </button>
                                 </span>
                             </td>
-                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} data-ng-class="data.headers[header].align">
+                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} data-ng-class="data.headers[header].align" class="grid" title="{% verbatim %}{{data.entities[entity].values[data.headers[header].column]}}{% endverbatim %}">
                                 <div data-ng-switch on="data.headers[header].html">
-                                    <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]">
+                                    <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]" class="grid">
                                     </div>
-                                    <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]">
+                                    <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]" class="grid">
                                     </div>
                                 </div>
                             </td>
