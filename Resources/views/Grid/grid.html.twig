@@ -92,8 +92,6 @@
                     </div>
                 </div>
                 <div class="page-control span2">
-                    {# <div class="pull-right"> #}
-                    {# <span>Page</span> #}
                     <div class="row-fluid">
                         <div class="span4">
                         </div>
@@ -119,27 +117,30 @@
                             <th data-ng-hide="null==data.paths || ''==data.paths" class="grid">
                                 <span> Actions</span>
                             </th>
-                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id="{% verbatim %}{{ data.headers[header].id }}{% endverbatim %}" title="{% verbatim %}{{ data.headers[header].title }}{% endverbatim %}" class="grid">
+                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
                                 <div class="row-fluid">
-                                    <div class="span3" data-ng-show="data.headers[header].filterable" >
-                                        <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="filter dropdown" data-header-filter={% verbatim %}"{{ data.headers[header].type }}"{% endverbatim %} data-ng-switch="" data-on="data.headers[header].type">
-                                            <span data-ng-click="toggleFilter(header)" class="dropdown-toggle icon-filter clickable"></span>
+                                    {#}
+                                    <div class="span3">
+                                        <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="dropdown" data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
+                                            <span data-ng-click="toggleFilter(header)" class="clickable dropdown-toggle"><span class="icon-filter"></span></span>
                                             <ul class="dropdown-menu" data-ng-switch-when="string">
-                                                <li>Filter: <input data-ng-bind="data.filters[header].filter"></input></li>
+                                                <li>Filter: <input data-ng-model="data.filters[header].string"></input></li>
                                             </ul>
                                             <ul class="dropdown-menu" data-ng-switch-when="date">
-                                                <li>From: <input data-ng-bind="data.filters[header].from"></input></li>
-                                                <li>To: <input data-ng-bind="data.filters[header].to"></input></li>
+                                                <li>From: <input data-ng-model="data.filters[header].from"></input></li>
+                                                <li>To: <input data-ng-model="data.filters[header].to"></input></li>
                                             </ul>
                                             <ul class="dropdown-menu" data-ng-switch-default="">
+                                                <li>{% verbatim %}{{ data.headers[header].type }}{% endverbatim %}</li>
                                             </ul>
                                         </span>
                                     </div>
-                                    <div class="span6 grid">
-                                        <span class="clickable" data-ng-click="sort($event, data.headers[header].column)">{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
+                                    {#}
+                                    <div class="span9" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                        <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
                                     </div>
-                                    <div class="span3">
-                                        <span data-ng-class="data.headers[header].sortIcon" class="sort clickable" data-ng-click="sort($event, data.headers[header].column)"></span>
+                                    <div class="span3" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                        <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}</span>
                                     </div>
                                 </div>
                             </th>

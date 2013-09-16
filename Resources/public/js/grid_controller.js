@@ -60,11 +60,14 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             if (parseInt(data.requestCount) != $scope.data.requestCount) {
                 return;
             }
+
             $scope.data.buttons = data.buttons;
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
             $scope.data.filtered = data.filtered;
+            console.log($scope.data.filters);
             $scope.data.filters = data.filters;
+            console.log($scope.data.filters);
             $scope.data.last = data.last;
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
@@ -80,6 +83,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
                 showControl: $scope.data.showControl,
                 sorts: $scope.data.sorts
             };
+            console.log(cookie);
             $cookieStore.put('grid0', cookie);
             $cookieStore.remove('page');
             $cookieStore.remove('perPage');
@@ -198,24 +202,38 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         $scope.makeRequest();
     };
 
-    $scope.toggleFilter = function(column) {
+    $scope.toggleFilter = function(headerName) {
         console.log($scope.data.filters);
         console.log('[]' == $scope.data.filters);
-        if ('[]' == $scope.data.filters) {
+        if ((null == $scope.data.filters) || ('[]' == $scope.data.filters)) {
             $scope.data.filters = [];
-            $scope.data.filters[column] = {
-                open: false,
-                filter: '',
-                to: '',
-                from: ''
-            };
         }
-        /*
         console.log($scope.data.filters);
-        if (!($scope.data.filters.hasOwnProperty(column))) {
-            $scope.data.filters[column] = {
+        console.log($scope.data.filters.hasOwnProperty(headerName));
+        console.log(!($scope.data.filters.hasOwnProperty(headerName)));
+        if (!($scope.data.filters.hasOwnProperty(headerName))) {
+            console.log('not has own property');
+            $scope.data.filters.push({
+                column: headerName,
+                from: '',
                 open: false,
-                filter: '',
+                string: '',
+                to: ''
+            });
+
+/*            var column = []
+            column['open'] = false;
+            column['string'] = '';
+            column['to'] = '';
+            column['from'] = '';
+            $scope.data.filters[headerName] = column;
+*/        }
+        console.log($scope.data.filters);
+        /*
+        if (!($scope.data.filters.hasOwnProperty(column))) {
+            $scope.data.filters[headerName] = {
+                open: false,
+                string: '',
                 to: '',
                 from: ''
             };
@@ -245,6 +263,9 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         console.log($scope.data.filters[column]);
         console.log(undefined == $scope.data.filters[column]);
         */
-        $scope.data.filters[column]['open'] = !$scope.data.filters[column]['open'];
+        $scope.data.filters[headerName]['open'] = !$scope.data.filters[headerName]['open'];
+        if(!$scope.data.filters[headerName]['open']) {
+            $scope.makeRequest();
+        }
     };
 }];
