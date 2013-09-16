@@ -117,9 +117,9 @@
                             <th data-ng-hide="null==data.paths || ''==data.paths" class="grid">
                                 <span> Actions</span>
                             </th>
-                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %}>
+                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
                                 <div class="row-fluid">
-                                    {#}
+                                    {#
                                     <div class="span3">
                                         <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="dropdown" data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
                                             <span data-ng-click="toggleFilter(header)" class="clickable dropdown-toggle"><span class="icon-filter"></span></span>
@@ -135,11 +135,11 @@
                                             </ul>
                                         </span>
                                     </div>
-                                    {#}
-                                    <div class="span9" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                    #}
+                                    <div class="span9 grid clickable" class="" data-ng-click="sort($event, data.headers[header].column)" >
                                         <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
                                     </div>
-                                    <div class="span3" class="clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                    <div class="span3 grid clickable" data-ng-click="sort($event, data.headers[header].column)" >
                                         <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}</span>
                                     </div>
                                 </div>
