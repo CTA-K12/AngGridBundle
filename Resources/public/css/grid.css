@@ -60,7 +60,7 @@ td.td-align-center {
 .grid-controls{
   padding-top:10px;
 }
-#grid-search{
-  margin-left:10px;
+.row-fluid .grid-controls .widgets{
+  padding-left:10px;
 }
 
