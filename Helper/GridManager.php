@@ -347,7 +347,7 @@ class GridManager {
             )
             ;
             if ( isset( $this->grid['numButtons'] ) ) {
-                $this->grid['actionWidth']=floor( $this->grid['numButtons']/$maxWidth*100 );
+                $this->grid['actionWidth']=floor( $buttonsWidth/$maxWidth*100 );
                 $this->grid['numButtons']*=30;
             } else {
                 $this->grid['actionWidth']=0;
@@ -373,7 +373,6 @@ class GridManager {
             $rootId = null;
             $this->processResults();
         }
-
         if ( $this->export ) {
             if ( $this->grid['exportType'] == 'pdf' && !is_null( $this->snappy ) ) {
                 $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
