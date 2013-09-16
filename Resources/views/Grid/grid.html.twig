@@ -121,8 +121,8 @@
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id="{% verbatim %}{{ data.headers[header].id }}{% endverbatim %}" title="{% verbatim %}{{ data.headers[header].title }}{% endverbatim %}" class="grid">
                                 <div class="row-fluid">
-                                    <div class="span3">
-                                        <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="filter dropdown" data-header-filter={% verbatim %}"{{ data.headers[header].type }}"{% endverbatim %} data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
+                                    <div class="span3" data-ng-show="data.headers[header].filterable" >
+                                        <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="filter dropdown" data-header-filter={% verbatim %}"{{ data.headers[header].type }}"{% endverbatim %} data-ng-switch="" data-on="data.headers[header].type">
                                             <span data-ng-click="toggleFilter(header)" class="dropdown-toggle icon-filter clickable"></span>
                                             <ul class="dropdown-menu" data-ng-switch-when="string">
                                                 <li>Filter: <input data-ng-bind="data.filters[header].filter"></input></li>

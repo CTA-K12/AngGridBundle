@@ -319,37 +319,46 @@ class GridManager {
                 $header['width']=1;
             }
             $maxWidth+=$header['width'];
+            // var_dump($header['column'].' => '.$maxWidth);
         }
 
-        $numPaths=0;
-        $numButtons=0;
+        $buttons=0;
         if ( isset($this->grid['paths']) ) {
             $numPaths=round(count($this->grid['paths']));
-            $maxWidth += $numPaths;
+            $buttons += $numPaths;
         }
 
         if ( isset($this->grid['buttons']) ) {
             $numButtons=sizeof($this->grid['buttons']);
-            $maxWidth += $numButtons;
+            $buttons += $numButtons;
         }
 
-        $this->grid['actionWidth']=round(($numButtons+$numPaths)/3);
-        // var_dump($this->grid);die;
+    //     var_dump($buttons);
+    //     var_dump($buttons/3);
+    // var_dump(floor($buttons/3));
+        $buttons=floor($buttons/3)+1;
+        $this->grid['actionWidth']=$buttons;
+        $maxWidth+=$buttons;
         // integral percentage
         foreach ($this->grid['headers'] as &$header){
             $header['width']=floor($header['width']/$maxWidth*100);
+            // var_dump($header['column'].' => '.$header['width']);
         }
+        // var_dump($this->grid);die;
 
         if( 0 < count($this->queryBuilder->getDqlPart( 'join' ))) {
             $qb=$this->queryBuilder;
             array_map(
                 function( $element ) use ( $qb ) {
                     $qb->addSelect( $element->getAlias() );
+                    // print_r($qb->getQuery()->getDql());
+                    // print_r("<br><br>");
                 },
                 $this->queryBuilder->getDqlPart( 'join' )[$this->root]
             )
             ;
         }
+
         $this->grid['actionWidth']=floor($this->grid['actionWidth']/$maxWidth*100);
 
         if ( 0 < $this->grid['filtered'] ) {
