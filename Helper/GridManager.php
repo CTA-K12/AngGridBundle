@@ -140,8 +140,12 @@ class GridManager {
 
     public function setQueryBuilder( $queryBuilder ) {
         $this->queryBuilder = $queryBuilder;
-        $this->root=$queryBuilder->getDQLPart( 'from' )[0]->getAlias();
-        $this->rootClass=$queryBuilder->getDQLPart( 'from' )[0]->getFrom();
+        $alias = $queryBuilder->getDQLPart( 'from' );
+        $this->root = $alias[0]->getAlias();
+        // $this->root=$queryBuilder->getDQLPart( 'from' )[0]->getAlias();
+        $from = $queryBuilder->getDQLPart( 'from' );
+        $this->root = $alias[0]->getFrom();
+        // $this->rootClass=$queryBuilder->getDQLPart( 'from' )[0]->getFrom();
     }
 
     public function setExportType( $exportType ) {
