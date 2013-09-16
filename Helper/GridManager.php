@@ -144,7 +144,7 @@ class GridManager {
         $this->root = $alias[0]->getAlias();
         // $this->root=$queryBuilder->getDQLPart( 'from' )[0]->getAlias();
         $from = $queryBuilder->getDQLPart( 'from' );
-        $this->root = $alias[0]->getFrom();
+        $this->rootClass = $alias[0]->getFrom();
         // $this->rootClass=$queryBuilder->getDQLPart( 'from' )[0]->getFrom();
     }
 
