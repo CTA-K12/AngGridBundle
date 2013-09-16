@@ -315,9 +315,9 @@ class GridManager {
                 $buttons += $numButtons;
             }
 
-            $buttons=floor( $buttons/3 )+1;
-            $this->grid['actionWidth']=$buttons;
-            $maxWidth+=$buttons;
+            $this->grid['numButtons']=$buttons;
+            $buttonsWidth=floor( $buttons/3 )+1;
+            $maxWidth+=$buttonsWidth;
         }
 
         // integral percentage
@@ -338,8 +338,9 @@ class GridManager {
                 $this->queryBuilder->getDqlPart( 'join' )[$this->root]
             )
             ;
-            if ( isset( $this->grid['actionWidth'] ) ) {
-                $this->grid['actionWidth']=floor( $this->grid['actionWidth']/$maxWidth*100 );
+            if ( isset( $this->grid['numButtons'] ) ) {
+                $this->grid['actionWidth']=floor( $this->grid['numButtons']/$maxWidth*100 );
+                $this->grid['numButtons']*=30;
             } else {
                 $this->grid['actionWidth']=0;
             }
@@ -364,6 +365,7 @@ class GridManager {
             $rootId = null;
             $this->processResults();
         }
+
         if ( $this->export ) {
             if ( $this->grid['exportType'] == 'pdf' && !is_null( $this->snappy ) ) {
                 $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
