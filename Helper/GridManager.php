@@ -13,6 +13,7 @@ class GridManager {
     private $controller;
     private $export;
     private $exportAlias;
+    private $exportParams;
     private $grid;
     private $queryBuilder;
     private $root;
@@ -33,7 +34,9 @@ class GridManager {
         $this->selects = array();
         $this->grid = array();
 
-        $this->debug = $this->request->query->get( 'debug' );
+        $this->exportParams = array();
+
+        $this->debug = $this->request->query->get('debug');
 
         $this->grid['paths'] = array();
         $this->grid['entities'] = array();
@@ -184,8 +187,9 @@ class GridManager {
         $this->grid['buttons'][$item['alias']] = $item;
     }
 
-    public function setExportAlias( $alias ) {
+    public function setExportAlias( $alias, $params = array()) {
         $this->exportAlias = $alias;
+        $this->exportParams = $params;
     }
 
     public function setHeader( $item ) {
@@ -404,14 +408,29 @@ class GridManager {
                 $exType['exportLink'] = '';
             }
         } else {
-            $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
+            if(!empty($this->exportParams)){
+                $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array_merge(array( 'exportType' => $this->grid['exportType'] ),$this->exportParams)) .
                 '?exportString=true&search=' . $this->grid['search'] .
                 '&sorts=' . json_encode( $this->grid['sorts'] );
+            }
+            else{
+                $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
+                '?exportString=true&search=' . $this->grid['search'] .
+                '&sorts=' . json_encode( $this->grid['sorts'] );
+            }
             for ( $i = 0; $i < count( $this->grid['exportArray'] ); $i++ ) {
-                $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
-                    array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
-                    '?exportString=true&search=' . $this->grid['search'] .
-                    '&sorts=' . json_encode( $this->grid['sorts'] );
+                if(!empty($this->exportParams)){
+                    $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
+                        array_merge(array( 'exportType' => $this->grid['exportArray'][$i]['value'] ),$this->exportParams) ) .
+                        '?exportString=true&search=' . $this->grid['search'] .
+                        '&sorts=' . json_encode( $this->grid['sorts'] );
+                }
+                else{
+                    $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
+                        array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
+                        '?exportString=true&search=' . $this->grid['search'] .
+                        '&sorts=' . json_encode( $this->grid['sorts'] );
+                }
             }
         }
 
@@ -460,7 +479,7 @@ EOT;
     }
 
     public function prependSearch( $search ) {
-        $this->prepend = $search[0].' ';
+        $this->prepend = $search.' ';
     }
 
     public function calculatePages() {
