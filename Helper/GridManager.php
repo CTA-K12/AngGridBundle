@@ -33,7 +33,7 @@ class GridManager {
         $this->selects = array();
         $this->grid = array();
 
-        $this->debug = $this->request->query->get('debug');
+        $this->debug = $this->request->query->get( 'debug' );
 
         $this->grid['paths'] = array();
         $this->grid['entities'] = array();
@@ -73,7 +73,7 @@ class GridManager {
             $this->grid['addView'] = false;
         }
 
-        $filters = json_decode($this->request->query->get( 'filters' ));
+        $filters = json_decode( $this->request->query->get( 'filters' ) );
         if ( isset( $filters ) ) {
             $this->grid['filters'] = $filters;
         } elseif ( isset( $cookie->filters ) ) {
@@ -137,8 +137,8 @@ class GridManager {
 
     public function setQueryBuilder( $queryBuilder ) {
         $this->queryBuilder = $queryBuilder;
-        $this->root=$queryBuilder->getDQLPart('from')[0]->getAlias();
-        $this->rootClass=$queryBuilder->getDQLPart('from')[0]->getFrom();
+        $this->root=$queryBuilder->getDQLPart( 'from' )[0]->getAlias();
+        $this->rootClass=$queryBuilder->getDQLPart( 'from' )[0]->getFrom();
     }
 
     public function setExportType( $exportType ) {
@@ -295,39 +295,39 @@ class GridManager {
 
         // for weighting
         $maxWidth = 0;
-        foreach ($this->grid['headers'] as &$header){
-            if (!isset($header['width'])) {
+        foreach ( $this->grid['headers'] as &$header ) {
+            if ( !isset( $header['width'] ) ) {
                 $header['width']=1;
             }
             $maxWidth+=$header['width'];
             // var_dump($header['column'].' => '.$maxWidth);
         }
 
-        $buttons=0;
-        if ( isset($this->grid['paths']) ) {
-            $numPaths=round(count($this->grid['paths']));
-            $buttons += $numPaths;
+        if ( 0 < ( count( $this->grid['paths'] ) + count( $this->grid['buttons'] ) ) ) {
+            $buttons=0;
+            if ( isset( $this->grid['paths'] ) ) {
+                $numPaths=round( count( $this->grid['paths'] ) );
+                $buttons += $numPaths;
+            }
+
+            if ( isset( $this->grid['buttons'] ) ) {
+                $numButtons=count( $this->grid['buttons'] );
+                $buttons += $numButtons;
+            }
+
+            $buttons=floor( $buttons/3 )+1;
+            $this->grid['actionWidth']=$buttons;
+            $maxWidth+=$buttons;
         }
 
-        if ( isset($this->grid['buttons']) ) {
-            $numButtons=sizeof($this->grid['buttons']);
-            $buttons += $numButtons;
-        }
-
-    //     var_dump($buttons);
-    //     var_dump($buttons/3);
-    // var_dump(floor($buttons/3));
-        $buttons=floor($buttons/3)+1;
-        $this->grid['actionWidth']=$buttons;
-        $maxWidth+=$buttons;
         // integral percentage
-        foreach ($this->grid['headers'] as &$header){
-            $header['width']=floor($header['width']/$maxWidth*100);
+        foreach ( $this->grid['headers'] as &$header ) {
+            $header['width']=floor( $header['width']/$maxWidth*100 );
             // var_dump($header['column'].' => '.$header['width']);
         }
         // var_dump($this->grid);die;
 
-        if( 0 < count($this->queryBuilder->getDqlPart( 'join' ))) {
+        if ( 0 < count( $this->queryBuilder->getDqlPart( 'join' ) ) ) {
             $qb=$this->queryBuilder;
             array_map(
                 function( $element ) use ( $qb ) {
@@ -338,9 +338,12 @@ class GridManager {
                 $this->queryBuilder->getDqlPart( 'join' )[$this->root]
             )
             ;
+            if ( isset( $this->grid['actionWidth'] ) ) {
+                $this->grid['actionWidth']=floor( $this->grid['actionWidth']/$maxWidth*100 );
+            } else {
+                $this->grid['actionWidth']=0;
+            }
         }
-
-        $this->grid['actionWidth']=floor($this->grid['actionWidth']/$maxWidth*100);
 
         if ( 0 < $this->grid['filtered'] ) {
             if ( is_null( $this->grid['page'] ) ) {
@@ -411,9 +414,9 @@ class GridManager {
             }
         }
 
-            if ( isset($this->debug) ) {
-                return $this->controller->render('MESDAngGridBundle:Grid:debug.html.twig', array('grid' => $this->grid));
-            }
+        if ( isset( $this->debug ) ) {
+            return $this->controller->render( 'MESDAngGridBundle:Grid:debug.html.twig', array( 'grid' => $this->grid ) );
+        }
 
         if ( 'js' == $this->grid['exportType'] ) {
             $response = new JsonResponse( $this->grid );
@@ -478,12 +481,12 @@ EOT;
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
                 $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                if ( isset($this->grid['headers'][$sort->column]['addSort'])
+                if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
                     // && 'array' == gettype($this->grid['headers'][$sort->column]['column']['addSort'])
-                    ) {
-                    foreach ($this->grid['headers'][$sort->column]['addSort'] as $newSort) {
+                ) {
+                    foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
                         // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort));
-                        }
+                    }
                 }
                 if ( 'asc' == $sort->direction ) {
                     $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
