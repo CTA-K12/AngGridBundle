@@ -83,7 +83,7 @@ src/MESD/App/ChangeThisBundle/Resources/views/Example/index.html.twig
 {% endblock main %}
 {% block javascripts %}
     {{parent()}}
-    <script type="text/javascript" src="export.js?perPage=10"></script>
+    <script type="text/javascript" src="export.js"></script>
 {% endblock javascripts %}
 ```
 
@@ -193,7 +193,7 @@ class ChangeThisController extends Controller
         $gm->setHeader( array(
                 'field'    => 'example.longName',
                 'title'    => 'Long Name',
-                'align'    => 'right' 
+                'align'    => 'right'
                 // center, left, and right are only options,  left is set if none are picked.
             )
         );
