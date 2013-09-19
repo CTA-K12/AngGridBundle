@@ -165,7 +165,7 @@ class GridManager {
         $alias = $item['alias'];
 
         if ( !isset( $item['class'] ) ) {
-            $item['class'] = 'btn btn-mini btn-default action';
+            $item['class'] = 'btn btn-mini btn-default action grid';
         }
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';
@@ -180,7 +180,7 @@ class GridManager {
         $alias = $item['alias'];
 
         if ( !isset( $item['class'] ) ) {
-            $item['class'] = 'btn btn-mini btn-default action';
+            $item['class'] = 'btn btn-mini btn-default action grid';
         }
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';

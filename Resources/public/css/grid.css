@@ -66,6 +66,14 @@ td.td-align-center {
     cursor: pointer;
 }
 
+.btn-mini.grid > span[class*='icon'] {
+    margin: 3px 0px 0px 0px;
+    font-size: 16px;
+    text-align: center !important;
+    display: inline-block !important;
+}
+
+
 table.grid {
   table-layout:fixed;
   max-width:100%;
