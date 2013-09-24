@@ -71,6 +71,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $scope.data.last = data.last;
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
+            $scope.data.perPageList = data.perPageList;
             $scope.data.paths = data.paths;
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;

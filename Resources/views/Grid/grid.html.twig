@@ -82,10 +82,9 @@
                                     {% verbatim %}{{ data.perPage }}{% endverbatim %} per page <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a ng-click="changePage(10)">10 per page</a></li>
-                                    <li><a ng-click="changePage(25)">25 per page</a></li>
-                                    <li><a ng-click="changePage(50)">50 per page</a></li>
-                                    <li><a ng-click="changePage(100)">100 per page</a></li>
+                                    <li data-ng-repeat="perPageItem in data.perPageList">
+                                        <a data-ng-click="changePage(perPageItem)">{% verbatim %}{{ perPageItem }}{% endverbatim %} per page</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

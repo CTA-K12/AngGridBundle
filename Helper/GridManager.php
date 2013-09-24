@@ -22,6 +22,7 @@ class GridManager {
     private $prepend;
     private $snappy;
     private $debug;
+    private $perPageList;
 
     public function __construct( $controller, Paginator $paginator, LoggableGenerator $snappy = null ) {
         $this->controller = $controller;
@@ -33,6 +34,7 @@ class GridManager {
 
         $this->selects = array();
         $this->grid = array();
+        $this->perPageList = array(10, 25, 50, 100);
 
         $this->exportParams = array();
 
@@ -300,6 +302,8 @@ class GridManager {
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
+
+        $this->grid['perPageList'] = $this->perPageList;
 
         // for weighting
         $maxWidth = 0;
@@ -607,5 +611,10 @@ EOT;
             }
         }
         $this->hideColumns( $columns );
+    }
+
+    public function setPerPageList($perPageList)
+    {
+        $this->perPageList = $perPageList;
     }
 }
