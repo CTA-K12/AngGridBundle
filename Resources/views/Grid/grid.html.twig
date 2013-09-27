@@ -48,7 +48,7 @@
                     <input type="search" placeholder="{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search" data-ng-class="{ true : 'highlight'}[data.search!='' && data.search!='{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}']"/>
                 </div>
                 <div class="span1">
-                    <a class="btn" data-ng-click="reset()">Reset</a>
+                    <a class="btn" data-ng-click="reset()" href="#">Reset</a>
                 </div>
                 {% if addForm is not defined and newFormUrl is not defined %}
                     <div class="span1">
