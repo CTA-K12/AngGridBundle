@@ -26,12 +26,12 @@
                 {% if addForm is defined %}
                     <div class="grid-form span1">
                         <div class="grid-button">
-                            <span class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
+                            <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-plus"></span> Add
-                            </span>
-                            <span class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
+                            </button>
+                            <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-minus"></span>
-                            </span>
+                            </button>
                         </div>
                     </div>
                 {% elseif newFormUrl is defined %}
