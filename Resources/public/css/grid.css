@@ -97,3 +97,7 @@ td > div > div.grid, th.grid > div.row-fluid > div.grid {
             text-align:left;
     }
 }
+
+.highlight {
+    background-color: rgba(255,255,0,0.25) !important;
+}
