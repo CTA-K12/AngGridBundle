@@ -26,12 +26,12 @@
                 {% if addForm is defined %}
                     <div class="grid-form span1">
                         <div class="grid-button">
-                            <span class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
+                            <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-plus"></span> Add
-                            </span>
-                            <span class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
+                            </button>
+                            <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-minus"></span>
-                            </span>
+                            </button>
                         </div>
                     </div>
                 {% elseif newFormUrl is defined %}
@@ -45,10 +45,10 @@
                 {% else %}
                 {% endif %}
                 <div class="search-control span3">
-                    <input type="search" placeholder="{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search" data-ng-class="{ true : 'highlight'}[data.search!='']"/>
+                    <input type="search" placeholder="{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search" data-ng-class="{ true : 'highlight'}[data.search!='' && data.search!='{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}']"/>
                 </div>
                 <div class="span1">
-                    <a class="btn" data-ng-click="reset()">Reset</a>
+                    <button class="btn" data-ng-click="reset()">Reset</a>
                 </div>
                 {% if addForm is not defined and newFormUrl is not defined %}
                     <div class="span1">
