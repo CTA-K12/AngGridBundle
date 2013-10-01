@@ -75,21 +75,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $scope.data.paths = data.paths;
             $scope.data.total = data.total;
             $scope.data.exportArray = data.exportArray;
-            var cookie = {
-                addView: $scope.data.addView,
-                filters: $scope.data.filters,
-                page: $scope.data.page,
-                perPage: $scope.data.perPage,
-                search: $scope.data.search,
-                showControl: $scope.data.showControl,
-                sorts: $scope.data.sorts
-            };
-            console.log(cookie);
-            $cookieStore.put('grid0', cookie);
-            $cookieStore.remove('page');
-            $cookieStore.remove('perPage');
-            $cookieStore.remove('search');
-            $cookieStore.remove('sorts');
+            $scope.setCookie();
         }).error(function(data, status, headers, config) {
             $cookieStore.remove('grid0');
             $cookieStore.remove('page');
@@ -189,17 +175,27 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         $scope.makeRequest();
     };
 
-    $scope.reset = function() {
-        $cookieStore.remove('grid0');
+    $scope.setCookie = function() {
+        var cookie = {
+            addView: $scope.data.addView,
+            filters: $scope.data.filters,
+            page: $scope.data.page,
+            perPage: $scope.data.perPage,
+            search: $scope.data.search,
+            showControl: $scope.data.showControl,
+            sorts: $scope.data.sorts
+        };
+        $cookieStore.put('grid0', cookie);
         $cookieStore.remove('page');
         $cookieStore.remove('perPage');
         $cookieStore.remove('search');
         $cookieStore.remove('sorts');
-        $scope.data.filters = [];
-        $scope.data.page = 1;
-        $scope.data.perPage = 10;
+    }
+
+
+    $scope.reset = function() {
+        $cookieStore.remove('grid0');
         $scope.data.search = '';
-        $scope.data.sorts = [];
         $scope.makeRequest();
     };
 
