@@ -34,7 +34,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
     };
 
     $scope.logThis = function(i) {
-        console.log(i);
+        // console.log(i);
     };
 
     $scope.getData = function(count) {
@@ -65,9 +65,9 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             $scope.data.entities = data.entities;
             $scope.data.exportLink = data.exportLink;
             $scope.data.filtered = data.filtered;
-            console.log($scope.data.filters);
+            // console.log($scope.data.filters);
             $scope.data.filters = data.filters;
-            console.log($scope.data.filters);
+            // console.log($scope.data.filters);
             $scope.data.last = data.last;
             $scope.data.headers = data.headers;
             $scope.data.page = data.page;
@@ -84,7 +84,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
                 showControl: $scope.data.showControl,
                 sorts: $scope.data.sorts
             };
-            console.log(cookie);
+            // console.log(cookie);
             $cookieStore.put('grid0', cookie);
             $cookieStore.remove('page');
             $cookieStore.remove('perPage');
@@ -204,16 +204,16 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
     };
 
     $scope.toggleFilter = function(headerName) {
-        console.log($scope.data.filters);
-        console.log('[]' == $scope.data.filters);
+        // console.log($scope.data.filters);
+        // console.log('[]' == $scope.data.filters);
         if ((null == $scope.data.filters) || ('[]' == $scope.data.filters)) {
             $scope.data.filters = [];
         }
-        console.log($scope.data.filters);
-        console.log($scope.data.filters.hasOwnProperty(headerName));
-        console.log(!($scope.data.filters.hasOwnProperty(headerName)));
+        // console.log($scope.data.filters);
+        // console.log($scope.data.filters.hasOwnProperty(headerName));
+        // console.log(!($scope.data.filters.hasOwnProperty(headerName)));
         if (!($scope.data.filters.hasOwnProperty(headerName))) {
-            console.log('not has own property');
+            // console.log('not has own property');
             $scope.data.filters.push({
                 column: headerName,
                 from: '',
@@ -229,7 +229,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
             column['from'] = '';
             $scope.data.filters[headerName] = column;
 */        }
-        console.log($scope.data.filters);
+        // console.log($scope.data.filters);
         /*
         if (!($scope.data.filters.hasOwnProperty(column))) {
             $scope.data.filters[headerName] = {
