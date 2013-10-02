@@ -192,10 +192,9 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         $cookieStore.remove('sorts');
     }
 
-
     $scope.reset = function() {
-        $cookieStore.remove('grid0');
         $scope.data.search = '';
+        $scope.setCookie();
         $scope.makeRequest();
     };
 
