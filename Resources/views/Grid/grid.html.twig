@@ -78,12 +78,12 @@
                         </div>
                         <div class="items-per-page-control span5">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Items per page">
                                     {% verbatim %}{{ data.perPage }}{% endverbatim %} per page <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li data-ng-repeat="perPageItem in data.perPageList">
-                                        <a data-ng-click="changePage(perPageItem)">{% verbatim %}{{ perPageItem }}{% endverbatim %} per page</a>
+                                        <a data-ng-click="changePage(perPageItem)" href="">{% verbatim %}{{ perPageItem }}{% endverbatim %} per page</a>
                                     </li>
                                 </ul>
                             </div>
