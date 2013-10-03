@@ -167,7 +167,7 @@ class GridManager {
         $alias = $item['alias'];
 
         if ( !isset( $item['class'] ) ) {
-            $item['class'] = 'btn btn-mini btn-default action grid';
+            $item['class'] = 'btn btn-mini action grid '.( isset( $item['button'] ) ? $item['button'] :'btn-default') ;
         }
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';
