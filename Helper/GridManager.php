@@ -516,10 +516,11 @@ EOT;
             foreach ( $this->grid['sorts'] as $sort ) {
                 $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
                 if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
-                    // && 'array' == gettype($this->grid['headers'][$sort->column]['column']['addSort'])
+                    && 'array' == gettype($this->grid['headers'][$sort->column]['addSort'])
                 ) {
                     foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
-                        // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort));
+                        // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort), $sort->direction);
+                        // $this->queryBuilder->addOrderBy($newSort, $sort->direction);
                     }
                 }
                 if ( 'asc' == $sort->direction ) {
@@ -529,6 +530,7 @@ EOT;
                 }
             }
         }
+        // print_r($this->queryBuilder->getQuery()->getDQL());print_r("<br><br><br>");die;
     }
 
     public function isExport() {
