@@ -34,11 +34,11 @@ class GridManager {
 
         $this->selects = array();
         $this->grid = array();
-        $this->perPageList = array(10, 25, 50, 100);
+        $this->perPageList = array( 10, 25, 50, 100 );
 
         $this->exportParams = array();
 
-        $this->debug = $this->request->query->get('debug');
+        $this->debug = $this->request->query->get( 'debug' );
 
         $this->grid['paths'] = array();
         $this->grid['entities'] = array();
@@ -167,7 +167,7 @@ class GridManager {
         $alias = $item['alias'];
 
         if ( !isset( $item['class'] ) ) {
-            $item['class'] = 'btn btn-mini action grid '.( isset( $item['button'] ) ? $item['button'] :'btn-default') ;
+            $item['class'] = 'btn btn-mini action grid '.( isset( $item['button'] ) ? $item['button'] :'btn-default' ) ;
         }
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';
@@ -193,7 +193,7 @@ class GridManager {
         $this->grid['buttons'][$item['alias']] = $item;
     }
 
-    public function setExportAlias( $alias, $params = array()) {
+    public function setExportAlias( $alias, $params = array() ) {
         $this->exportAlias = $alias;
         $this->exportParams = $params;
     }
@@ -337,7 +337,18 @@ class GridManager {
             $header['width']=floor( $header['width']/$maxWidth*100 );
             // var_dump($header['column'].' => '.$header['width']);
         }
+
         // var_dump($this->grid);die;
+
+        if ( isset( $this->grid['numButtons'] ) ) {
+            $this->grid['actionWidth']=floor( $buttonsWidth/$maxWidth*100 );
+            // hardcoded values-- needs to be configured
+            $this->grid['numButtons']*=30;
+            $this->grid['numButtons']+=8;
+
+        } else {
+            $this->grid['actionWidth']=0;
+        }
 
         if ( 0 < count( $this->queryBuilder->getDqlPart( 'join' ) ) ) {
             $qb=$this->queryBuilder;
@@ -350,16 +361,7 @@ class GridManager {
                 $this->queryBuilder->getDqlPart( 'join' )[$this->root]
             )
             ;
-            if ( isset( $this->grid['numButtons'] ) ) {
-                $this->grid['actionWidth']=floor( $buttonsWidth/$maxWidth*100 );
 
-                // hardcoded values-- needs to be configured
-                $this->grid['numButtons']*=30;
-                $this->grid['numButtons']+=8;
-
-            } else {
-                $this->grid['actionWidth']=0;
-            }
         }
 
         if ( 0 < $this->grid['filtered'] ) {
@@ -367,10 +369,10 @@ class GridManager {
                 $this->grid['page'] = 1;
             }
             if ( is_null( $this->grid['perPage'] ) ) {
-                    $this->grid['perPage'] = 10;
+                $this->grid['perPage'] = 10;
             }
 
-            if ($this->export) {
+            if ( $this->export ) {
                 $this->grid['perPage'] = $this->grid['filtered'];
             }
 
@@ -426,24 +428,24 @@ class GridManager {
                 $exType['exportLink'] = '';
             }
         } else {
-            if(!empty($this->exportParams)){
-                $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array_merge(array( 'exportType' => $this->grid['exportType'] ),$this->exportParams)) .
-                '?exportString=true&search=' . $this->grid['search'] .
-                '&sorts=' . json_encode( $this->grid['sorts'] );
+            if ( !empty( $this->exportParams ) ) {
+                $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array_merge( array( 'exportType' => $this->grid['exportType'] ), $this->exportParams ) ) .
+                    '?exportString=true&search=' . $this->grid['search'] .
+                    '&sorts=' . json_encode( $this->grid['sorts'] );
             }
-            else{
+            else {
                 $this->grid['exportLink'] = $this->controller->generateUrl( $this->exportAlias, array( 'exportType' => $this->grid['exportType'] ) ) .
-                '?exportString=true&search=' . $this->grid['search'] .
-                '&sorts=' . json_encode( $this->grid['sorts'] );
+                    '?exportString=true&search=' . $this->grid['search'] .
+                    '&sorts=' . json_encode( $this->grid['sorts'] );
             }
             for ( $i = 0; $i < count( $this->grid['exportArray'] ); $i++ ) {
-                if(!empty($this->exportParams)){
+                if ( !empty( $this->exportParams ) ) {
                     $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
-                        array_merge(array( 'exportType' => $this->grid['exportArray'][$i]['value'] ),$this->exportParams) ) .
+                        array_merge( array( 'exportType' => $this->grid['exportArray'][$i]['value'] ), $this->exportParams ) ) .
                         '?exportString=true&search=' . $this->grid['search'] .
                         '&sorts=' . json_encode( $this->grid['sorts'] );
                 }
-                else{
+                else {
                     $this->grid['exportArray'][$i]['exportLink'] = $this->controller->generateUrl( $this->exportAlias,
                         array( 'exportType' => $this->grid['exportArray'][$i]['value'] ) ) .
                         '?exportString=true&search=' . $this->grid['search'] .
@@ -520,7 +522,7 @@ EOT;
             foreach ( $this->grid['sorts'] as $sort ) {
                 $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
                 if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
-                    && 'array' == gettype($this->grid['headers'][$sort->column]['addSort'])
+                    && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
                 ) {
                     foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
                         // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort), $sort->direction);
@@ -621,8 +623,7 @@ EOT;
         $this->hideColumns( $columns );
     }
 
-    public function setPerPageList($perPageList)
-    {
+    public function setPerPageList( $perPageList ) {
         $this->perPageList = $perPageList;
     }
 }

@@ -113,7 +113,7 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
+                            <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
                                 <span> Actions</span>
                             </th>
                             <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
