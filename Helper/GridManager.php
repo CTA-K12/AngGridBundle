@@ -287,18 +287,18 @@ class GridManager {
     }
 
     public function orderColumns( $columns ) {
-        $this->grid['headers'] = Query::orderColumns( $this->grid['headers'], $columns );
+        $this->grid['headers'] = QueryHelper::orderColumns( $this->grid['headers'], $columns );
     }
 
     public function hideColumns( $columns ) {
-        $this->grid['headers'] = Query::hideColumns( $this->grid['headers'], $columns );
+        $this->grid['headers'] = QueryHelper::hideColumns( $this->grid['headers'], $columns );
     }
 
     public function getJsonResponse( $distinct = true ) {
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $search = $this->prepend.$this->grid['search'];
-        Query::search( $this->queryBuilder, $search, $this->grid['headers'] );
+        QueryHelper::search( $this->queryBuilder, $search, $this->grid['headers'] );
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
         $this->removeHidden();
