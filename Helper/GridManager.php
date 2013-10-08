@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\Query\Expr;
 
 class GridManager {
     private $controller;
@@ -381,6 +382,7 @@ class GridManager {
             }
 
             $this->addSorts();
+
             $this->results = $this->paginator->paginate(
                 $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
                 $this->grid['page'],
@@ -525,8 +527,9 @@ EOT;
                     && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
                 ) {
                     foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
+                        var_dump($newSort);
                         // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort), $sort->direction);
-                        // $this->queryBuilder->addOrderBy($newSort, $sort->direction);
+                        $this->queryBuilder->addOrderBy($newSort, $sort->direction);
                     }
                 }
                 if ( 'asc' == $sort->direction ) {
