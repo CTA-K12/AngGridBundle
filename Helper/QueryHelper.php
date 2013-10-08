@@ -5,34 +5,36 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class QueryHelper
 {
-    public static function search($query, $value, $headers)
+    public static function search($qb, $value, $headers)
     {
         if ('' != $value) {
             $values = explode( ' ', str_replace( array( ',', ';' ), ' ', $value ) );
             foreach ( $values as $k => $term ) {
                 $oqb=array();
                 foreach ( $headers as $headerKey => $header ) {
-                    if ( false === $header['searchable']) {
+                    if ( false === $header['searchable'] ) {
                         continue;
                     }
-                    if ( 'string' == $header['type'] ) {
-                        $oqb[]=$query->expr()
-                        ->iLike( "CONCAT(" . $header['column'] . ", '')", ':term' . $k );
-                    } elseif ( 'date' == $header['type'] ) {
+                    if ( 'date' == $header['type'] ) {
                             $dateout=preg_replace( '/^(\d\d)\/(\d\d)\/(\d\d\d\d).*$/', '$3-$1-$2', $term );
-                        $oqb[]=$query->expr()->iLike( "CONCAT(" . $header['column'] . ", '')", ':date'.$k );
-                    $query->setParameter( 'date'.$k, "%".str_replace( '/', '-', $dateout )."%" );
+                        $oqb[]=$qb->expr()->iLike( "CONCAT(" . $header['column'] . ", '')", ':date'.$k );
+                    $qb->setParameter( 'date'.$k, "%".str_replace( '/', '-', $dateout )."%" );
                     } else {
-                        $oqb[]=$query->expr()
+                        $oqb[]=$qb->expr()
                         ->iLike( "CONCAT(" . $header['column'] . ", '')", ':term' . $k );
+                        if (isset($header['addSort'])) {
+                            foreach ($header['addSort'] as $newSort) {
+                                $oqb[]=$qb->expr()
+                                ->iLike( "CONCAT(" . $newSort . ", '')", ':term' . $k );
+                            }
+                        }
                     }
-                    $query->setParameter( 'term' . $k, "%" . $term ."%" );
+                    $qb->setParameter( 'term' . $k, "%" . $term ."%" );
                 }
-                $query->andWhere( call_user_func_array( array( $query->expr(), "orx" ), $oqb ) );
+                $qb->andWhere( call_user_func_array( array( $qb->expr(), "orx" ), $oqb ) );
             }
         }
-
-        return $query;
+        return $qb;
     }
 
     public static function orderColumns($headers, $columns){

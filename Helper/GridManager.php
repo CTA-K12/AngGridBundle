@@ -336,10 +336,7 @@ class GridManager {
         // integral percentage
         foreach ( $this->grid['headers'] as &$header ) {
             $header['width']=floor( $header['width']/$maxWidth*100 );
-            // var_dump($header['column'].' => '.$header['width']);
         }
-
-        // var_dump($this->grid);die;
 
         if ( isset( $this->grid['numButtons'] ) ) {
             $this->grid['actionWidth']=floor( $buttonsWidth/$maxWidth*100 );
@@ -356,8 +353,6 @@ class GridManager {
             array_map(
                 function( $element ) use ( $qb ) {
                     $qb->addSelect( $element->getAlias() );
-                    // print_r($qb->getQuery()->getDql());
-                    // print_r("<br><br>");
                 },
                 $this->queryBuilder->getDqlPart( 'join' )[$this->root]
             )
@@ -391,6 +386,7 @@ class GridManager {
             $rootId = null;
             $this->processResults();
         }
+
         if ( $this->export ) {
             if ( $this->grid['exportType'] == 'pdf' && !is_null( $this->snappy ) ) {
                 $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
@@ -527,8 +523,6 @@ EOT;
                     && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
                 ) {
                     foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
-                        var_dump($newSort);
-                        // $this->queryBuilder->addOrderBy($this->queryBuilder->expr()->lower($newSort), $sort->direction);
                         $this->queryBuilder->addOrderBy($newSort, $sort->direction);
                     }
                 }
@@ -539,7 +533,6 @@ EOT;
                 }
             }
         }
-        // print_r($this->queryBuilder->getQuery()->getDQL());print_r("<br><br><br>");die;
     }
 
     public function isExport() {
