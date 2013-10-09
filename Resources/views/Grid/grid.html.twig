@@ -37,8 +37,8 @@
                 {% elseif newFormUrl is defined %}
                     <div class="grid-form span1">
                         <div class="grid-button">
-                            <a href="{{ newFormUrl }}" title="{{ formTitle is defined ? formTitle }}" class="btn btn-primary">
-                                <span class="icon-plus"></span> {{ newForm is defined ? newForm : 'New' }}
+                            <a href="{{ newFormUrl }}" title="{{ newFormTitle is defined ? newFormTitle : 'New' }}" class="btn btn-primary">
+                                <span class="{{ newFormIcon is defined ? newFormIcon : 'icon-plus' }}"></span> {{ newFormTitle is defined ? newFormTitle : 'New' }}
                             </a>
                         </div>
                     </div>
