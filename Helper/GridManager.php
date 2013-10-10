@@ -518,7 +518,9 @@ EOT;
     public function addSorts() {
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
-                $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                if ( isset($this->grid['headers'][$sort->column]['column'] ) ) {
+                    $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
+                }
                 if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
                     && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
                 ) {
