@@ -313,7 +313,6 @@ class GridManager {
                 $header['width']=1;
             }
             $maxWidth+=$header['width'];
-            // var_dump($header['column'].' => '.$maxWidth);
         }
 
         if ( 0 < ( count( $this->grid['paths'] ) + count( $this->grid['buttons'] ) ) ) {
@@ -595,17 +594,19 @@ EOT;
                 $value = $function( $this->resultSet, $this->controller );
                 $values[$header['column']] = $value['value'];
             } else {
-                $columns = explode( '.', $header['field'] );
-                $value = $this->resultSet['root'];
-                foreach ( $columns as $key => $column ) {
-                    if ( isset( $value ) && $key > 0 ) {
-                        $value = call_user_func( array( $value, 'get' . ucwords( $column ) ) );
+                if ( isset( $header['field'])) {
+                    $columns = explode( '.', $header['field'] );
+                    $value = $this->resultSet['root'];
+                    foreach ( $columns as $key => $column ) {
+                        if ( isset( $value ) && $key > 0 ) {
+                            $value = call_user_func( array( $value, 'get' . ucwords( $column ) ) );
+                        }
                     }
+                    if ( is_null( $value ) ) {
+                        $value = '-';
+                    }
+                    $values[$header['column']] = $value;
                 }
-                if ( is_null( $value ) ) {
-                    $value = '-';
-                }
-                $values[$header['column']] = $value;
             }
         }
         return $values;
