@@ -27,8 +27,7 @@
                     <div class="grid-form span1">
                         <div class="grid-button">
                             <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
-                                <span class="icon-plus"></span> Add
-                            </button>
+                                <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'icon-plus' }}"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'add' }}
                             <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-minus"></span>
                             </button>
