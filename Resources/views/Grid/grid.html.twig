@@ -28,95 +28,95 @@
                         <div class="grid-button">
                             <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()">
                                 <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'icon-plus' }}"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'Add' }}
-                            <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
-                                <span class="icon-minus"></span>
-                            </button>
+                                <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
+                                    <span class="icon-minus"></span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                {% elseif newFormUrl is defined %}
-                    <div class="grid-form span1">
-                        <div class="grid-button">
-                            <a href="{{ newFormUrl }}" title="{{ newFormTitle is defined ? newFormTitle : 'New' }}" class="btn btn-primary">
-                                <span class="{{ newFormIcon is defined ? newFormIcon : 'icon-plus' }}"></span> {{ newFormTitle is defined ? newFormTitle : 'New' }}
-                            </a>
+                    {% elseif newFormUrl is defined %}
+                        <div class="grid-form span1">
+                            <div class="grid-button">
+                                <a href="{{ newFormUrl }}" title="{{ newFormTitle is defined ? newFormTitle : 'New' }}" class="btn btn-primary">
+                                    <span class="{{ newFormIcon is defined ? newFormIcon : 'icon-plus' }}"></span> {{ newFormTitle is defined ? newFormTitle : 'New' }}
+                                </a>
+                            </div>
                         </div>
+                    {% else %}
+                    {% endif %}
+                    <div class="search-control span3">
+                        <input type="search" placeholder="{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search" data-ng-class="{ false : 'highlight', true : '' }[!data.search || data.search=='{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}']"/>
                     </div>
-                {% else %}
-                {% endif %}
-                <div class="search-control span3">
-                    <input type="search" placeholder="{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}" class="grid-filter-input-query-from" data-ng-model="data.search" data-ng-change="makeRequest()" style="width:100%" id="grid-search" data-ng-class="{ false : 'highlight', true : '' }[!data.search || data.search=='{{ searchPlaceholder is defined ? searchPlaceholder : 'Search'}}']"/>
-                </div>
-                <div class="span1">
-                    <button class="btn" data-ng-click="reset()">Reset</a>
-                </div>
-                {% if addForm is not defined and newFormUrl is not defined %}
+                    <div class="span1">
+                        <button class="btn" data-ng-click="reset()">Reset</a>
+                    </div>
+                    {% if addForm is not defined and newFormUrl is not defined %}
+                        <div class="span1">
+                        </div>
+                    {% endif %}
+                    <div class="btn-group export-control span1">
+                        <a data-ng-href="{% verbatim %}{{ data.exportArray[0].exportLink }}{% endverbatim %}" class="btn">Export</a>
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a data-ng-repeat="option in data.exportArray" data-ng-click="data.setExportType(option.value)" data-ng-href="{% verbatim %}{{ option.exportLink }}{% endverbatim %}">{% verbatim %}{{ option.label }}{% endverbatim %}</a></li>
+                        </ul>
+                    </div>
                     <div class="span1">
                     </div>
-                {% endif %}
-                <div class="btn-group export-control span1">
-                    <a data-ng-href="{% verbatim %}{{ data.exportArray[0].exportLink }}{% endverbatim %}" class="btn">Export</a>
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a data-ng-repeat="option in data.exportArray" data-ng-click="data.setExportType(option.value)" data-ng-href="{% verbatim %}{{ option.exportLink }}{% endverbatim %}">{% verbatim %}{{ option.label }}{% endverbatim %}</a></li>
-                    </ul>
-                </div>
-                <div class="span1">
-                </div>
-                <div class="results-controls span3">
-                    <div class="row-fluid">
-                        <div class="results-control span5">
-                            <strong>
-                                <span data-ng-bind="0 < data.filtered && (data.perPage * (data.page - 1)) + 1 || 0" class="filtered"></span>
-                                -
-                                <span data-ng-bind="(data.perPage * data.page) < data.filtered && (data.perPage * data.page) || data.filtered" class="filtered"></span>
-                                of
-                                <span data-ng-bind="data.filtered" class="filtered"></span>
-                            </strong>
+                    <div class="results-controls span3">
+                        <div class="row-fluid">
+                            <div class="results-control span5">
+                                <strong>
+                                    <span data-ng-bind="0 < data.filtered && (data.perPage * (data.page - 1)) + 1 || 0" class="filtered"></span>
+                                    -
+                                    <span data-ng-bind="(data.perPage * data.page) < data.filtered && (data.perPage * data.page) || data.filtered" class="filtered"></span>
+                                    of
+                                    <span data-ng-bind="data.filtered" class="filtered"></span>
+                                </strong>
+                            </div>
+                            <div class="items-per-page-control span5">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Items per page">
+                                        {% verbatim %}{{ data.perPage }}{% endverbatim %} per page <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li data-ng-repeat="perPageItem in data.perPageList">
+                                            <a data-ng-click="changePage(perPageItem)" href="">{% verbatim %}{{ perPageItem }}{% endverbatim %} per page</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div class="items-per-page-control span5">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Items per page">
-                                    {% verbatim %}{{ data.perPage }}{% endverbatim %} per page <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li data-ng-repeat="perPageItem in data.perPageList">
-                                        <a data-ng-click="changePage(perPageItem)" href="">{% verbatim %}{{ perPageItem }}{% endverbatim %} per page</a>
-                                    </li>
-                                </ul>
+                    </div>
+                    <div class="page-control span2">
+                        <div class="row-fluid">
+                            <div class="span4">
+                            </div>
+                            <div class="span4">
+                                <input data-ng-model="data.page" data-ng-change="makeRequest()" type="text"/>
+                            </div>
+                            <div class="span1"> of</div>
+                            <div class="span2" data-ng-bind="data.last">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="page-control span2">
-                    <div class="row-fluid">
-                        <div class="span4">
-                        </div>
-                        <div class="span4">
-                            <input data-ng-model="data.page" data-ng-change="makeRequest()" type="text"/>
-                        </div>
-                        <div class="span1"> of</div>
-                        <div class="span2" data-ng-bind="data.last">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endblock controls %}
-        {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post" enctype="multipart/form-data">{% endif %}
-            <table class="table table-bordered table-condensed table-hover table-striped grid">
-                {% block tableheader %}
-                    <colgroup>
-                        <col data-ng-show="data.actionWidth" class="grid" style="width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;"{# "width:{% verbatim %}{{data.actionWidth}}{% endverbatim %}%;" #} span="1"></col>
-                        <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
-                                <span> Actions</span>
-                            </th>
-                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
-                                <div class="row-fluid">
+            {% endblock controls %}
+            {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post" enctype="multipart/form-data">{% endif %}
+                <table class="table table-bordered table-condensed table-hover table-striped grid">
+                    {% block tableheader %}
+                        <colgroup>
+                            <col data-ng-show="data.actionWidth" class="grid" style="width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;"{# "width:{% verbatim %}{{data.actionWidth}}{% endverbatim %}%;" #} span="1"></col>
+                            <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
+                                    <span> Actions</span>
+                                </th>
+                                <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
+                                    <div class="row-fluid">
                                     {#
                                     <div class="span3">
                                         <span data-ng-class="{true:'open', false:''}[data.filters[header].open]" class="dropdown" data-ng-show="data.headers[header].filterable" data-ng-switch="" data-on="data.headers[header].type">
@@ -173,20 +173,16 @@
                                 </div>
                             </td>
                         </tr>
-                        {% if saveAll is defined %}
-                            <tr>
-                                <td colspan='100'>
-                                    <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
-                                        <span class="icon-save">
-                                        </span>
-                                        Save All
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endif %}
                     </tbody>
                 {% endblock tablebody %}
             </table>
+            {% if saveAll is defined %}
+                <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+                    <span class="icon-save">
+                    </span>
+                    Save All
+                </button>
+            {% endif %}
             {% if addFormUrl is defined %}</form>{% endif %}
             </div>
         {% endblock grid %}
