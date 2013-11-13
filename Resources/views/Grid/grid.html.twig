@@ -73,6 +73,7 @@
                                     <span data-ng-bind="(data.perPage * data.page) < data.filtered && (data.perPage * data.page) || data.filtered" class="filtered"></span>
                                     of
                                     <span data-ng-bind="data.filtered" class="filtered"></span>
+                                    <input type="hidden" data-ng-bind="data.total" class="total" />
                                 </strong>
                             </div>
                             <div class="items-per-page-control span5">
