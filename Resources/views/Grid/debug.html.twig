@@ -1,4 +1,7 @@
 {% extends '::base.html.twig' %}
 {% block main %}
-{{ dump(grid) }}
+    {% for key, item in grid %}
+        {{ key }}
+        {{ dump(item) }}
+    {% endfor %}
 {% endblock main %}
