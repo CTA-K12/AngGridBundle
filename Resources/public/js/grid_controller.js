@@ -86,7 +86,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
         });
     };
 
-    if (typeof $("select.grid-export").select2 == 'function'){
+    if ((typeof $("select.grid-export").select2 == 'function') && (typeof starts2 !== 'undefined')) {
 
         $("select.grid-export").select2({
             minimumInputLength:0
