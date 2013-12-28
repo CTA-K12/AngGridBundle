@@ -30,6 +30,10 @@ app/AppKernel.php
 
 app/config/config.yml
 ```yml
+
+assetic:
+    bundles:        [ MESDAppChangeThisBundle, MESDPresentationPresentationBundle, MESDAngGridBundle ]
+
 knp_snappy:
     pdf:
         enabled:    true
@@ -176,17 +180,17 @@ class ChangeThisController extends Controller
         );
 
         $gm->setButton( array(
-                'alias'    => 'example_delete'
-                'class'    => 'btn btn-danger btn-mini'
-                'icon'     => 'icon-remove'
-                'title'    => 'Delete'
+                'alias'    => 'example_delete',
+                'class'    => 'btn btn-danger btn-mini',
+                'icon'     => 'icon-remove',
+                'title'    => 'Delete',
             )
         );
 
 
         $gm->setHeader( array(
-                'field'    => 'example.shortName'
-                'title'    => 'Short Name'
+                'field'    => 'example.shortName',
+                'title'    => 'Short Name',
             )
         );
 
@@ -199,15 +203,15 @@ class ChangeThisController extends Controller
         );
 
         $gm->setHeader( array(
-                'field'    => 'example.another.shortName'
-                'title'    => 'Another'
+                'field'    => 'example.another.shortName',
+                'title'    => 'Another',
             )
         );
 
         // date and time fields have to be given a function or else you get [Object object]
         $gm->setHeader( array(
-                'field'    => 'example.effective'
-                'title'    => 'Effective Date'
+                'field'    => 'example.effective',
+                'title'    => 'Effective Date',
                 'function' => function($resultSet) {
                     return array('value' => $resultSet['root']->getDate() ? $resultSet['root']->getDate()->format( 'm/d/Y' ) : '-' );
                 },
