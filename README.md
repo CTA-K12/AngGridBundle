@@ -150,11 +150,11 @@ class ChangeThisController extends Controller
                 'alias'    => 'associated_show',
                 'icon'     => 'icon-file',
                 'title'    => 'Show Associated',
-                'function' => function($resultSet, $router) {
+                'function' => function($resultSet, $controller) {
                     $class = 'MESD\ORMed\ORMedBundle\Entity\Associated';
                     if (isset($resultSet[$class]) && 0 < count($resultSet[$class])) {
                         return array(
-                            'path' => $router->generate('associated_show', array('id' => $resultSet['root']->getAssociated()->getId())),
+                            'path' => $controller->generateUrl('associated_show', array('id' => $resultSet['root']->getAssociated()->getId())),
                         );
                     }
                     return array('path' => null);
@@ -167,11 +167,11 @@ class ChangeThisController extends Controller
                 'alias'    => 'not_associated_show',
                 'icon'     => 'icon-file',
                 'title'    => 'Show Not Associated',
-                'function' => function($resultSet, $router) {
+                'function' => function($resultSet, $controller) {
                     $class = 'MESD\ORMed\ORMedBundle\Entity\NotAssociated';
                     if (isset($resultSet[$class]) && 0 < count($resultSet[$class])) {
                         return array(
-                            'path' => $router->generate('not_associated_show', array('id' => $resultSet[$class][0]->getId())),
+                            'path' => $controller->generateUrl('not_associated_show', array('id' => $resultSet[$class][0]->getId())),
                         );
                     }
                     return array('path' => null);
