@@ -139,11 +139,11 @@
                         <tr data-ng-repeat="entity in notSorted(data.entities)">
                             <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
                                 <span class="btn-group">
-                                    <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }} {{data.entities[entity].labels[action]}}{% endverbatim %}">
+                                    <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{{data.entities[entity].labels[action]}}{% endverbatim %}">
                                         <span class={% verbatim %}"{{data.paths[action].icon}}"{% endverbatim %}></span>
                                     </a>
                                     <button data-ng-repeat="button in notSorted(data.entities[entity].buttons)"
-                                        class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }} {{data.entities[entity].labels[action]}}"{% endverbatim %} name="{% verbatim %}{{data.buttons[button].name}}{% endverbatim %}" value={% verbatim %}"{{ data.entities[entity].id }}"{% endverbatim %}>
+                                        class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }}{{data.entities[entity].labels[action]}}"{% endverbatim %} name="{% verbatim %}{{data.buttons[button].name}}{% endverbatim %}" value={% verbatim %}"{{ data.entities[entity].id }}"{% endverbatim %}>
                                         <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}></span>
                                     </button>
                                 </span>
