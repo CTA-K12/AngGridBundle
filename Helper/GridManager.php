@@ -573,7 +573,7 @@ EOT;
         $buttons = $this->processActions( 'buttons' );
         $values = $this->processValues();
         $labels = $this->processLabels();
-        $titles = $this->processTitles();
+        $titles = $this->processTitles( $this->processValues() );
         $this->grid['entities']['id_' . $this->resultSet['root']->getId()] = array(
             'id'      => $this->resultSet['root']->getId(),
             'paths'   => $paths,
@@ -650,9 +650,11 @@ EOT;
     }
 
 
-    public function processTitles() {
+    public function processTitles( $values) {
         // HTML5 titles
         $titles = array();
+
+        // var_dump($values);
 
         foreach ( $this->grid['headers'] as $header ) {
             if ( isset( $header['title_function'] ) ) {
@@ -660,20 +662,7 @@ EOT;
                 $title = $function( $this->resultSet, $this->controller );
                 $titles[$header['column']] = $title['value'];
             } else {
-                if ( isset( $header['field'] ) ) {
-                    $columns = explode( '.', $header['field'] );
-                    $title = $this->resultSet['root'];
-                    foreach ( $columns as $key => $column ) {
-                        if ( isset( $title ) && $key > 0 ) {
-                            $title = call_user_func( array( $title, 'get' . ucwords( $column ) ) );
-                        }
-                    }
-                    if ( is_null( $title ) ) {
-                        $title = '-';
-                    }
-                    $titles[$header['column']] = $title;
-                }
-
+                $titles[$header['column']] = $values[$header['column']];
             }
         }
         return $titles;
