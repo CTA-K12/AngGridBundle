@@ -170,12 +170,16 @@ class GridManager {
         if ( !isset( $item['class'] ) ) {
             $item['class'] = 'btn btn-mini action grid '.( isset( $item['button'] ) ? $item['button'] :'btn-default' ) ;
         }
+
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';
         }
-        if ( !isset( $item['title'] ) ) {
+
+        // title_function overrides default
+        if ( !isset( $item['title'] ) && !isset( $item['title_function'] ) ) {
             $item['title'] = $alias;
         }
+
         $this->grid['paths'][$item['alias']] = $item;
     }
 
@@ -185,12 +189,16 @@ class GridManager {
         if ( !isset( $item['class'] ) ) {
             $item['class'] = 'btn btn-mini btn-default action grid';
         }
+
         if ( !isset( $item['icon'] ) ) {
             $item['icon'] = 'icon-search';
         }
-        if ( !isset( $item['title'] ) ) {
+
+        // title_function overrides default
+        if ( !isset( $item['title'] ) && !isset( $item['title_function'] ) ) {
             $item['title'] = $alias;
         }
+
         $this->grid['buttons'][$item['alias']] = $item;
     }
 
@@ -320,11 +328,13 @@ class GridManager {
             if ( isset( $this->grid['paths'] ) ) {
                 $numPaths=round( count( $this->grid['paths'] ) );
                 $buttons += $numPaths;
+                foreach ( $this->grid['paths'] as $k =>$p ) { if ( isset( $p['text'] ) ) { $buttons++; } }
             }
 
             if ( isset( $this->grid['buttons'] ) ) {
                 $numButtons=count( $this->grid['buttons'] );
                 $buttons += $numButtons;
+                foreach ( $this->grid['buttons'] as $k =>$b ) { if ( isset( $b['text'] ) ) { $buttons++; } }
             }
 
             $this->grid['numButtons']=$buttons;
@@ -517,14 +527,14 @@ EOT;
     public function addSorts() {
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
-                if ( isset($this->grid['headers'][$sort->column]['column'] ) ) {
+                if ( isset( $this->grid['headers'][$sort->column]['column'] ) ) {
                     $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
                 }
                 if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
                     && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
                 ) {
                     foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
-                        $this->queryBuilder->addOrderBy($newSort, $sort->direction);
+                        $this->queryBuilder->addOrderBy( $newSort, $sort->direction );
                     }
                 }
                 if ( 'asc' == $sort->direction ) {
@@ -562,11 +572,15 @@ EOT;
         $paths = $this->processActions( 'paths' );
         $buttons = $this->processActions( 'buttons' );
         $values = $this->processValues();
+        $labels = $this->processLabels();
+        $titles = $this->processTitles();
         $this->grid['entities']['id_' . $this->resultSet['root']->getId()] = array(
-            'id' => $this->resultSet['root']->getId(),
-            'paths' => $paths,
+            'id'      => $this->resultSet['root']->getId(),
+            'paths'   => $paths,
             'buttons' => $buttons,
-            'values' => $values,
+            'values'  => $values,
+            'labels'  => $labels,
+            'titles'  => $titles
         );
     }
 
@@ -586,15 +600,38 @@ EOT;
         return $actions;
     }
 
+
+    public function processLabels() {
+        // These are in the html5 title popups
+        $labels = array();
+
+        foreach ( array( 'paths', 'buttons' ) as $kind ) {
+            foreach ( $this->grid[$kind] as $action ) {
+                if ( isset( $action['title_function'] ) ) {
+                    $function = $action['title_function'];
+                    $label = $function( $this->resultSet, $this->controller );
+                    $labels[$action['alias']] = $label['text'];
+                } elseif ( isset( $action['text'] ) ) {
+                    $labels[$action['alias']] = $action['text'];
+                } else {
+                    $labels[$action['alias']] = '';
+                }
+            }
+        }
+
+        return $labels;
+    }
+
     public function processValues() {
         $values = array();
+
         foreach ( $this->grid['headers'] as $header ) {
             if ( isset( $header['function'] ) ) {
                 $function = $header['function'];
                 $value = $function( $this->resultSet, $this->controller );
                 $values[$header['column']] = $value['value'];
             } else {
-                if ( isset( $header['field'])) {
+                if ( isset( $header['field'] ) ) {
                     $columns = explode( '.', $header['field'] );
                     $value = $this->resultSet['root'];
                     foreach ( $columns as $key => $column ) {
@@ -611,6 +648,37 @@ EOT;
         }
         return $values;
     }
+
+
+    public function processTitles() {
+        // HTML5 titles
+        $titles = array();
+
+        foreach ( $this->grid['headers'] as $header ) {
+            if ( isset( $header['title_function'] ) ) {
+                $function = $header['title_function'];
+                $title = $function( $this->resultSet, $this->controller );
+                $titles[$header['column']] = $title['value'];
+            } else {
+                if ( isset( $header['field'] ) ) {
+                    $columns = explode( '.', $header['field'] );
+                    $title = $this->resultSet['root'];
+                    foreach ( $columns as $key => $column ) {
+                        if ( isset( $title ) && $key > 0 ) {
+                            $title = call_user_func( array( $title, 'get' . ucwords( $column ) ) );
+                        }
+                    }
+                    if ( is_null( $title ) ) {
+                        $title = '-';
+                    }
+                    $titles[$header['column']] = $title;
+                }
+
+            }
+        }
+        return $titles;
+    }
+
 
     public function removeHidden() {
         $columns = array();
