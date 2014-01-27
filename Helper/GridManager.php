@@ -320,11 +320,11 @@ class GridManager {
 
         // for weighting
         $maxWidth = 0;
-        foreach($this->grid['headers'] as $key => $value) {
-            if ( !isset( $header[$key]['width'] ) ) {
-                $header[$key]['width']=1;
+        foreach ( $this->grid['headers'] as &$header ) {
+            if ( !isset( $header['width'] ) ) {
+                $header['width']=1;
             }
-            $maxWidth += $header[$key]['width'];
+            $maxWidth+=$header['width'];
         }
 
         if ( 0 < ( count( $this->grid['paths'] ) + count( $this->grid['buttons'] ) ) ) {
@@ -347,8 +347,8 @@ class GridManager {
         }
 
         // integral percentage
-        foreach($this->grid['headers'] as $key => $value) {
-            $header[$key]['width']=floor( $header[$key]['width']/$maxWidth*100 );
+        foreach ( $this->grid['headers'] as &$header ) {
+            $header['width']=floor( $header['width']/$maxWidth*100 );
         }
 
         if ( isset( $this->grid['numButtons'] ) ) {
