@@ -304,6 +304,7 @@ class GridManager {
     }
 
     public function getJsonResponse( $distinct = true ) {
+
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $search = $this->prepend.$this->grid['search'];
@@ -316,11 +317,11 @@ class GridManager {
 
         // for weighting
         $maxWidth = 0;
-        foreach ( $this->grid['headers'] as &$header ) {
-            if ( !isset( $header['width'] ) ) {
-                $header['width']=1;
+        foreach($this->grid['headers'] as $key => $value) {
+            if ( !isset( $header[$key]['width'] ) ) {
+                $header[$key]['width']=1;
             }
-            $maxWidth+=$header['width'];
+            $maxWidth += $header[$key]['width'];
         }
 
         if ( 0 < ( count( $this->grid['paths'] ) + count( $this->grid['buttons'] ) ) ) {
@@ -343,8 +344,8 @@ class GridManager {
         }
 
         // integral percentage
-        foreach ( $this->grid['headers'] as &$header ) {
-            $header['width']=floor( $header['width']/$maxWidth*100 );
+        foreach($this->grid['headers'] as $key => $value) {
+            $header[$key]['width']=floor( $header[$key]['width']/$maxWidth*100 );
         }
 
         if ( isset( $this->grid['numButtons'] ) ) {
@@ -393,7 +394,9 @@ class GridManager {
                 $this->grid['perPage'],
                 array( 'distinct' => $distinct ) );
             $rootId = null;
+
             $this->processResults();
+
         }
 
         if ( $this->export ) {
@@ -527,20 +530,22 @@ EOT;
     public function addSorts() {
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
-                if ( isset( $this->grid['headers'][$sort->column]['column'] ) ) {
-                    $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
-                }
-                if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
-                    && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
-                ) {
-                    foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
-                        $this->queryBuilder->addOrderBy( $newSort, $sort->direction );
+                if (isset($this->grid['headers'][$sort->column])) {
+                    if ( isset( $this->grid['headers'][$sort->column]['column'] ) ) {
+                        $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
                     }
-                }
-                if ( 'asc' == $sort->direction ) {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
-                } else {
-                    $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                    if ( isset( $this->grid['headers'][$sort->column]['addSort'] )
+                        && 'array' == gettype( $this->grid['headers'][$sort->column]['addSort'] )
+                    ) {
+                        foreach ( $this->grid['headers'][$sort->column]['addSort'] as $newSort ) {
+                            $this->queryBuilder->addOrderBy( $newSort, $sort->direction );
+                        }
+                    }
+                    if ( 'asc' == $sort->direction ) {
+                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-up';
+                    } else {
+                        $this->grid['headers'][$sort->column]['sortIcon'] = 'icon-sort-down';
+                    }
                 }
             }
         }
@@ -569,6 +574,7 @@ EOT;
     }
 
     public function processResultSet() {
+
         $paths = $this->processActions( 'paths' );
         $buttons = $this->processActions( 'buttons' );
         $values = $this->processValues();
@@ -653,8 +659,6 @@ EOT;
     public function processTitles( $values) {
         // HTML5 titles
         $titles = array();
-
-        // var_dump($values);
 
         foreach ( $this->grid['headers'] as $header ) {
             if ( isset( $header['title_function'] ) ) {
