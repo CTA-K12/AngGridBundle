@@ -304,13 +304,16 @@ class GridManager {
     }
 
     public function getJsonResponse( $distinct = true ) {
-
+        $orderBys = $this->queryBuilder->getDQLPart('orderBy');
+        $this->queryBuilder->resetDQLPart('orderBy');
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
+
         $search = $this->prepend.$this->grid['search'];
         QueryHelper::search( $this->queryBuilder, $search, $this->grid['headers'] );
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
+        foreach ($orderBys as $k => $part) { $this->queryBuilder->add('orderBy', $part); }
         $this->removeHidden();
 
         $this->grid['perPageList'] = $this->perPageList;
