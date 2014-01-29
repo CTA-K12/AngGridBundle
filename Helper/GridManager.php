@@ -594,6 +594,11 @@ EOT;
     }
 
     public function processActions( $name ) {
+
+        //
+        // For buttons batch us just the submission value
+        //
+
         $actions = array();
         foreach ( $this->grid[$name] as $action ) {
             if ( isset( $action['function'] ) ) {
