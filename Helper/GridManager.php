@@ -304,8 +304,8 @@ class GridManager {
     }
 
     public function getJsonResponse( $distinct = true ) {
-        $orderBys = $this->queryBuilder->getDQLPart('orderBy');
-        $this->queryBuilder->resetDQLPart('orderBy');
+        $orderBys = $this->queryBuilder->getDQLPart( 'orderBy' );
+        $this->queryBuilder->resetDQLPart( 'orderBy' );
         $this->queryBuilder->select( $this->queryBuilder->expr()->count( 'distinct ' . $this->root . '.id' ) );
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
 
@@ -313,7 +313,7 @@ class GridManager {
         QueryHelper::search( $this->queryBuilder, $search, $this->grid['headers'] );
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
-        foreach ($orderBys as $k => $part) { $this->queryBuilder->add('orderBy', $part); }
+        foreach ( $orderBys as $k => $part ) { $this->queryBuilder->add( 'orderBy', $part ); }
         $this->removeHidden();
 
         $this->grid['perPageList'] = $this->perPageList;
@@ -404,32 +404,47 @@ class GridManager {
 
         if ( $this->export ) {
             if ( $this->grid['exportType'] == 'pdf' && !is_null( $this->snappy ) ) {
-                $html = $this->controller->render( 'MESDAngGridBundle:Grid:export.pdf.twig',
+                $html = $this->controller->renderView( 'MESDAngGridBundle:Grid:export.pdf.twig',
                     array(
                         'entities' => $this->grid['entities'],
                         'headers' => $this->grid['headers'],
                     )
                 );
-                $response = new Response( $this->snappy->getOutputFromHtml( $html, array( 'orientation' => 'Landscape',
+                $response = new Response(
+                    $this->snappy->getOutputFromHtml( $html, array( 'orientation' => 'Landscape',
                             'print-media-type' => true,
                             'footer-left'  => 'Exported on [date] at [time]',
-                            'footer-right' => 'Page [page] of [toPage]' ) ),
+                            'footer-right' => 'Page [page] of [toPage]' )
+                    ),
                     200,
                     array(
                         'Content-Type'          => 'application/pdf',
                         'Content-Disposition'   => 'attachment; filename="export.pdf"'
                     )
                 );
+                $response->headers->set( 'Content-Type', 'application/pdf'] );
+                $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
+                $response->setStatusCode( 200 );
+                $response->headers->set( 'Content-Description', 'Export' );
+                $response->headers->set( 'Content-Transfer-Encoding', 'binary' );
+                $response->headers->set( 'Pragma', 'no-cache' );
+                $response->headers->set( 'Expires', '0' );
             }
             else {
-                $response = new Response( $this->controller->render( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
+                $response = new Response( $this->controller->renderView( 'MESDAngGridBundle:Grid:export.' . $this->grid['exportType'] . '.twig',
                         array(
                             'entities' => $this->grid['entities'],
                             'headers' => $this->grid['headers'],
                         )
-                    ) );
+                    )
+                );
                 $response->headers->set( 'Content-Type', 'text/' . $this->grid['exportType'] );
                 $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
+                $response->setStatusCode( 200 );
+                $response->headers->set( 'Content-Description', 'Export' );
+                $response->headers->set( 'Content-Transfer-Encoding', 'binary' );
+                $response->headers->set( 'Pragma', 'no-cache' );
+                $response->headers->set( 'Expires', '0' );
             }
 
             return $response;
@@ -533,7 +548,7 @@ EOT;
     public function addSorts() {
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
-                if (isset($this->grid['headers'][$sort->column])) {
+                if ( isset( $this->grid['headers'][$sort->column] ) ) {
                     if ( isset( $this->grid['headers'][$sort->column]['column'] ) ) {
                         $this->queryBuilder->addOrderBy( $this->grid['headers'][$sort->column]['column'], $sort->direction );
                     }
@@ -664,7 +679,7 @@ EOT;
     }
 
 
-    public function processTitles( $values) {
+    public function processTitles( $values ) {
         // HTML5 titles
         $titles = array();
 
