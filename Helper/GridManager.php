@@ -422,7 +422,7 @@ class GridManager {
                         'Content-Disposition'   => 'attachment; filename="export.pdf"'
                     )
                 );
-                $response->headers->set( 'Content-Type', 'application/pdf'] );
+                $response->headers->set( 'Content-Type', 'application/pdf' );
                 $response->headers->set( 'Content-Disposition', 'attachment; filename="export.' . $this->grid['exportType'] . '"' );
                 $response->setStatusCode( 200 );
                 $response->headers->set( 'Content-Description', 'Export' );
