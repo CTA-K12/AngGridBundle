@@ -1,6 +1,7 @@
 <?php
 
 namespace MESD\Ang\GridBundle\Helper;
+
 use Doctrine\ORM\Query\SqlWalker;
 
 class QueryHelper
@@ -12,51 +13,54 @@ class QueryHelper
         }
 
         if ('' != $value) {
-            $values = explode( ' ', str_replace( array( ',', ';' ), ' ', $value ) );
-            foreach ( $values as $k => $term ) {
+            $values = explode(' ', str_replace(array(',', ';'), ' ', $value));
+            foreach ($values as $k => $term) {
                 $oqb=array();
-                foreach ( $headers as $headerKey => $header ) {
-                    if ( false === $header['searchable'] ) {
+                foreach ($headers as $headerKey => $header) {
+                    if (false === $header['searchable']) {
+                        
                         continue;
                     }
-                    if ( 'date' == $header['type'] ) {
-                            $dateout=preg_replace( '/^(\d\d)\/(\d\d)\/(\d\d\d\d).*$/', '$3-$1-$2', $term );
-                        $oqb[]=$qb->expr()->iLike( "CONCAT(" . $header['column'] . ", '')", ':date'.$k );
-                    $qb->setParameter( 'date'.$k, "%".str_replace( '/', '-', $dateout )."%" );
+                    if ('date' == $header['type']) {
+                        $dateout=preg_replace('/^(\d\d)\/(\d\d)\/(\d\d\d\d).*$/', '$3-$1-$2', $term);
+                        $oqb[]=$qb->expr()->like("CONCAT(" . $header['column'] . ", '')", ':date'.$k);
+                        $qb->setParameter('date' . $k, "%" . str_replace('/', '-', $dateout) . "%");
                     } else {
-                        $oqb[]=$qb->expr()
-                        ->iLike( "CONCAT(" . $header['column'] . ", '')", ':term' . $k );
+                        $oqb[]=$qb->expr()->like("LOWER(CONCAT(" . $header['column'] . ", ''))", 'LOWER(:term' . $k . ')');
                         if (isset($header['addSort'])) {
                             foreach ($header['addSort'] as $newSort) {
-                                $oqb[]=$qb->expr()
-                                ->iLike( "CONCAT(" . $newSort . ", '')", ':term' . $k );
+                                $oqb[]=$qb->expr()->like("LOWER(CONCAT(" . $newSort . ", ''))", 'LOWER(:term' . $k . ')');
                             }
                         }
                     }
-                    $qb->setParameter( 'term' . $k, "%" . $term ."%" );
+                    $qb->setParameter('term' . $k, "%" . $term ."%");
                 }
-                $qb->andWhere( call_user_func_array( array( $qb->expr(), "orx" ), $oqb ) );
+                $qb->andWhere(call_user_func_array(array($qb->expr(), "orx"), $oqb));
             }
         }
         return $qb;
     }
 
-    public static function orderColumns($headers, $columns){
+    public static function orderColumns($headers, $columns)
+    {
         $newHeaders = array();
 
-        foreach($columns as $column){
+        foreach ($columns as $column) {
             $newHeaders[$column] = $headers[$column];
         }
 
         $newHeaders = array_merge($newHeaders, $headers);
+        
         return $newHeaders;
     }
 
-    public static function hideColumns($headers, $columns){
+    public static function hideColumns($headers, $columns)
+    {
 
-        foreach($columns as $column){
+        foreach ($columns as $column) {
             unset($headers[$column]);
         }
+        
         return $headers;
     }
 }
