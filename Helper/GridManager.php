@@ -310,7 +310,11 @@ class GridManager {
         $this->grid['total'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
 
         $search = $this->prepend.$this->grid['search'];
-        QueryHelper::search( $this->queryBuilder, $search, $this->grid['headers'] );
+        if ( isset($this->grid['negative']) && $this->grid['negative']) {
+            QueryHelper::search( $this->queryBuilder, $search, $this->grid['headers'], true );
+        } else {
+            QueryHelper::search( $this->queryBuilder, $search, $this->grid['headers'] );
+        }
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
         foreach ( $orderBys as $k => $part ) { $this->queryBuilder->add( 'orderBy', $part ); }
@@ -708,5 +712,9 @@ EOT;
 
     public function setPerPageList( $perPageList ) {
         $this->perPageList = $perPageList;
+    }
+
+    public function setNegative($negative){
+        $this->grid['negative'] = $negative;
     }
 }

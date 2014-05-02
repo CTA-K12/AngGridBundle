@@ -5,8 +5,12 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class QueryHelper
 {
-    public static function search($qb, $value, $headers)
+    public static function search($qb, $value, $headers, $negative=false)
     {
+        if ( $negative && '' == $value ) {
+            $value="WhatHaveYouBeenSmoking,Lighthart?";
+        }
+
         if ('' != $value) {
             $values = explode( ' ', str_replace( array( ',', ';' ), ' ', $value ) );
             foreach ( $values as $k => $term ) {

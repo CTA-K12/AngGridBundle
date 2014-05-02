@@ -194,6 +194,7 @@ var GridController = ['$scope', '$http', '$cookieStore', 'initData', function($s
 
     $scope.reset = function() {
         $scope.data.search = '';
+        $scope.data.addView = false;
         $scope.setCookie();
         $scope.makeRequest();
     };
