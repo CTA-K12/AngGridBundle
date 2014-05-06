@@ -317,7 +317,9 @@ class GridManager {
         }
         $this->grid['filtered'] = $this->queryBuilder->getQuery()->getSingleScalarResult();
         $this->queryBuilder->select( $this->root );
-        foreach ( $orderBys as $k => $part ) { $this->queryBuilder->add( 'orderBy', $part ); }
+        foreach ( $orderBys as $k => $part ) {
+            $this->queryBuilder->add( 'orderBy', $part, true);
+        }
         $this->removeHidden();
 
         $this->grid['perPageList'] = $this->perPageList;
@@ -550,6 +552,9 @@ EOT;
     }
 
     public function addSorts() {
+        $orderBys = $this->queryBuilder->getDQLPart( 'orderBy' );
+        $this->queryBuilder->resetDQLPart( 'orderBy' );
+
         if ( isset( $this->grid['sorts'] ) && '[]' != $this->grid['sorts'] ) {
             foreach ( $this->grid['sorts'] as $sort ) {
                 if ( isset( $this->grid['headers'][$sort->column] ) ) {
@@ -570,6 +575,9 @@ EOT;
                     }
                 }
             }
+        }
+        foreach ( $orderBys as $k => $part ) {
+            $this->queryBuilder->add( 'orderBy', $part, true);
         }
     }
 
