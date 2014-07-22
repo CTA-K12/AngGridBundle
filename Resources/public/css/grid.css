@@ -9,31 +9,13 @@
     background-color: #ffffff;
 }
 
-.mini-page {
-    float:right;
-    margin: 1px;
-    right: 5px;
-    position: relative;
-    line-height: 2em;
-}
-
 .widget-bar {
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
-    border-top-left-radius: 4px;
     background-color: #dddddd;
     line-height: 2em;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
 }
 
-.mini-page {
-    text-align:center;
-    width: 100%;
-    background-color: #eeeeee;
-}
-
-.mini-page:hover {
-    background-color: #ffffff;
-}
 .grid-controls {
     -webkit-border-top-left-radius: 4px;
     -moz-border-radius-topleft: 4px;
