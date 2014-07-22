@@ -360,8 +360,8 @@ class GridManager {
         if ( isset( $this->grid['numButtons'] ) ) {
             $this->grid['actionWidth']=floor( $buttonsWidth/$maxWidth*100 );
             // hardcoded values-- needs to be configured
-            $this->grid['numButtons']*=30;
-            $this->grid['numButtons']+=8;
+            $this->grid['numButtons']*=17;
+            $this->grid['numButtons']+=5;
 
         } else {
             $this->grid['actionWidth']=0;

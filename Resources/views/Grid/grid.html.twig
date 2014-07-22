@@ -13,7 +13,7 @@
                     <div class="grid-button">
                         <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()" id="show-grid-add-form">
                             <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'icon-plus' }}" id="grid-add-form"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'Add' }}
-                            <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
+                            <button class="btn btn-default" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
                                 <span class="icon-minus"></span>
                             </button>
                         </div>
@@ -75,8 +75,8 @@
                 </div>
                 <div class="col-md-1-12 col-md-offset-1-12">
                     {# <div class="col-md-1-12"> #}
-                        <span class="fa fa-angle-left btn btn-default btn-sm" data-ng-click="previousPage()"></span>
-                        <span class="fa fa-angle-right btn btn-default btn-sm" data-ng-click="nextPage()"></span>
+                        <span class="fa fa-angle-left btn btn-default btn-xs" data-ng-click="previousPage()"></span>
+                        <span class="fa fa-angle-right btn btn-default btn-xs" data-ng-click="nextPage()"></span>
                     {# </div> #}
                 </div>
             </div>
