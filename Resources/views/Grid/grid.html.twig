@@ -12,9 +12,9 @@
                 <div class="grid-form col-md-1-12">
                     <div class="grid-button">
                         <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()" id="show-grid-add-form">
-                            <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'icon-plus' }}" id="grid-add-form"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'Add' }}
+                            <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'fa fa-plus' }}" id="grid-add-form"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'Add' }}
                             <button class="btn btn-default" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
-                                <span class="icon-minus"></span>
+                                <span class="fa fa-minus"></span>
                             </button>
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                     <div class="grid-form col-md-1-12">
                         <div class="grid-button">
                             <a href="{{ newFormUrl }}" title="{{ newFormTitle is defined ? newFormTitle : 'New' }}" class="btn btn-primary">
-                                <span class="{{ newFormIcon is defined ? newFormIcon : 'icon-plus' }}"></span> {{ newFormTitle is defined ? newFormTitle : 'New' }}
+                                <span class="{{ newFormIcon is defined ? newFormIcon : 'fa fa-plus' }}"></span> {{ newFormTitle is defined ? newFormTitle : 'New' }}
                             </a>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                     <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
                 </colgroup>
                 <thead>
-                    <tr>
+                    <tr class="angrid">
                         <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
                             <span> Actions</span>
                         </th>
@@ -114,7 +114,7 @@
                     <tr data-ng-show="!data.filtered">
                         <td>No matches found.</td>
                     </tr>
-                    <tr data-ng-repeat="entity in notSorted(data.entities)">
+                    <tr data-ng-repeat="entity in notSorted(data.entities)" class="angrid">
                         <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
                             <span class="btn-group">
                                 <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{{data.entities[entity].labels[action]}}{% endverbatim %}"  name="{% verbatim %}{{ data.paths[action].name }}{% endverbatim %}">

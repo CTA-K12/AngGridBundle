@@ -57,16 +57,20 @@ td.td-align-center {
 }
 
 
-table.grid {
+.angrid {
   table-layout:fixed;
-  max-width:100%;
-  width:100%;
 }
 
-td > div > div.grid, th.grid > div.row-fluid > div.grid {
+.angrid td {
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.angrid th {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 767px) {
