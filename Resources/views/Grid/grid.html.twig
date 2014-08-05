@@ -8,8 +8,8 @@
 <div data-ng-module="task" data-ng-controller="{{ ngController }}" style="line-height:2em;">
     {% block controls %}
         <div class="widget-bar row">
-            <div class="col-sm-4-12 corner-left" data-ng-click="toggleControl()">
-                <div data-ng-class="{true:'fa fa-caret-down', false:'fa fa-caret-right'}[data.showControl]" class="col-sm-1-12 mini-page toggle-control"></div>
+            <div class="col-sm-4-12 corner-left">
+                <div data-ng-class="{true:'fa fa-caret-down', false:'fa fa-caret-right'}[data.showControl]" class="col-sm-1-12 mini-page toggle-control" data-ng-click="toggleControl()"></div>
                 <div class="col-sm-1-12">
                 </div>
                 <div class="search-control col-sm-7-12">
@@ -96,70 +96,71 @@
                     </li>
                 </ul>
             </div>
-        {% endblock controls %}
-        {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post" enctype="multipart/form-data">{% endif %}
-            <table class="table table-bordered table-condensed table-hover table-striped grid">
-                {% block tableheader %}
-                    <colgroup>
-                        <col data-ng-show="data.actionWidth" class="grid" style="width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;"{# "width:{% verbatim %}{{data.actionWidth}}{% endverbatim %}%;" #} span="1"></col>
-                        <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
-                                <span> Actions</span>
-                            </th>
-                            <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
-                                <div class="row">
-                                    <div class="col-sm-9-12 grid clickable" class="" data-ng-click="sort($event, data.headers[header].column)" >
-                                        <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
-                                    </div>
-                                    <div class="col-sm-3-12 grid clickable" data-ng-click="sort($event, data.headers[header].column)" >
-                                        <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}</span>
-                                    </div>
+        </div>
+    {% endblock controls %}
+    {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post" enctype="multipart/form-data">{% endif %}
+        <table class="table table-bordered table-condensed table-hover table-striped grid">
+            {% block tableheader %}
+                <colgroup>
+                    <col data-ng-show="data.actionWidth" class="grid" style="width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;"{# "width:{% verbatim %}{{data.actionWidth}}{% endverbatim %}%;" #} span="1"></col>
+                    <col class="grid" style="width:{% verbatim %}{{data.headers[header].width}}{% endverbatim %}%;" data-ng-repeat="header in notSorted(data.headers)" span="1"></col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th data-ng-hide="null==data.paths || ''==data.paths" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
+                            <span> Actions</span>
+                        </th>
+                        <th data-ng-repeat="header in notSorted(data.headers)" data-ng-init="data.headers[header]" id={% verbatim %}"{{ data.headers[header].id }}"{% endverbatim %} title={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} class="grid">
+                            <div class="row">
+                                <div class="col-sm-9-12 grid clickable" class="" data-ng-click="sort($event, data.headers[header].column)" >
+                                    <span>{% verbatim %}{{data.headers[header].header}}{% endverbatim %}</span>
                                 </div>
-                            </th>
-                        </tr>
-                    </thead>
-                {% endblock tableheader %}
-                {% block extraheader %}
-                {% endblock extraheader %}
-                {% block tablebody %}
-                    <tbody>
-                        <tr data-ng-show="!data.filtered">
-                            <td>No matches found.</td>
-                        </tr>
-                        <tr data-ng-repeat="entity in notSorted(data.entities)">
-                            <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
-                                <span class="btn-group">
-                                    <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{{data.entities[entity].labels[action]}}{% endverbatim %}"  name="{% verbatim %}{{ data.paths[action].name }}{% endverbatim %}">
-                                        <span class={% verbatim %}"{{data.paths[action].icon}}"{% endverbatim %}></span>
-                                    </a>
-                                    <button data-ng-repeat="button in notSorted(data.entities[entity].buttons)"
-                                        class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }}{{data.entities[entity].labels[action]}}"{% endverbatim %} name="{% verbatim %}{{data.buttons[button].name}}{% endverbatim %}" value={% verbatim %}"{{ data.entities[entity].buttons[button] }}"{% endverbatim %} name="{% verbatim %}{{data.buttons[button].name}}{% endverbatim %}">
-                                        <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}></span>
-                                    </button>
-                                </span>
-                            </td>
-                            <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} data-ng-class="data.headers[header].align" class="grid" >
-                                <div data-ng-switch on="data.headers[header].html">
-                                    <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]" class="grid">
-                                    </div>
-                                    <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]" class="grid" title="{% verbatim %}{{data.entities[entity].titles[data.headers[header].column]}}{% endverbatim %}">
-                                    </div>
+                                <div class="col-sm-3-12 grid clickable" data-ng-click="sort($event, data.headers[header].column)" >
+                                    <span class={% verbatim %}"{{ data.headers[header].sortIcon }}"{% endverbatim %}</span>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                {% endblock tablebody %}
-            </table>
-            {% if saveAll is defined %}
-                <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
-                    <span class="fa fa-save">
-                    </span>
-                    Save All
-                </button>
-            {% endif %}
-            {% if addFormUrl is defined %}</form>{% endif %}
-            </div>
-        {% endblock grid %}
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            {% endblock tableheader %}
+            {% block extraheader %}
+            {% endblock extraheader %}
+            {% block tablebody %}
+                <tbody>
+                    <tr data-ng-show="!data.filtered">
+                        <td>No matches found.</td>
+                    </tr>
+                    <tr data-ng-repeat="entity in notSorted(data.entities)">
+                        <td data-role-th="Actions" data-ng-hide="null==data.paths || ''==data.paths || data.hideControl" data-ng-class="data.headers[header].align" class="grid" style="min-width:{% verbatim %}{{data.numButtons}}{% endverbatim %}px;">
+                            <span class="btn-group">
+                                <a data-ng-repeat="action in notSorted(data.entities[entity].paths)" data-ng-init="value=data.paths[action]" class={% verbatim %}"{{ data.paths[action].class }}"{% endverbatim %} data-ng-href={% verbatim %}"{{ data.entities[entity].paths[action] }}"{% endverbatim %} title="{% verbatim %}{{ data.paths[action].title }}{{data.entities[entity].labels[action]}}{% endverbatim %}"  name="{% verbatim %}{{ data.paths[action].name }}{% endverbatim %}">
+                                    <span class={% verbatim %}"{{data.paths[action].icon}}"{% endverbatim %}></span>
+                                </a>
+                                <button data-ng-repeat="button in notSorted(data.entities[entity].buttons)"
+                                    class={% verbatim %}"{{ data.buttons[button].class }}"{% endverbatim %} title={% verbatim %}"{{ data.buttons[button].title }}{{data.entities[entity].labels[action]}}"{% endverbatim %} name="{% verbatim %}{{data.buttons[button].name}}{% endverbatim %}" value={% verbatim %}"{{ data.entities[entity].buttons[button] }}"{% endverbatim %} name="{% verbatim %}{{data.buttons[button].name}}{% endverbatim %}">
+                                    <span class={% verbatim %}"{{data.buttons[button].icon}}"{% endverbatim %}></span>
+                                </button>
+                            </span>
+                        </td>
+                        <td data-ng-repeat="header in notSorted(data.headers)" data-ng-init="value=data.headers[header]" data-role-th={% verbatim %}"{{ data.headers[header].title }}"{% endverbatim %} data-ng-class="data.headers[header].align" class="grid" >
+                            <div data-ng-switch on="data.headers[header].html">
+                                <div data-ng-switch-when="true" data-ng-bind-html-unsafe="data.entities[entity].values[data.headers[header].column]" class="grid">
+                                </div>
+                                <div data-ng-switch-default data-ng-bind="data.entities[entity].values[data.headers[header].column]" class="grid" title="{% verbatim %}{{data.entities[entity].titles[data.headers[header].column]}}{% endverbatim %}">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            {% endblock tablebody %}
+        </table>
+        {% if saveAll is defined %}
+            <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+                <span class="fa fa-save">
+                </span>
+                Save All
+            </button>
+        {% endif %}
+        {% if addFormUrl is defined %}</form>{% endif %}
+        </div>
+    {% endblock grid %}
