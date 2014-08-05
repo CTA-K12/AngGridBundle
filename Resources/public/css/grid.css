@@ -25,6 +25,13 @@
     padding: 0px;
 }
 
+.widget-bar input#grid-search {
+    text-indent: 8px;
+    text-align: left;
+    padding: 0px;
+}
+
+
 input.page-number {
     line-height: initial;
 }
