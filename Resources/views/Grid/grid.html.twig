@@ -50,7 +50,7 @@
                 {% if addForm is defined %}
                     {# <div class="grid-form col-sm-1-12"> #}
                     <div class="grid-button">
-                        <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()" id="debug-grid-add-form">
+                        <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()" id="show-grid-add-form">
                             <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'fa fa-plus' }}" id="grid-add-form"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'Add' }}
                         </button>
                         <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
