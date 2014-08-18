@@ -98,7 +98,7 @@
             </div>
         </div>
     {% endblock controls %}
-    {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post" enctype="multipart/form-data">{% endif %}
+    {# {% if addFormUrl is defined %}<form action="{{ addFormUrl }}" method="post" enctype="multipart/form-data">{% endif %} #}
         <table class="table table-bordered table-condensed table-hover table-striped grid">
             {% block tableheader %}
                 <colgroup>
@@ -161,6 +161,6 @@
                 Save All
             </button>
         {% endif %}
-        {% if addFormUrl is defined %}</form>{% endif %}
+{#         {% if addFormUrl is defined %}</form>{% endif %} #}
         </div>
     {% endblock grid %}
