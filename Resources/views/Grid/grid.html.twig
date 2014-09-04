@@ -50,7 +50,7 @@
                 {% if addForm is defined %}
                     {# <div class="grid-form col-sm-1-12"> #}
                     <div class="grid-button">
-                        <button class="btn btn-primary" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()" id="show-grid-add-form">
+                        <button class="btn btn-default" data-ng-hide="data.addView" title="Show Add Form" data-ng-click="toggleAdd()" id="show-grid-add-form">
                             <span class="{{ showAddFormIcon is defined ? showAddFormIcon : 'fa fa-plus' }}" id="grid-add-form"></span> {{ showAddFormTitle is defined ? showAddFormTitle : 'Add' }}
                         </button>
                         <button class="btn" data-ng-show="data.addView" title="Hide Add Form" data-ng-click="toggleAdd()">
@@ -61,7 +61,7 @@
                 {% elseif newFormUrl is defined %}
                     {# <div class="grid-form col-sm-1-12"> #}
                     <div class="grid-button">
-                        <a href="{{ newFormUrl }}" title="{{ newFormTitle is defined ? newFormTitle : 'New' }}" class="btn btn-primary">
+                        <a href="{{ newFormUrl }}" title="{{ newFormTitle is defined ? newFormTitle : 'New' }}" class="btn btn-default">
                             <span class="{{ newFormIcon is defined ? newFormIcon : 'fa fa-plus' }}"></span> {{ newFormTitle is defined ? newFormTitle : 'New' }}
                         </a>
                     </div>
@@ -155,7 +155,7 @@
             {% endblock tablebody %}
         </table>
         {% if saveAll is defined %}
-            <button class="btn btn-primary"title="Save All" name="action" value="grid_update">
+            <button class="btn btn-default"title="Save All" name="action" value="grid_update">
                 <span class="fa fa-save">
                 </span>
                 Save All
