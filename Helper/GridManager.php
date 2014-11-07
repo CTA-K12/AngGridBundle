@@ -401,7 +401,8 @@ class GridManager {
                 $this->queryBuilder->getQuery()->setHint( 'knp_paginator.count', $this->grid['filtered'] ),
                 $this->grid['page'],
                 $this->grid['perPage'],
-                array( 'distinct' => $distinct ) );
+                array( 'distinct' => $distinct )
+            );
             $rootId = null;
 
             $this->processResults();
