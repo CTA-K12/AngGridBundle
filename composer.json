@@ -5,7 +5,7 @@
     "type": "symfony-bundle",
     "description": "AngularJS Grid bundle",
     "require": {
-        "knplabs/knp-paginator-bundle": "~2.3",
+        "knplabs/knp-paginator-bundle": "~2.4",
         "knplabs/knp-snappy-bundle": "~1.2"
     },
     "autoload": {
